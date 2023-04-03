@@ -1,21 +1,35 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class StudentDB {
-    public static void main(String[] args) {
+    private ArrayList<Student> students = new ArrayList<Student>();
+
+    //When this class object is created, automatically read from text file and store into arraylist of student objects
+    StudentDB(){
         String fileName = "../data/student list.txt";
         String line;
+        boolean isFirstLine = true;
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             while ((line = br.readLine()) != null) {
-                String[] values = line.split("\t"); // split the line by tabs
-                for (String value : values) {
-                    System.out.print(value + "\t");
+                if (isFirstLine) {
+                    isFirstLine = false;
+                    continue; // skip the first line
                 }
-                System.out.println();
+                String[] values = line.split("\t"); // split the line by tabs
+                int index = values[1].indexOf('@');
+                students.add( new Student(values[1].substring(0,index),values[0],values[1]));
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    /*For testing purposes */
+    public void viewDB(){
+        for(int i = 0; i < students.size(); i++){
+            students.get(i).viewDetails();
         }
     }
 }
