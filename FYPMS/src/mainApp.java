@@ -2,18 +2,23 @@ import java.util.Scanner;
 
 public class mainApp{
     public static void main(String[] args){
+        /*Initialise Database*/
         StudentDB student_list = new StudentDB();
         FacultyDB faculty_list = new FacultyDB();
         ProjectDB project_list = new ProjectDB();
         FYPcoordDB FYPcoord_list = new FYPcoordDB();
 
-        int userInput;
+        /*For Testing purposes*/
+        //student_list.viewDB();
+        //faculty_list.viewDB();
 
-        Scanner scObject = new Scanner(System.in);
-
-        
-        
-        
+        /*Login Page*/
+        Scanner scanner = new Scanner(System.in);
+        printWelcome();
+        System.out.println("Please enter your username:");
+        String username = scanner.nextLine();
+        System.out.println("Please enter your password:");
+        String password = scanner.nextLine();
     }
 
     /**
@@ -21,7 +26,7 @@ public class mainApp{
      */
     public static void printWelcome() {
         System.out.println();
-        System.out.println("#######   #      #  #######   ##       ##   #######");
+        System.out.println("#######   #     #   #######   ##       ##   #######");
         System.out.println("#          #   #    #     #   # #     # #   #      ");
         System.out.println("#           # #     #     #   # #     # #   #      ");
         System.out.println("#######      #      #######   #  #  #   #   #######");
@@ -37,7 +42,7 @@ public class mainApp{
      * Displays all the options of the system.
      */
     public static void printSupervisorOptions() {
-        System.out.println("************ I can help you with these functions: *************");
+        System.out.println("************ Supervisor Options: *************");
         System.out.println(" 1. Create a Project.");
         System.out.println(" 2. View own Project(s).");
         System.out.println(" 3. Modify the title of your Project(s).");
