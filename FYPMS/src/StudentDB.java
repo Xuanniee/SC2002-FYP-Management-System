@@ -7,7 +7,7 @@ public class StudentDB {
     private ArrayList<Student> students = new ArrayList<Student>();
 
     //When this class object is created, automatically read from text file and store into arraylist of student objects
-    StudentDB(){
+    public StudentDB(){
         String fileName = "../data/student list.txt";
         String line;
         boolean isFirstLine = true;

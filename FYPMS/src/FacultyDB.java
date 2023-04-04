@@ -7,7 +7,7 @@ public class FacultyDB {
     private ArrayList<Supervisor> supervisors = new ArrayList<Supervisor>();
 
     //When this class object is created, automatically read from text file and store into arraylist of supervisor objects
-    FacultyDB(){
+    public FacultyDB(){
         String fileName = "../data/faculty_list.txt";
         String line;
         boolean isFirstLine = true;
@@ -31,5 +31,26 @@ public class FacultyDB {
         for(int i = 0; i < supervisors.size(); i++){
             supervisors.get(i).viewDetails();
         }
+    }
+
+    /**
+     * Returns the Target Supervisor so long as they are present
+     * @param userID
+     * @return
+     */
+    public Supervisor getSupervisor(String userID) {
+        int targetIndex = -1;
+        for (int i = 0; i < supervisors.size(); i += 1) {
+            if (supervisors.get(i).userID.equals(userID)) {
+                targetIndex = i;
+            }
+        }
+
+        if (targetIndex == -1) {
+            return null;
+        }
+        
+        return supervisors.get(targetIndex);
+
     }
 }

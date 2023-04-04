@@ -3,7 +3,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class FYPcoordDB {
-    public static void main(String[] args) {
+    public FYPcoordDB() {
         String fileName = "../data/FYP coordinator.txt";
         String line;
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {

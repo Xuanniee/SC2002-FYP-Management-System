@@ -11,14 +11,42 @@ public class mainApp{
         /*For Testing purposes*/
         //student_list.viewDB();
         //faculty_list.viewDB();
-
-        /*Login Page*/
+        
         Scanner scanner = new Scanner(System.in);
+        int userInput;
+
+        /* Login Page */
         printWelcome();
         System.out.println("Please enter your username:");
         String username = scanner.nextLine();
         System.out.println("Please enter your password:");
         String password = scanner.nextLine();
+
+        // Check through all the Users
+        do {
+            printSupervisorOptions(username);
+            userInput = scanner.nextInt();
+
+            Supervisor tester = faculty_list.getSupervisor("ASMADHUKUMAR");
+            switch(userInput) {
+                case 1:
+                    tester.createProject(project_list, scanner);
+                    break;
+                case 2:
+                    tester.viewOwnProject(project_list.retrieveProfessorProjects(tester.getName()));
+                    break;
+                case 3:
+                    tester.modifyTitle(project_list, scanner);
+                    break;
+                case 7:
+                    break;
+                default:
+                    System.out.println("Error!!");
+            }
+
+        } while (userInput != 7);
+        
+        scanner.close();
     }
 
     /**
@@ -39,9 +67,10 @@ public class mainApp{
     }
 
     /**
-     * Displays all the options of the system.
+     * Displays all the options of the system. Abstract so can be overridden
      */
-    public static void printSupervisorOptions() {
+    public static void printSupervisorOptions(String professorName) {
+        System.out.println("************ Welcome to FYPMS " + professorName + " *************");
         System.out.println("************ Supervisor Options: *************");
         System.out.println(" 1. Create a Project.");
         System.out.println(" 2. View own Project(s).");
