@@ -38,7 +38,8 @@ public class StudentManager {
 
             case 6:
                 System.out.println("Request to Deregister from Registered Project...");
-                // loginController.displaySignup();
+                //RequestDB.deregister(getCurrentStudent);
+                
                 break;
 
             case 7:
@@ -79,5 +80,7 @@ public class StudentManager {
     public Student getCurrentStudent() {
         return studentLoginManager.getCurrentStudent();
     }
+
+
 
 }

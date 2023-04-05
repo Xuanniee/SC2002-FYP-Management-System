@@ -17,6 +17,15 @@ public class MainMenuUI {
         int choice;
 
         do {
+            System.out.println(""); // print empty line
+            System.out.println("88888888888  oooo    oooo   oooooooooo.  oooo         ooo   ooooooo.      ");
+            System.out.println("`88          od8y    y8bo  `888'   `Y8b  8888.       .88'  888   888.     ");
+            System.out.println(" 88           888    888    888     888  88 88b     d'88    '888          ");
+            System.out.println(" 8Y88888888     88888       888oooo888'  88  Y88  8P  88       '888       ");
+            System.out.println(" 88              888        888          88   `888'   88          88b     ");
+            System.out.println(" 88              888        888          88     Y     88   888    88b     ");
+            System.out.println(" 8o              ooo        o88         o88o         o88o   8oo8888b'     ");
+
             System.out.println("+-------------------------------------------------------+");
             System.out.println("|              Welcome to FYPMS Main Menu               |");
             System.out.println("|-------------------------------------------------------|");
