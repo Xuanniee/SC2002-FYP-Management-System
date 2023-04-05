@@ -32,4 +32,23 @@ public class StudentDB {
             students.get(i).viewDetails();
         }
     }
+
+    public ArrayList<Student> getStudentList() {
+        return students;
+    }
+
+    public Student getStudent(String userID) {
+        int targetIndex = -1;
+        for (int i = 0; i < students.size(); i += 1) {
+            if (students.get(i).userID.equals(userID)) {
+                targetIndex = i;
+            }
+        }
+
+        if (targetIndex == -1) {
+            return null;
+        }
+        
+        return students.get(targetIndex);
+    }
 }

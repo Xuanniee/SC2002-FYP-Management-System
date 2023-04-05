@@ -1,8 +1,10 @@
 import java.util.Scanner;
+import java.io.Console;
+import enums.*;
 
 public class mainApp{
     public static void main(String[] args){
-        /*Initialise Database*/
+        /* Initialise Database */
         StudentDB student_list = new StudentDB();
         FacultyDB faculty_list = new FacultyDB();
         ProjectDB project_list = new ProjectDB();
@@ -13,38 +15,83 @@ public class mainApp{
         //faculty_list.viewDB();
         
         Scanner scanner = new Scanner(System.in);
+        Console terminalConsole = System.console();
         int userInput;
 
+        // Check to ensure Console is available
+        if (terminalConsole == null) {
+            System.err.println("No console.");
+            System.exit(1);
+        }
+
+
         /* Login Page */
+        String username;
+        UserType attemptUserType;
+        int numLoginAttempts = 3;
         printWelcome();
-        System.out.println("Please enter your username:");
-        String username = scanner.nextLine();
-        System.out.println("Please enter your password:");
-        String password = scanner.nextLine();
-
-        // Check through all the Users
         do {
-            printSupervisorOptions(username);
-            userInput = scanner.nextInt();
+            System.out.println("Enter your username:");
+            username = scanner.nextLine();
+            
+            char passwordArray[] = terminalConsole.readPassword("Enter your Password: ");
+            String maskedPassword = new String(passwordArray);
 
-            Supervisor tester = faculty_list.getSupervisor("ASMADHUKUMAR");
-            switch(userInput) {
-                case 1:
-                    tester.createProject(project_list, scanner);
-                    break;
-                case 2:
-                    tester.viewOwnProject(project_list.retrieveProfessorProjects(tester.getName()));
-                    break;
-                case 3:
-                    tester.modifyTitle(project_list, scanner);
-                    break;
-                case 7:
-                    break;
-                default:
-                    System.out.println("Error!!");
+            // Create attempted User
+            User attemptUser = new User(username, maskedPassword);
+            attemptUserType = attemptUser.authenticateUser(username, maskedPassword, faculty_list.getSupervisorList(), student_list.getStudentList());
+
+            // Check if exceed login limits
+            if (numLoginAttempts == 0) {
+                System.exit(1);
+            }
+            else if (attemptUserType == UserType.UNKNOWN) {
+                System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+                System.out.println("Your Login Credentials are errorneous. You have " + numLoginAttempts + " attempts left.");
+                numLoginAttempts -= 1;
             }
 
-        } while (userInput != 7);
+        } while(attemptUserType == UserType.UNKNOWN);
+
+        // Find the Corresponding User
+        switch(attemptUserType) {
+            case STUDENT:
+                Student loggedStudent = student_list.getStudent(username);
+                break;
+
+            case FACULTY:
+                Supervisor loggedSupervisor = faculty_list.getSupervisor(username);
+                do {
+                    // Call the Menu for the respective users
+                    loggedSupervisor.printMenuOptions();
+                    userInput = scanner.nextInt();
+
+                    switch(userInput) {
+                        case 1:
+                            loggedSupervisor.createProject(project_list, scanner);
+                            break;
+                        case 2:
+                            loggedSupervisor.viewOwnProject(project_list.retrieveProfessorProjects(loggedSupervisor.getName()));
+                            break;
+                        case 3:
+                            loggedSupervisor.modifyTitle(project_list, scanner);
+                            break;
+                        case 7:
+                            break;
+                        default:
+                            System.out.println("Error!!");
+                    }
+                } while(userInput != 7);
+                
+
+            case FYPCOORDINATOR:
+                break;
+
+            case UNKNOWN:
+                System.out.println("Error!! Should never be Unknown.");
+
+        }
+
         
         scanner.close();
     }
@@ -56,7 +103,7 @@ public class mainApp{
         System.out.println();
         System.out.println("#######   #     #   #######   ##       ##   #######");
         System.out.println("#          #   #    #     #   # #     # #   #      ");
-        System.out.println("#           # #     #     #   # #     # #   #      ");
+        System.out.println("#           # #     #     #   # #    #  #   #      ");
         System.out.println("#######      #      #######   #  #  #   #   #######");
         System.out.println("#            #      #         #  #  #   #         #");
         System.out.println("#            #      #         #   ##    #         #");
@@ -66,21 +113,7 @@ public class mainApp{
         System.out.println();
     }
 
-    /**
-     * Displays all the options of the system. Abstract so can be overridden
-     */
-    public static void printSupervisorOptions(String professorName) {
-        System.out.println("************ Welcome to FYPMS " + professorName + " *************");
-        System.out.println("************ Supervisor Options: *************");
-        System.out.println(" 1. Create a Project.");
-        System.out.println(" 2. View own Project(s).");
-        System.out.println(" 3. Modify the title of your Project(s).");
-        System.out.println(" 4. View pending requests.)");
-        System.out.println(" 5. View request history & status.");
-        System.out.println(" 6. Request the transfer of a student.");
-        System.out.println(" 7. Log out.");
-        System.out.println();
-    }
+    
 
 
 }

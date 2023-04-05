@@ -51,6 +51,12 @@ public class FacultyDB {
         }
         
         return supervisors.get(targetIndex);
+    }
 
+    /**
+     * Get Supervisor List
+     */
+    public ArrayList<Supervisor> getSupervisorList() {
+        return supervisors;
     }
 }

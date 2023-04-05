@@ -4,6 +4,7 @@ import java.util.Scanner;
 public class Supervisor extends User{
 
     public Supervisor(String userID, String name, String email){
+        super(userID, "password");
         this.userID = userID;
         this.name = name;
         this.email = email;
@@ -12,7 +13,8 @@ public class Supervisor extends User{
     /**
      * Displays all the options of the system. Abstract so can be overridden
      */
-    public void printSupervisorOptions() {
+    @Override
+     public void printMenuOptions() {
         System.out.println("************ Welcome to FYPMS " + this.name + " *************");
         System.out.println("************ Supervisor Options: *************");
         System.out.println(" 1. Create a Project.");
