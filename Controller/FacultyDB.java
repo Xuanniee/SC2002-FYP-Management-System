@@ -1,155 +1,65 @@
 package Controller;
-
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 
-import Entities.*;
+import Entities.Supervisor;
 
-public class FacultyDB extends Database {
+public class FacultyDB {
+    private ArrayList<Supervisor> supervisors = new ArrayList<Supervisor>();
 
-    private String facultyFilePath = String.join("", super.directory, "faculty_list.txt");
-    private String coordinatorFilePath = String.join("", super.directory, "FYP_coordinator.txt");
-    private String projectFilePath = String.join("", super.directory, "rollover_project.txt");
-
-    private File facultyFile;
-    private File coordinatorFile;
-    private File projectFile;
-
-    public ArrayList<Faculty> faculties;
-    public ArrayList<Project> projects;
-
-    public FacultyDB() {
-        this.facultyFile = new File(facultyFilePath);
-        this.coordinatorFile = new File(coordinatorFilePath);
-        this.projectFile = new File(projectFilePath);
-        this.faculties = new ArrayList<Faculty>();
-        this.readFile();
-        this.readCoordinatorFile();
-        this.projects = new ArrayList<Project>();
-        this.readProjectFile();
-    }
-
-    public FacultyDB(String facultyFilePath, String coordinatorFilePath) {
-        this.facultyFile = new File(facultyFilePath);
-        this.coordinatorFile = new File(coordinatorFilePath);
-        this.projectFile = new File(projectFilePath);
-        this.faculties = new ArrayList<Faculty>();
-        this.readFile();
-        this.readCoordinatorFile();
-        this.projects = new ArrayList<Project>();
-        this.readProjectFile();
-    }
-
-    public void readFile() {
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(facultyFile));
-
-            String facultyLine = br.readLine();
-            facultyLine = br.readLine();
-            String facultyName, facultyEmail, facultyID;
-            String[] facultyData, temp;
-
-            while (facultyLine != null) {
-                facultyData = facultyLine.split(super.delimiter);
-                facultyName = facultyData[0];
-                facultyEmail = facultyData[1];
-
-                temp = facultyData[1].split(super.emailDelimiter);
-                facultyID = temp[0];
-
-                faculties.add(new Faculty(facultyID, facultyName, facultyEmail));
-
-                facultyLine = br.readLine();
-            }
-            br.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void readCoordinatorFile() {
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(coordinatorFile));
-
-            String coordinatorLine = br.readLine();
-            coordinatorLine = br.readLine();
-            String coordinatorName;
-            String[] coordinatorData;
-
-            while (coordinatorLine != null) {
-                coordinatorData = coordinatorLine.split(super.delimiter);
-                coordinatorName = coordinatorData[0];
-                for (Faculty faculty : faculties) {
-                    if (faculty.getUserName().equalsIgnoreCase(coordinatorName)) {
-                        faculty.setIsCoordinator(true);
-                    }
+    //When this class object is created, automatically read from text file and store into arraylist of supervisor objects
+    public FacultyDB(){
+        String fileName = "../data/faculty_list.txt";
+        String line;
+        boolean isFirstLine = true;
+        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+            while ((line = br.readLine()) != null) {
+                if (isFirstLine) {
+                    isFirstLine = false;
+                    continue; // skip the first line
                 }
-                coordinatorLine = br.readLine();
+                String[] values = line.split("\t"); // split the line by tabs
+                int index = values[1].indexOf('@');
+                supervisors.add( new Supervisor(values[1].substring(0,index),values[0],values[1]));
             }
-            br.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void readProjectFile() {
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(projectFile));
-
-            String projectLine = br.readLine();
-            projectLine = br.readLine();
-            String facultyName, projectTitle;
-            String[] projectData;
-
-            while (projectLine != null) {
-                projectData = projectLine.split(super.delimiter);
-                facultyName = projectData[0];
-                projectTitle = projectData[1];
-
-                // Add project to ArrayList of Projects
-                projects.add(new Project(projectTitle));
-
-                for (Faculty faculty : faculties) {
-                    if (faculty.getUserName().equalsIgnoreCase(facultyName)) {
-                        faculty.createProject(projectTitle);
-                        break;
-                    }
-                }
-                projectLine = br.readLine();
-            }
-            br.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+    /*For testing purposes */
+    public void viewDB(){
+        for(int i = 0; i < supervisors.size(); i++){
+            supervisors.get(i).viewDetails();
         }
     }
 
-    public ArrayList<Faculty> getAllFaculties() {
-        return this.faculties;
-    }
-
-    public ArrayList<Project> getAllProjects() {
-        return this.projects;
-    }
-
-    public void updateFile() {
-        try {
-            BufferedWriter bf = new BufferedWriter(new FileWriter(facultyFile, false));
-            PrintWriter pw = new PrintWriter(bf);
-            for (Faculty faculty : faculties) {
-                String facultyName = faculty.getUserName();
-                String facultyEmail = faculty.getUserEmail();
-                pw.println(facultyName + "," + facultyEmail);
+    /**
+     * Returns the Target Supervisor so long as they are present
+     * @param userID
+     * @return
+     */
+    public Supervisor getSupervisor(String userID) {
+        int targetIndex = -1;
+        for (int i = 0; i < supervisors.size(); i += 1) {
+            if (supervisors.get(i).getUserID().equalsIgnoreCase(userID)) {
+                targetIndex = i;
             }
-            pw.close();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
+
+        if (targetIndex == -1) {
+            return null;
+        }
+        
+        return supervisors.get(targetIndex);
     }
 
+    /**
+     * Get Supervisor List
+     */
+    public ArrayList<Supervisor> getSupervisorList() {
+        return supervisors;
+    }
 }

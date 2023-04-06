@@ -18,7 +18,7 @@ public class StudentManager {
 
             case 2:
                 System.out.println("View All Projects...");
-                projectDB.viewAvailableProjects();
+                // projectDB.viewAvailableProjects();
                 break;
 
             case 3:

@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 import Entities.Student;
 import Entities.Project;
+import Entities.Request;
 
 public class StudentDB extends Database {
 
@@ -96,10 +97,11 @@ public class StudentDB extends Database {
         return false;
     }
 
-    public String findStudent(String userID, String password) {
+    public Student findStudent(String userID) {
+        // Student targetStudent;
         for (Student student : students) {
-            if (student.getUserID().equalsIgnoreCase(userID) && student.getPassword().equals(password)) {
-                return student.getUserName();
+            if (student.getUserID().equalsIgnoreCase(userID)) {
+                return student;
             }
         }
         return null;
@@ -113,11 +115,15 @@ public class StudentDB extends Database {
         }
     }
 
+    public ArrayList<Student> getStudentList() {
+        return students;
+    }
+
     public void viewRegisteredProject(Student currentStudent) {
         for (Student student : students) {
             if (student.equals(currentStudent)) {
                 Project currentProject = student.getAssignedProject();
-                currentProject.viewProjectDetails();
+                // currentProject.viewProjectDetails();
             }
         }
     }

@@ -2,7 +2,7 @@ package Controller;
 
 import java.util.Scanner;
 
-import Entities.Student;
+import Entities.*;
 
 public class StudentLoginManager {
 
@@ -34,8 +34,8 @@ public class StudentLoginManager {
         System.out.println("");
 
         if (loginUser(userID, password) == true) {
-            String studentName = studentDB.findStudent(userID, password);
-            this.currentStudent = new Student(userID, studentName, password);
+            Student currentStudent = studentDB.findStudent(userID);
+            // this.currentStudent = new Student(userID, studentName, password);
             System.out.println("Login successful!");
         } else {
             System.out.println("Login unsuccessful. Please try again.");
