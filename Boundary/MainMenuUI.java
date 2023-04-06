@@ -2,7 +2,6 @@ package Boundary;
 
 import java.util.Scanner;
 
-import Controller.FacultyManager;
 import Controller.StudentManager;
 
 public class MainMenuUI {
@@ -10,7 +9,6 @@ public class MainMenuUI {
     private Scanner sc = new Scanner(System.in);
 
     private StudentManager studentManager = new StudentManager();
-    private FacultyManager facultyManager = new FacultyManager();
 
     public void displayMainMenu() {
         System.out.println("");
@@ -106,7 +104,7 @@ public class MainMenuUI {
     }
 
     public void displayFacultyMenu() {
-
+        
     }
 
 }
