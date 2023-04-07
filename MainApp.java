@@ -5,18 +5,18 @@ import enums.*;
 import Entities.*;
 import Controller.*;
 
-public class mainApp{
-    public static void main(String[] args){
+public class MainApp {
+    public static void main(String[] args) {
         /* Initialise Database */
         StudentDB student_list = new StudentDB();
         FacultyDB faculty_list = new FacultyDB();
         ProjectDB project_list = new ProjectDB();
         FYPcoordDB FYPcoord_list = new FYPcoordDB();
 
-        /*For Testing purposes*/
-        //student_list.viewDB();
-        //faculty_list.viewDB();
-        
+        /* For Testing purposes */
+        // student_list.viewDB();
+        // faculty_list.viewDB();
+
         Scanner scanner = new Scanner(System.in);
         Console terminalConsole = System.console();
         int userInput;
@@ -27,7 +27,6 @@ public class mainApp{
             System.exit(1);
         }
 
-
         /* Login Page */
         String username;
         UserType attemptUserType;
@@ -36,28 +35,29 @@ public class mainApp{
         do {
             System.out.println("Enter your username:");
             username = scanner.nextLine();
-            
+
             char passwordArray[] = terminalConsole.readPassword("Enter your Password: ");
             String maskedPassword = new String(passwordArray);
 
             // Create attempted User
             User attemptUser = new User(username, maskedPassword);
-            attemptUserType = attemptUser.authenticateUser(username, maskedPassword, faculty_list.getSupervisorList(), student_list.getStudentList());
+            attemptUserType = attemptUser.authenticateUser(username, maskedPassword, faculty_list.getSupervisorList(),
+                    student_list.getStudentList());
 
             // Check if exceed login limits
             if (numLoginAttempts == 0) {
                 System.exit(1);
-            }
-            else if (attemptUserType == UserType.UNKNOWN) {
+            } else if (attemptUserType == UserType.UNKNOWN) {
                 System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-                System.out.println("Your Login Credentials are errorneous. You have " + numLoginAttempts + " attempts left.");
+                System.out.println(
+                        "Your Login Credentials are errorneous. You have " + numLoginAttempts + " attempts left.");
                 numLoginAttempts -= 1;
             }
 
-        } while(attemptUserType == UserType.UNKNOWN);
+        } while (attemptUserType == UserType.UNKNOWN);
 
         // Find the Corresponding User
-        switch(attemptUserType) {
+        switch (attemptUserType) {
             case STUDENT:
                 Student loggedStudent = student_list.findStudent(username);
                 loggedStudent.displayStudentMenu();
@@ -70,12 +70,13 @@ public class mainApp{
                     loggedSupervisor.printMenuOptions();
                     userInput = scanner.nextInt();
 
-                    switch(userInput) {
+                    switch (userInput) {
                         case 1:
                             loggedSupervisor.createProject(project_list, scanner);
                             break;
                         case 2:
-                            loggedSupervisor.viewOwnProject(project_list.retrieveProfessorProjects(loggedSupervisor.getSupervisorName()));
+                            loggedSupervisor.viewOwnProject(
+                                    project_list.retrieveProfessorProjects(loggedSupervisor.getSupervisorName()));
                             break;
                         case 3:
                             loggedSupervisor.modifyTitle(project_list, scanner);
@@ -85,8 +86,7 @@ public class mainApp{
                         default:
                             System.out.println("Error!!");
                     }
-                } while(userInput != 7);
-                
+                } while (userInput != 7);
 
             case FYPCOORDINATOR:
                 break;
@@ -96,7 +96,6 @@ public class mainApp{
 
         }
 
-        
         scanner.close();
     }
 
@@ -116,8 +115,5 @@ public class mainApp{
         System.out.println("****************** Welcome to FYPMS! ******************");
         System.out.println();
     }
-
-    
-
 
 }
