@@ -46,13 +46,18 @@ public class StudentManager {
 
             case 6:
                 System.out.println("Request to Deregister from Registered Project...");
-                // RequestDB.deregister(getCurrentStudent);
-
+                if (!getCurrentStudent().getIsAssigned()) {
+                    break;
+                } else {
+                    System.out.println("Your registered project: ");
+                    getCurrentStudent().getAssignedProject().viewProjectDetails();
+                    requestManager.studentDeregister(getCurrentStudent());
+                }
                 break;
 
             case 7:
                 System.out.println("View all Request History...");
-                // studentDB.viewRequestHistory(getCurrentStudent());
+                requestManager.viewAvailableProjects(getCurrentStudent());
                 break;
 
             case 0:

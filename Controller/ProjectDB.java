@@ -107,5 +107,9 @@ public class ProjectDB {
         }
     }
 
+    public ArrayList<Project> getAvailableProjects() {
+        return projectList;
+    }
+
     // TODO Add SUpervisors Email somehow
 }
