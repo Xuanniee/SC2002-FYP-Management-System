@@ -1,17 +1,18 @@
 package Controller;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import Entities.Supervisor;
+import Entities.*;
 
 public class FacultyDB {
     private ArrayList<Supervisor> supervisors = new ArrayList<Supervisor>();
 
     //When this class object is created, automatically read from text file and store into arraylist of supervisor objects
     public FacultyDB(){
-        String fileName = "../data/faculty_list.txt";
+        String fileName = "./Data/faculty_list.txt";
         String line;
         boolean isFirstLine = true;
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
@@ -21,7 +22,10 @@ public class FacultyDB {
                     continue; // skip the first line
                 }
                 String[] values = line.split("\t"); // split the line by tabs
+                // System.out.println(values[0]);
+                // System.out.println(values[1]);
                 int index = values[1].indexOf('@');
+                // System.out.println(index);
                 supervisors.add( new Supervisor(values[1].substring(0,index),values[0],values[1]));
             }
         } catch (IOException e) {

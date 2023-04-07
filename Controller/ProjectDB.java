@@ -11,7 +11,7 @@ public class ProjectDB {
     private int projectCount = 0;
 
     public ProjectDB() {
-        String fileName = "../data/rollover project.txt";
+        String fileName = "./Data/rollover project.txt";
         String line;
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             while ((line = br.readLine()) != null) {

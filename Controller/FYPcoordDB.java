@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public class FYPcoordDB {
     public FYPcoordDB() {
-        String fileName = "../data/FYP coordinator.txt";
+        String fileName = "./Data/FYP coordinator.txt";
         String line;
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             while ((line = br.readLine()) != null) {
