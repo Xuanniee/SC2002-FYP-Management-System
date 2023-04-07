@@ -7,6 +7,7 @@ public class StudentManager {
     private StudentLoginManager studentLoginManager = new StudentLoginManager();
     private StudentDB studentDB = new StudentDB();
     private ProjectDB projectDB = new ProjectDB();
+    private RequestManager requestManager = new RequestManager();
 
     public void processStudentChoice(int choice) {
 
@@ -18,7 +19,7 @@ public class StudentManager {
 
             case 2:
                 System.out.println("View All Projects...");
-                // projectDB.viewAvailableProjects();
+                projectDB.viewAvailableProjects();
                 break;
 
             case 3:
@@ -28,23 +29,30 @@ public class StudentManager {
 
             case 4:
                 System.out.println("Request to Register for a Project...");
-                // systemSettingController.displaySystemSetting();
+                projectDB.viewAvailableProjects();
+                requestManager.studentRegister(getCurrentStudent());
                 break;
 
             case 5:
                 System.out.println("Request to Change Title of Registered Project...");
-                // loginController.displaySignup();
+                if (!getCurrentStudent().getIsAssigned()) {
+                    break;
+                } else {
+                    System.out.println("Your registered project: ");
+                    getCurrentStudent().getAssignedProject().viewProjectDetails();
+                    requestManager.changeTitle(getCurrentStudent(), getCurrentStudent().getAssignedProject());
+                }
                 break;
 
             case 6:
                 System.out.println("Request to Deregister from Registered Project...");
-                //RequestDB.deregister(getCurrentStudent);
-                
+                // RequestDB.deregister(getCurrentStudent);
+
                 break;
 
             case 7:
                 System.out.println("View all Request History...");
-                studentDB.viewRequestHistory(getCurrentStudent());
+                // studentDB.viewRequestHistory(getCurrentStudent());
                 break;
 
             case 0:
@@ -80,7 +88,5 @@ public class StudentManager {
     public Student getCurrentStudent() {
         return studentLoginManager.getCurrentStudent();
     }
-
-
 
 }

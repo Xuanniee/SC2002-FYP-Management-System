@@ -11,7 +11,6 @@ import java.util.ArrayList;
 
 import Entities.Student;
 import Entities.Project;
-import Entities.Request;
 
 public class StudentDB extends Database {
 
@@ -123,15 +122,7 @@ public class StudentDB extends Database {
         for (Student student : students) {
             if (student.equals(currentStudent)) {
                 Project currentProject = student.getAssignedProject();
-                // currentProject.viewProjectDetails();
-            }
-        }
-    }
-
-    public void viewRequestHistory(Student currentStudent) {
-        for (Student student : students) {
-            if (student.equals(currentStudent)) {
-                ArrayList<Request> studentHistory = student.getRequestHistory();
+                currentProject.viewProjectDetails();
             }
         }
     }

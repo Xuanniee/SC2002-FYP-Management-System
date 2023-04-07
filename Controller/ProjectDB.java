@@ -1,12 +1,15 @@
 package Controller;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
 import Entities.Project;
+import enums.ProjectStatus;
 
 public class ProjectDB {
+
     private ArrayList<Project> projectList = new ArrayList<Project>();
     private int projectCount = 0;
 
@@ -24,7 +27,7 @@ public class ProjectDB {
 
                 // TODO Get Supervisor Email
                 projectList.add(new Project(projectCount, professorName, "Unknown Email", projectTitle));
-                
+
                 for (String value : values) {
                     System.out.print(value + "\t");
                 }
@@ -43,14 +46,20 @@ public class ProjectDB {
         this.projectCount += 1;
     }
 
-    public Boolean addProject(Project newlyCreatedProject){
-        // Don't need increment projectCount since should incremented before calling this function
+    public Boolean addProject(Project newlyCreatedProject) {
+        // Don't need increment projectCount since should incremented before calling
+        // this function
         if (newlyCreatedProject == null) {
             return false;
         }
         projectList.add(newlyCreatedProject);
 
         return true;
+    }
+
+    public Project findProject(int projectID) {
+        Project targetProject = projectList.get(projectID - 1);
+        return targetProject;
     }
 
     public Boolean changeProjectTitle(int projectID, String newProjectTitle) {
@@ -61,7 +70,7 @@ public class ProjectDB {
 
         // Retrieve the Project whose title is to be changed
         Project targetProject = projectList.get(projectID - 1);
-        targetProject.changeProjectTitle(newProjectTitle);
+        targetProject.setProjectTitle(newProjectTitle);
 
         return true;
     };
@@ -70,8 +79,8 @@ public class ProjectDB {
         // Create Project List to be returned
         ArrayList<Project> supervisorProjectList = new ArrayList<Project>();
 
-        for (int i = 0; i < projectList.size(); i += 1){
-            if (projectList.get(i).getSupervisorName().equalsIgnoreCase(professorName)) {
+        for (int i = 0; i < projectList.size(); i += 1) {
+            if (projectList.get(i).getStudent().getUserName().equalsIgnoreCase(professorName)) {
                 supervisorProjectList.add(projectList.get(i));
             }
         }
@@ -81,12 +90,21 @@ public class ProjectDB {
 
     public int getProjectIndexInSupervisorProjectList(int projectID, ArrayList<Project> supervisorProjectList) {
         int index = -1;
-        for (int i = 0; i < supervisorProjectList.size(); i += 1){
+        for (int i = 0; i < supervisorProjectList.size(); i += 1) {
             if (supervisorProjectList.get(i).getProjectID() == projectID) {
                 index = i;
             }
         }
         return index;
+    }
+
+    public void viewAvailableProjects() {
+        System.out.println(" ----- List of Available Projects ----- ");
+        for (Project project : projectList) {
+            if (project.getProjectStatus() == ProjectStatus.AVAILABLE) {
+                project.viewProjectDetails();
+            }
+        }
     }
 
     // TODO Add SUpervisors Email somehow
