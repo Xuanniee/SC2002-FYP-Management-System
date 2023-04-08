@@ -57,6 +57,10 @@ public class Student extends User {
         this.deregisteredProjects.add(project);
     }
 
+    public ArrayList<Project> getDeregisteredProjects() {
+        return this.deregisteredProjects;
+    }
+
     public ArrayList<Request> getRequestHistory() {
         return this.studentHistory;
     }

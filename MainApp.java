@@ -64,7 +64,7 @@ public class MainApp {
                 break;
 
             case FACULTY:
-                Supervisor loggedSupervisor = faculty_list.getSupervisor(username);
+                Supervisor loggedSupervisor = faculty_list.findSupervisor(username);
                 do {
                     // Call the Menu for the respective users
                     loggedSupervisor.printMenuOptions();
