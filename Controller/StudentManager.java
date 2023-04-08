@@ -1,63 +1,72 @@
 package Controller;
 
+import java.util.Scanner;
+
 import Entities.*;
 
 public class StudentManager {
 
-    private StudentLoginManager studentLoginManager = new StudentLoginManager();
     private StudentDB studentDB = new StudentDB();
     private ProjectDB projectDB = new ProjectDB();
     private RequestManager requestManager = new RequestManager();
+
+    Scanner scanner = new Scanner(System.in);
+
+    private Student currentStudent;
+
+    public StudentManager(Student student) {
+        this.currentStudent = student;
+    }
 
     public void processStudentChoice(int choice) {
 
         switch (choice) {
             case 1:
                 System.out.println("View Student Profile...");
-                studentDB.viewStudentProfile(getCurrentStudent());
+                studentDB.viewStudentProfile(currentStudent);
                 break;
 
             case 2:
                 System.out.println("View All Projects...");
-                projectDB.viewAvailableProjects();
+                projectDB.viewAvailableProjects(currentStudent);
                 break;
 
             case 3:
                 System.out.println("View Registered Project...");
-                studentDB.viewRegisteredProject(getCurrentStudent());
+                studentDB.viewRegisteredProject(currentStudent);
                 break;
 
             case 4:
                 System.out.println("Request to Register for a Project...");
-                projectDB.viewAvailableProjects();
-                requestManager.studentRegister(getCurrentStudent());
+                projectDB.viewAvailableProjects(currentStudent);
+                requestManager.studentRegister(currentStudent);
                 break;
 
             case 5:
                 System.out.println("Request to Change Title of Registered Project...");
-                if (!getCurrentStudent().getIsAssigned()) {
+                if (!currentStudent.getIsAssigned()) {
                     break;
                 } else {
                     System.out.println("Your registered project: ");
-                    getCurrentStudent().getAssignedProject().viewProjectDetails();
-                    requestManager.changeTitle(getCurrentStudent(), getCurrentStudent().getAssignedProject());
+                    currentStudent.getAssignedProject().printProjectDetails();
+                    requestManager.changeTitle(currentStudent, currentStudent.getAssignedProject());
                 }
                 break;
 
             case 6:
                 System.out.println("Request to Deregister from Registered Project...");
-                if (!getCurrentStudent().getIsAssigned()) {
+                if (!currentStudent.getIsAssigned()) {
                     break;
                 } else {
                     System.out.println("Your registered project: ");
-                    getCurrentStudent().getAssignedProject().viewProjectDetails();
-                    requestManager.studentDeregister(getCurrentStudent());
+                    currentStudent.getAssignedProject().printProjectDetails();
+                    requestManager.studentDeregister(currentStudent);
                 }
                 break;
 
             case 7:
                 System.out.println("View all Request History...");
-                requestManager.viewAvailableProjects(getCurrentStudent());
+                // requestManager.viewAvailableProjects(currentStudent);
                 break;
 
             case 0:
@@ -71,27 +80,30 @@ public class StudentManager {
 
     }
 
-    public boolean checkLoggedin() {
-        if (studentLoginManager.getIsLoggedIn() == true) {
-            System.out.println("");
-            System.out.println(
-                    "You are currently logged in as [" + studentLoginManager.currentStudent.getUserName() + "]");
-            return true;
-        }
-        System.out.println("");
-        return false;
-    }
+    public int displayStudentMenu() {
+        int choice;
 
-    public void triggerLogin() {
-        studentLoginManager.displayLogin();
-    }
+        System.out.println(""); // print empty line
+        System.out.println("+-------------------------------------------------------+");
+        System.out.println("|                   Student Portal                      |");
+        System.out.println("|-------------------------------------------------------|");
+        System.out.println("| 1. View Profile                                       |");
+        System.out.println("| 2. View All Projects                                  |");
+        System.out.println("| 3. View Registered Project                            |");
+        System.out.println("| 4. Request to Register for a Project                  |");
+        System.out.println("| 5. Request to Change Title of Project                 |");
+        System.out.println("| 6. Request to Deregister from Project                 |");
+        System.out.println("| 7. View Request History                               |");
+        System.out.println("|-------------------------------------------------------|");
+        System.out.println("|           Enter 0 to go back to Main Menu             |");
+        System.out.println("+-------------------------------------------------------+");
+        System.out.println(""); // print empty line
 
-    public void triggerLogout() {
-        studentLoginManager.logout();
-    }
+        System.out.print("Please enter your choice: ");
 
-    public Student getCurrentStudent() {
-        return studentLoginManager.getCurrentStudent();
+        choice = scanner.nextInt();
+
+        return choice;
     }
 
 }

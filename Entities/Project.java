@@ -4,19 +4,16 @@ import enums.ProjectStatus;
 
 public class Project {
     protected int projectID;
-    protected String supervisorName;
-    protected String supervisorEmail;
+    // protected String supervisorName;
+    // protected String supervisorEmail;
     protected Supervisor supervisor;
     protected Student student;
     protected String projectTitle;
     protected ProjectStatus projectStatus;
 
-    // Constructors
-    public Project(int projectID, String supervisorName, String supervisorEmail, String projectTitle) {
+    public Project(int projectID, Supervisor supervisor, String projectTitle) {
         this.projectID = projectID;
-        this.supervisorName = supervisorName;
-        this.supervisorEmail = supervisorEmail;
-        // this.supervisor = null;
+        this.supervisor = supervisor;
         this.student = null;
         this.projectTitle = projectTitle;
         this.projectStatus = ProjectStatus.AVAILABLE;
@@ -58,7 +55,8 @@ public class Project {
         this.projectStatus = projectStatus;
     }
 
-    public void viewProjectDetails() {
+    public void printProjectDetails() {
+        System.out.println("ProjectID: " + this.projectID);
         System.out.println("Title of Project: " + this.projectTitle);
         System.out.println("Faculty In-charge's Name: " + this.getSupervisor().getUserName());
         System.out.println("Faculty In-charge's Email: " + this.getSupervisor().getUserEmail());
@@ -66,8 +64,6 @@ public class Project {
             System.out.println("This project is allocated to the following student:");
             System.out.println("Student's Name: " + this.getStudent().getUserName());
             System.out.println("Student's Email: " + this.getStudent().getUserEmail());
-        } else {
-            System.out.println("This project is not yet allocated to any student.");
         }
         System.out.println("");
     }

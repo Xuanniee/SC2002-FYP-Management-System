@@ -7,6 +7,7 @@ import Controller.*;
 
 public class MainApp {
     public static void main(String[] args) {
+
         /* Initialise Database */
         StudentDB student_list = new StudentDB();
         FacultyDB faculty_list = new FacultyDB();
@@ -60,7 +61,12 @@ public class MainApp {
         switch (attemptUserType) {
             case STUDENT:
                 Student loggedStudent = student_list.findStudent(username);
-                loggedStudent.displayStudentMenu();
+                StudentManager studentMgr = new StudentManager(loggedStudent);
+                int choice;
+                do {
+                    choice = studentMgr.displayStudentMenu();
+                    studentMgr.processStudentChoice(choice);
+                } while (choice != 0);
                 break;
 
             case FACULTY:
@@ -95,7 +101,6 @@ public class MainApp {
                 System.out.println("Error!! Should never be Unknown.");
 
         }
-
         scanner.close();
     }
 

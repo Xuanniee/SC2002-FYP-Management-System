@@ -50,13 +50,12 @@ public class RequestDeregisterDB extends Database {
             while (requestLine != null) {
                 requestData = requestLine.split(super.delimiter);
                 studentID = requestData[0];
-                //supervisorID = requestData[1];
                 projectID = Integer.parseInt(requestData[1]);
                 reqStatus = RequestStatus.valueOf(requestData[2]);
 
                 // Add new record to list
                 requestDeregisterList.add(new RequestDeregister(studentDB.findStudent(studentID),
-                         projectDB.findProject(projectID), reqStatus));
+                        projectDB.findProject(projectID), reqStatus));
 
                 requestLine = br.readLine();
             }
@@ -79,7 +78,7 @@ public class RequestDeregisterDB extends Database {
                 int projID = rq.getProjectID();
                 String reqStatus = rq.getRequestStatus().name();
 
-                pw.println(studentID +"\t" + projID + "\t" + reqStatus);
+                pw.println(studentID + "\t" + projID + "\t" + reqStatus);
             }
             pw.close();
         } catch (IOException e) {
@@ -90,5 +89,5 @@ public class RequestDeregisterDB extends Database {
     public void addRequest(RequestDeregister requestDeregister) {
         requestDeregisterList.add(requestDeregister);
     }
-    
+
 }

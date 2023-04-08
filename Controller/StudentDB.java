@@ -14,7 +14,7 @@ import Entities.Project;
 
 public class StudentDB extends Database {
 
-    private String filePath = String.join("", super.directory, "student_list.txt");
+    private String filePath = String.join("", super.directory, "student list.txt");
 
     private File file;
 
@@ -87,15 +87,6 @@ public class StudentDB extends Database {
         }
     }
 
-    public boolean login(String userID, String password) {
-        for (Student student : students) {
-            if (student.getUserID().equalsIgnoreCase(userID) && student.getPassword().equals(password)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public Student findStudent(String userID) {
         // Student targetStudent;
         for (Student student : students) {
@@ -107,11 +98,8 @@ public class StudentDB extends Database {
     }
 
     public void viewStudentProfile(Student currentStudent) {
-        for (Student student : students) {
-            if (student.equals(currentStudent)) {
-                student.printProfile();
-            }
-        }
+        Student targetStudent = findStudent(currentStudent.getUserID());
+        targetStudent.printProfile();
     }
 
     public ArrayList<Student> getStudentList() {
@@ -119,12 +107,15 @@ public class StudentDB extends Database {
     }
 
     public void viewRegisteredProject(Student currentStudent) {
-        for (Student student : students) {
-            if (student.equals(currentStudent)) {
-                Project currentProject = student.getAssignedProject();
-                currentProject.viewProjectDetails();
+        if (!currentStudent.getIsAssigned()) {
+            System.out.println("You have not registered for any projects.");
+        } else {
+            for (Student student : students) {
+                if (student.getUserID() == currentStudent.getUserID()) {
+                    Project currentProject = student.getAssignedProject();
+                    currentProject.printProjectDetails();
+                }
             }
         }
     }
-
 }
