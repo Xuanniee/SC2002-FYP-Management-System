@@ -5,9 +5,9 @@ import java.util.Scanner;
 
 import Controller.*;
 
-public class Supervisor extends User{
+public class Supervisor extends User {
 
-    public Supervisor(String userID, String name, String userEmail){
+    public Supervisor(String userID, String name, String userEmail) {
         super(userID, "password");
         this.userID = userID;
         this.name = name;
@@ -46,7 +46,7 @@ public class Supervisor extends User{
     /**
      * Method to allow User to create a FYP Project
      */
-    public void createProject(ProjectDB projectDB, Scanner scObject){
+    public void createProject(ProjectDB projectDB, Scanner scObject) {
         String projectTitle;
 
         System.out.println("#############     Project Creation     #############");
@@ -58,13 +58,13 @@ public class Supervisor extends User{
         projectDB.updateProjectCount();
 
         // Create new Project
-        Project newlyCreatedProject = new Project(projectDB.getProjectCount(), this.name, this.userEmail, projectTitle);
+        Project newlyCreatedProject = new Project(projectDB.getProjectCount(), this, projectTitle);
         projectDB.addProject(newlyCreatedProject);
 
         System.out.println("Project Initialised.");
     };
-    
-    public void viewOwnProject(ArrayList<Project> supervisorProjectList){
+
+    public void viewOwnProject(ArrayList<Project> supervisorProjectList) {
         if (supervisorProjectList.size() == 0) {
             System.out.println("You have not yet created any projects.");
         }
@@ -82,9 +82,9 @@ public class Supervisor extends User{
     /**
      * Function to change Project Title. Called after User elects to change Title
      */
-    public void modifyTitle(ProjectDB projectDB, Scanner scObject){
+    public void modifyTitle(ProjectDB projectDB, Scanner scObject) {
         // Retrieve the list of projects owned by this particular supervisor
-        ArrayList<Project> supervisorProjectList = projectDB.retrieveProfessorProjects(this.name); 
+        ArrayList<Project> supervisorProjectList = projectDB.retrieveProfessorProjects(this.name);
         // Scanner scObject = new Scanner(System.in);
         int targetProjectID;
         int userInput;
@@ -108,8 +108,9 @@ public class Supervisor extends User{
 
             // Verify with User for Project Deletion
             projectIndex = projectDB.getProjectIndexInSupervisorProjectList(targetProjectID, supervisorProjectList);
-            System.out.println("Project \"" + supervisorProjectList.get(projectIndex).projectTitle + "\" will be changed to \"" + newTitle + "\"");
-        
+            System.out.println("Project \"" + supervisorProjectList.get(projectIndex).projectTitle
+                    + "\" will be changed to \"" + newTitle + "\"");
+
             System.out.println("Press 1 to Confirm and 2 to Quit.");
             userInput = scObject.nextInt();
 
@@ -117,11 +118,9 @@ public class Supervisor extends User{
             if (userInput == 1) {
                 projectDB.changeProjectTitle(targetProjectID, newTitle);
                 break;
-            }
-            else if (userInput == 2) {
+            } else if (userInput == 2) {
                 break;
-            }
-            else {
+            } else {
                 System.out.println("Invalid Input. Please key in 1 or 2.");
             }
         } while (true);
@@ -129,7 +128,7 @@ public class Supervisor extends User{
     };
 
     public Boolean validateProjectID(ArrayList<Project> supervisorProjectList, int unknownProjectId) {
-        for (int i = 0; i < supervisorProjectList.size(); i += 1){
+        for (int i = 0; i < supervisorProjectList.size(); i += 1) {
             if (supervisorProjectList.get(i).projectID == unknownProjectId) {
                 return true;
             }
@@ -137,7 +136,12 @@ public class Supervisor extends User{
         return false;
     }
 
-    public void viewPendingRequests(){};
-    public void viewCreatedProjects(){};
-    public void requestTransfer(){};
+    public void viewPendingRequests() {
+    };
+
+    public void viewCreatedProjects() {
+    };
+
+    public void requestTransfer() {
+    };
 }

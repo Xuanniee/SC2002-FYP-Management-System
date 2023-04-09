@@ -1,7 +1,6 @@
 package Entities;
 
 import java.util.ArrayList;
-import java.util.Scanner;
 
 import enums.*;
 
@@ -57,38 +56,12 @@ public class Student extends User {
         this.deregisteredProjects.add(project);
     }
 
-    public ArrayList<Request> getRequestHistory() {
-        return this.studentHistory;
+    public ArrayList<Project> getDeregisteredProjects() {
+        return this.deregisteredProjects;
     }
 
-    public void displayStudentMenu() {
-
-        int choice;
-        Scanner sc = new Scanner(System.in);
-
-        do {
-            System.out.println(""); // print empty line
-            System.out.println("+-------------------------------------------------------+");
-            System.out.println("|                   Student Portal                      |");
-            System.out.println("|-------------------------------------------------------|");
-            System.out.println("| 1. View Profile                                       |");
-            System.out.println("| 2. View All Projects                                  |");
-            System.out.println("| 3. View Registered Project                            |");
-            System.out.println("| 4. Request to Register for a Project                  |");
-            System.out.println("| 5. Request to Change Title of Project                 |");
-            System.out.println("| 6. Request to Deregister from Project                 |");
-            System.out.println("| 7. View Request History                               |");
-            System.out.println("|-------------------------------------------------------|");
-            System.out.println("|           Enter 0 to go back to Main Menu             |");
-            System.out.println("+-------------------------------------------------------+");
-            System.out.println(""); // print empty line
-            System.out.print("Choice chosen is: ");
-
-            choice = sc.nextInt();
-
-        } while (choice != 0);
-
-        sc.close();
+    public ArrayList<Request> getRequestHistory() {
+        return this.studentHistory;
     }
 
 }
