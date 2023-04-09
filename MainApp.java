@@ -4,6 +4,7 @@ import java.io.Console;
 import enums.*;
 import Entities.*;
 import Controller.*;
+import Controller.SupervisorManager;
 
 public class mainApp{
     public static void main(String[] args){
@@ -64,35 +65,15 @@ public class mainApp{
                 break;
 
             case FACULTY:
-                Supervisor loggedSupervisor = faculty_list.getSupervisor(username);
-                do {
-                    // Call the Menu for the respective users
-                    loggedSupervisor.printMenuOptions();
-                    userInput = scanner.nextInt();
-
-                    switch(userInput) {
-                        case 1:
-                            loggedSupervisor.createProject(project_list, scanner);
-                            break;
-                        case 2:
-                            loggedSupervisor.viewOwnProject(project_list.retrieveProfessorProjects(loggedSupervisor.getSupervisorName()));
-                            break;
-                        case 3:
-                            loggedSupervisor.modifyTitle(project_list, scanner);
-                            break;
-                        case 7:
-                            break;
-                        default:
-                            System.out.println("Error!!");
-                    }
-                } while(userInput != 7);
-                
+                SupervisorManager supervisorManager = new SupervisorManager(username, faculty_list);
+                supervisorManager.processSupervisorChoice(scanner, project_list);
+                break;
 
             case FYPCOORDINATOR:
                 break;
 
             case UNKNOWN:
-                System.out.println("Error!! Should never be Unknown.");
+                System.out.println("Error!! Should never be unknown.");
 
         }
 
