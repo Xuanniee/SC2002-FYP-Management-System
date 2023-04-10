@@ -61,7 +61,7 @@ public class MainApp {
         switch (attemptUserType) {
             case STUDENT:
                 Student loggedStudent = student_list.findStudent(username);
-                StudentManager studentMgr = new StudentManager(loggedStudent);
+                StudentManager studentMgr = new StudentManager(loggedStudent, student_list, project_list);
                 do {
                     userInput = studentMgr.displayStudentMenu();
                     studentMgr.processStudentChoice(userInput);

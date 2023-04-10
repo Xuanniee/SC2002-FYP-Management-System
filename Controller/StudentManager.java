@@ -6,16 +6,18 @@ import Entities.*;
 
 public class StudentManager {
 
-    private StudentDB studentDB = new StudentDB();
-    private ProjectDB projectDB = new ProjectDB();
+    private StudentDB studentDB;
+    private ProjectDB projectDB;
     private RequestManager requestManager = new RequestManager();
 
     Scanner scanner = new Scanner(System.in);
 
     private Student currentStudent;
 
-    public StudentManager(Student student) {
+    public StudentManager(Student student, StudentDB studentDB, ProjectDB projectDB) {
         this.currentStudent = student;
+        this.studentDB = studentDB;
+        this.projectDB = projectDB;
     }
 
     public void processStudentChoice(int choice) {

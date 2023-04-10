@@ -68,17 +68,17 @@ public class FacultyDB {
         int counter = 1;
         System.out.println("############# List of Created Projects #############");
         for (int i = 0; i < supervisorProjectList.size(); i += 1) {
-            int projectId = supervisorProjectList.get(i).projectID;
-            String projectName = supervisorProjectList.get(i).projectTitle;
+            int projectId = supervisorProjectList.get(i).getProjectID();
+            String projectName = supervisorProjectList.get(i).getProjectTitle();
             System.out.println(counter + " | Project ID: " + projectId + " | Project Title: " + projectName);
             counter += 1;
         }
         System.out.println("----------------------------------------------------");
     };
 
-    public void modifyTitle(ProjectDB projectDB) {
+    public void modifyTitle(ProjectDB projectDB, Supervisor managedSupervisor) {
         // Retrieve the list of projects owned by this particular supervisor
-        ArrayList<Project> supervisorProjectList = projectDB.retrieveProfessorProjects(this.name);
+        ArrayList<Project> supervisorProjectList = projectDB.retrieveProfessorProjects(managedSupervisor.getSupervisorName());
         Scanner scObject = new Scanner(System.in);
         int targetProjectID;
         int userInput;
@@ -102,7 +102,7 @@ public class FacultyDB {
 
             // Verify with User for Project Deletion
             projectIndex = projectDB.getProjectIndexInSupervisorProjectList(targetProjectID, supervisorProjectList);
-            System.out.println("Project \"" + supervisorProjectList.get(projectIndex).projectTitle
+            System.out.println("Project \"" + supervisorProjectList.get(projectIndex).getProjectTitle()
                     + "\" will be changed to \"" + newTitle + "\"");
 
             System.out.println("Press 1 to Confirm and 2 to Quit.");
@@ -119,6 +119,15 @@ public class FacultyDB {
             }
         } while (true);
 
+    }
+
+    public Boolean validateProjectID(ArrayList<Project> supervisorProjectList, int unknownProjectId) {
+        for (int i = 0; i < supervisorProjectList.size(); i += 1) {
+            if (supervisorProjectList.get(i).getProjectID() == unknownProjectId) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

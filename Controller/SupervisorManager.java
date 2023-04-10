@@ -38,7 +38,7 @@ public class SupervisorManager {
                 facultyDB.viewOwnProject(projectDB.retrieveProfessorProjects(managedSupervisor.getSupervisorName()));
                 break;
             case 3:
-                managedSupervisor.modifyTitle(projectDB, scObject);
+                facultyDB.modifyTitle(projectDB,managedSupervisor);
                 break;
             case 7:
                 break;

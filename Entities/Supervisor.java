@@ -141,14 +141,14 @@ public class Supervisor extends User {
 
     };*/
 
-    public Boolean validateProjectID(ArrayList<Project> supervisorProjectList, int unknownProjectId) {
+    /*public Boolean validateProjectID(ArrayList<Project> supervisorProjectList, int unknownProjectId) {
         for (int i = 0; i < supervisorProjectList.size(); i += 1) {
             if (supervisorProjectList.get(i).projectID == unknownProjectId) {
                 return true;
             }
         }
         return false;
-    }
+    }*/
 
     public void viewPendingRequests() {
     };
