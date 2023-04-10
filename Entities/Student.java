@@ -20,7 +20,7 @@ public class Student extends User {
      * @param userEmail
      */
     public Student(String userID, String userName, String userEmail) {
-        super(userID, "password");
+        super(userID, userName, userEmail);
         this.project = null;
         this.isAssigned = false;
         this.studentHistory = new ArrayList<Request>();

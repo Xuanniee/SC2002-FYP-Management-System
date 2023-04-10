@@ -10,6 +10,7 @@ public class RequestManager {
     private RequestChangeTitleDB requestChangeTitleDB = new RequestChangeTitleDB();
     private RequestRegisterDB requestRegisterDB = new RequestRegisterDB();
     private RequestDeregisterDB requestDeregisterDB = new RequestDeregisterDB();
+    private RequestTransferDB requestTransferDB = new RequestTransferDB();
 
     Scanner sc = new Scanner(System.in);
 
@@ -38,6 +39,13 @@ public class RequestManager {
         } else {
             System.out.print("Error - You are not assigned to this project!");
         }
+    }
+
+    public void getRequestHistory(User user) {
+        requestChangeTitleDB.printHistory(user);
+        requestDeregisterDB.printHistory(user);
+        requestRegisterDB.printHistory(user);
+        requestTransferDB.printHistory(user);
     }
 
 }

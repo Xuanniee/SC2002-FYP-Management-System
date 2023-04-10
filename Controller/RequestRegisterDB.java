@@ -3,7 +3,9 @@ package Controller;
 import java.util.ArrayList;
 
 import Entities.RequestRegister;
+import Entities.User;
 import enums.RequestStatus;
+import enums.UserType;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -78,7 +80,7 @@ public class RequestRegisterDB extends Database {
             for (RequestRegister rq : requestRegisterList) {
                 String studentID = rq.getStudent().getUserID();
                 String supervisorID = rq.getSupervisor().getUserID();
-                int projID = rq.getProjectID();
+                int projID = rq.getProject().getProjectID();
                 String reqStatus = rq.getRequestStatus().name();
 
                 pw.println(studentID + "\t" + supervisorID + "\t" + projID + "\t" + reqStatus);
@@ -91,6 +93,63 @@ public class RequestRegisterDB extends Database {
 
     public void addRequest(RequestRegister requestRegister) {
         requestRegisterList.add(requestRegister);
+    }
+
+    public Boolean findStudent(User student) {
+        for (RequestRegister req : requestRegisterList) {
+            if (req.getStudent() == student) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Boolean findSupervisor(User supervisor) {
+        for (RequestRegister req : requestRegisterList) {
+            if (req.getSupervisor() == supervisor) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void printHistory(User user) {
+
+        if (user.getUserType() == UserType.STUDENT) {
+            if (findStudent(user)) {
+                System.out.println("Showing all Registration Requests ... ");
+                for (RequestRegister req : requestRegisterList) {
+                    if (req.getStudent() == user) {
+                        System.out.printf("Registering for Project(ID/Title): %s/%s", req.getProject().getProjectID(),
+                                req.getProject().getProjectTitle());
+                        System.out.println("Requestee: " + req.getSupervisor().getSupervisorName());
+                        System.out.println("Request Status: " + req.getRequestStatus().name());
+                        System.out.println("");
+                    }
+                }
+            } else {
+                System.out.println("No requests to Register");
+            }
+        }
+
+        else if (user.getUserType() == UserType.FACULTY) {
+            if (findSupervisor(user)) {
+                System.out.println("Showing all Change Title Requests ... ");
+                for (RequestRegister req : requestRegisterList) {
+                    if (req.getSupervisor() == user) {
+                        System.out.println("Requester: " + req.getStudent().getUserName());
+                        System.out.printf("Registering for Project(ID/Title): %s/%s", req.getProject().getProjectID(),
+                                req.getProject().getProjectTitle());
+                        System.out.println("Request Status: " + req.getRequestStatus().name());
+                        System.out.println("");
+                    }
+                }
+            } else {
+                System.out.println("No requests to Change Title from Students");
+            }
+
+        }
+
     }
 
 }
