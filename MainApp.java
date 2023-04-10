@@ -62,37 +62,20 @@ public class MainApp {
             case STUDENT:
                 Student loggedStudent = student_list.findStudent(username);
                 StudentManager studentMgr = new StudentManager(loggedStudent);
-                int choice;
                 do {
-                    choice = studentMgr.displayStudentMenu();
-                    studentMgr.processStudentChoice(choice);
-                } while (choice != 0);
+                    userInput = studentMgr.displayStudentMenu();
+                    studentMgr.processStudentChoice(userInput);
+                } while (userInput != 0);
                 break;
 
             case FACULTY:
                 Supervisor loggedSupervisor = faculty_list.findSupervisor(username);
+                SupervisorManager superMgr = new SupervisorManager(loggedSupervisor, faculty_list, project_list);
                 do {
-                    // Call the Menu for the respective users
-                    loggedSupervisor.printMenuOptions();
-                    userInput = scanner.nextInt();
-
-                    switch (userInput) {
-                        case 1:
-                            loggedSupervisor.createProject(project_list, scanner);
-                            break;
-                        case 2:
-                            loggedSupervisor.viewOwnProject(
-                                    project_list.retrieveProfessorProjects(loggedSupervisor.getSupervisorName()));
-                            break;
-                        case 3:
-                            loggedSupervisor.modifyTitle(project_list, scanner);
-                            break;
-                        case 7:
-                            break;
-                        default:
-                            System.out.println("Error!!");
-                    }
-                } while (userInput != 7);
+                    userInput = superMgr.displayFacultyMenu();
+                    superMgr.processSupervisorChoice(userInput);
+                } while (userInput != 0);
+                break;
 
             case FYPCOORDINATOR:
                 break;

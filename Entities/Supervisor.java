@@ -29,8 +29,7 @@ public class Supervisor extends User {
     /**
      * Displays all the options of the system. Abstract so can be overridden
      */
-    @Override
-    public void printMenuOptions() {
+    /*public void printMenuOptions() {
         System.out.println("************ Welcome to FYPMS " + this.name + " *************");
         System.out.println("************ Supervisor Options: *************");
         System.out.println(" 1. Create a Project.");
@@ -41,12 +40,12 @@ public class Supervisor extends User {
         System.out.println(" 6. Request the transfer of a student.");
         System.out.println(" 7. Log out.");
         System.out.println();
-    }
+    }*/
 
     /**
      * Method to allow User to create a FYP Project
      */
-    public void createProject(ProjectDB projectDB, Scanner scObject) {
+    /*public void createProject(ProjectDB projectDB, Scanner scObject) {
         String projectTitle;
 
         System.out.println("#############     Project Creation     #############");
@@ -62,9 +61,9 @@ public class Supervisor extends User {
         projectDB.addProject(newlyCreatedProject);
 
         System.out.println("Project Initialised.");
-    };
+    };*/
 
-    public void viewOwnProject(ArrayList<Project> supervisorProjectList) {
+    /*public void viewOwnProject(ArrayList<Project> supervisorProjectList) {
         if (supervisorProjectList.size() == 0) {
             System.out.println("You have not yet created any projects.");
         }
@@ -77,12 +76,12 @@ public class Supervisor extends User {
             counter += 1;
         }
         System.out.println("----------------------------------------------------");
-    };
+    };*/
 
     /**
      * Function to change Project Title. Called after User elects to change Title
      */
-    public void modifyTitle(ProjectDB projectDB, Scanner scObject) {
+    /*public void modifyTitle(ProjectDB projectDB, Scanner scObject) {
         // Retrieve the list of projects owned by this particular supervisor
         ArrayList<Project> supervisorProjectList = projectDB.retrieveProfessorProjects(this.name);
         // Scanner scObject = new Scanner(System.in);
@@ -125,7 +124,7 @@ public class Supervisor extends User {
             }
         } while (true);
 
-    };
+    };*/
 
     public Boolean validateProjectID(ArrayList<Project> supervisorProjectList, int unknownProjectId) {
         for (int i = 0; i < supervisorProjectList.size(); i += 1) {
