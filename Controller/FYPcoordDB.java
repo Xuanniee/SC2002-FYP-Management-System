@@ -14,8 +14,13 @@ public class FYPcoordDB {
     public FYPcoordDB() {
         String fileName = "./Data/FYP coordinator.txt";
         String line;
+        Boolean isFirstLine = true;
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             while ((line = br.readLine()) != null) {
+                if (isFirstLine) {
+                    isFirstLine = false;
+                    continue; // skip the first line
+                }
                 String[] values = line.split("\t"); // split the line by tabs
 
                 int indexUserId = values[1].indexOf("@");

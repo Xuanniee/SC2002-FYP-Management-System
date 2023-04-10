@@ -166,7 +166,6 @@ public class ProjectDB extends Database {
     }
 
     public void viewAvailableProjects(Student student) {
-
         System.out.println(" ----- List of Available Projects ----- ");
 
         // Do not print projects that student is deregistered from
@@ -193,6 +192,65 @@ public class ProjectDB extends Database {
 
     public ArrayList<Project> getAllProjects() {
         return projectList;
+    }
+
+    public void viewAllProjectsFYPCoord() {
+        Boolean available = false;
+        Boolean allocated = false;
+        Boolean reserved = false;
+        Boolean unavailable = false;
+
+        System.out.println();
+        System.out.println(" ----- List of Available Projects ----- ");
+        for (Project project : projectList) {
+            if (project.getProjectStatus() == ProjectStatus.AVAILABLE) {
+                project.printProjectDetails();
+                available = true;
+            }
+        }
+        if (!available) {
+            System.out.println("There are currently no available project(s).");
+            System.out.println();
+        }
+
+        System.out.println();
+        System.out.println(" ----- List of Allocated Projects ----- ");
+        for (Project project : projectList) {
+            if (project.getProjectStatus() == ProjectStatus.ALLOCATED) {
+                project.printProjectDetails();
+                allocated = true;
+            }
+        }
+        if (!allocated) {
+            System.out.println("There are currently no allocated project(s).");
+            System.out.println();
+        }
+
+        System.out.println();
+        System.out.println(" ----- List of Reserved Projects ----- ");
+        for (Project project : projectList) {
+            if (project.getProjectStatus() == ProjectStatus.RESERVED) {
+                project.printProjectDetails();
+                reserved = true;
+            }
+        }
+        if (!reserved) {
+            System.out.println("There are currently no reserved project(s).");
+            System.out.println();
+        }
+
+        System.out.println();
+        System.out.println(" ----- List of Unavailable Projects ----- ");
+        for (Project project : projectList) {
+            if (project.getProjectStatus() == ProjectStatus.UNAVAILABLE) {
+                project.printProjectDetails();
+                unavailable = true;
+            }
+        }
+        if (!unavailable) {
+            System.out.println("There are currently no unavailable project(s).");
+            System.out.println();
+        }
     }
 
     // TODO Add SUpervisors Email somehow

@@ -6,7 +6,9 @@ import Entities.Project;
 import Entities.Student;
 import Entities.RequestRegister;
 import enums.ProjectStatus;
+import Entities.User;
 import enums.RequestStatus;
+import enums.UserType;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -81,7 +83,7 @@ public class RequestRegisterDB extends Database {
             for (RequestRegister rq : requestRegisterList) {
                 String studentID = rq.getStudent().getUserID();
                 String supervisorID = rq.getSupervisor().getUserID();
-                int projID = rq.getProjectID();
+                int projID = rq.getProject().getProjectID();
                 String reqStatus = rq.getRequestStatus().name();
 
                 pw.println(studentID + "\t" + supervisorID + "\t" + projID + "\t" + reqStatus);
@@ -96,15 +98,23 @@ public class RequestRegisterDB extends Database {
         requestRegisterList.add(requestRegister);
     }
 
-    // ArrayList<RequestRegister>
-    public void viewAllRegisterRequestFYPCoord() {
+    public int viewAllRegisterRequestFYPCoord() {
         System.out.println("Loading all pending requests to register for a project...");
         for (int i = 0; i < requestRegisterList.size(); i += 1) {
             Project currentProject = requestRegisterList.get(i).getProject();
             System.out.println((i+1) + ". " + currentProject.getProjectTitle() + "  requested by " + requestRegisterList.get(i).getStudent());
         }
-        System.out.println("Enter 0 to return to the previous menu.");
+        System.out.println();
+
+        if (requestRegisterList.size() == 0) {
+            System.out.println("Pending Register Requests: 0");
+            System.out.println("Enter 0 to return to the previous menu.");
+            return 1;
+        }
+
+        System.out.println();
         System.out.println();       // Prints Empty Line
+        return 0;
     }
 
     public RequestRegister viewRegisterRequestDetailedFYPCoord(int requestChoice) {
@@ -116,7 +126,7 @@ public class RequestRegisterDB extends Database {
         System.out.println("|                                         Register Request Approval                                          |");
         System.out.println("|------------------------------------------------------------------------------------------------------------|");
         targetRequest.getProject().printProjectDetails();
-        System.out.println("Project Status: ");
+        System.out.println("Project Status        : " + targetRequest.getProject().getProjectStatus());
         System.out.println("Student who made request: " + targetRequest.getStudent());
         System.out.println("|------------------------------------------------------------------------------------------------------------|");
         System.out.println("Select 1 to approve the request, and 0 to reject the request and return to the previous menu.");
@@ -143,6 +153,62 @@ public class RequestRegisterDB extends Database {
         System.out.println("Project " + approvedProject.getProjectTitle() + " has been successfully allocated to " + approvedStudent.getStudentName());
 
         return true;
+    }
+
+    public Boolean findStudent(User student) {
+        for (RequestRegister req : requestRegisterList) {
+            if (req.getStudent() == student) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Boolean findSupervisor(User supervisor) {
+        for (RequestRegister req : requestRegisterList) {
+            if (req.getSupervisor() == supervisor) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void printHistory(User user) {
+
+        if (user.getUserType() == UserType.STUDENT) {
+            if (findStudent(user)) {
+                System.out.println("Showing all Registration Requests ... ");
+                for (RequestRegister req : requestRegisterList) {
+                    if (req.getStudent() == user) {
+                        System.out.printf("Registering for Project(ID/Title): %s/%s", req.getProject().getProjectID(),
+                                req.getProject().getProjectTitle());
+                        System.out.println("Requestee: " + req.getSupervisor().getSupervisorName());
+                        System.out.println("Request Status: " + req.getRequestStatus().name());
+                        System.out.println("");
+                    }
+                }
+            } else {
+                System.out.println("No requests to Register");
+            }
+        }
+
+        else if (user.getUserType() == UserType.FACULTY) {
+            if (findSupervisor(user)) {
+                System.out.println("Showing all Change Title Requests ... ");
+                for (RequestRegister req : requestRegisterList) {
+                    if (req.getSupervisor() == user) {
+                        System.out.println("Requester: " + req.getStudent().getUserName());
+                        System.out.printf("Registering for Project(ID/Title): %s/%s", req.getProject().getProjectID(),
+                                req.getProject().getProjectTitle());
+                        System.out.println("Request Status: " + req.getRequestStatus().name());
+                        System.out.println("");
+                    }
+                }
+            } else {
+                System.out.println("No requests to Change Title from Students");
+            }
+
+        }
 
     }
 

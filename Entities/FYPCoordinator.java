@@ -1,7 +1,5 @@
 package Entities;
 
-
-
 public class FYPCoordinator extends User{
     /**
      * Constructor for FYP Coordinator
@@ -11,7 +9,7 @@ public class FYPCoordinator extends User{
      */
     public FYPCoordinator(String userID, String name, String userEmail) {
         super(userID, "password");
-        this.name = name;
+        this.userName = name;
         this.userEmail = userEmail;
     }
 
@@ -29,14 +27,14 @@ public class FYPCoordinator extends User{
     }
 
     public String getFYPCoordName() {
-        return this.name;
+        return this.userName;
     }
 
     public Boolean setFYPCoordName(String newName) {
         if (newName.isEmpty()) {
             return false;
         }
-        this.name = newName;
+        this.userName = newName;
         return true;
     }
 

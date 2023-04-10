@@ -42,11 +42,8 @@ public class RequestRegister extends Request {
         return this.supervisor;
     }
 
-    public int getProjectID() {
-        return this.project.getProjectID();
-    }
-
     public Project getProject() {
         return this.project;
     }
+
 }

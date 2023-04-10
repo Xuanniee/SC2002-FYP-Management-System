@@ -4,5 +4,6 @@ public enum RequestType {
     REGISTER,
     CHANGETITLE,
     DEREGISTER,
-    TRANSFER
+    TRANSFER,
+    UNKNOWN
 }
