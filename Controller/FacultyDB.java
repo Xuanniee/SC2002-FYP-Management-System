@@ -25,8 +25,6 @@ public class FacultyDB {
                     continue; // skip the first line
                 }
                 String[] values = line.split("\t"); // split the line by tabs
-                // System.out.println(values[0]);
-                // System.out.println(values[1]);
                 int index = values[1].indexOf('@');
                 // System.out.println(index);
                 supervisors.add(new Supervisor(values[1].substring(0, index), values[0], values[1]));

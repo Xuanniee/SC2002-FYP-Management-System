@@ -6,13 +6,57 @@ import java.util.Scanner;
 import Controller.*;
 
 public class Supervisor extends User {
-
+    private ArrayList<Project> supervisingProjectList;
     private int numProjects = 0;
     private Boolean isFull = false;
 
     public Supervisor(String userID, String userName, String userEmail) {
         super(userID, userName, "password");
         this.userEmail = userEmail;
+    }
+
+    public ArrayList<Project> getSupervisingProjectList() {
+        return supervisingProjectList;
+    }
+
+    /**
+     * Removes the Project from the Replaced Supervisor's Project List
+     * @param oldProject
+     * @return
+     */
+    public Boolean removeSupervisingProjectList(Project oldProject) {
+        if (oldProject == null) {
+            return false;
+        }
+
+        // Get index of Object to be removed
+        int indexRemovedProject = supervisingProjectList.indexOf(oldProject);
+        // Remove the Project and Update the list
+        supervisingProjectList.remove(indexRemovedProject);
+        numProjects -= 1;
+
+        return true;
+    }
+
+    /**
+     * Updates the Replacement Supervisor with the Project. Number of Projects is unaffected
+     * @param oldProject
+     * @param replacementProject
+     * @return
+     */
+    public Boolean setSupervisingProjectList(Project replacementProject) {
+        if (replacementProject == null) {
+            return false;
+        }
+        else if (numProjects == 2) {
+            System.out.println("Supervisor " + this.userName + " is already supervising two FYP Projects.");
+            return false;
+        }
+
+        supervisingProjectList.add(replacementProject);
+        numProjects += 1;
+
+        return true;
     }
 
     public String getSupervisorID() {

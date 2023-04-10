@@ -67,4 +67,12 @@ public class Project {
         }
         System.out.println("");
     }
+
+    public Boolean deregisterStudent() {
+        System.out.println("Student " + this.student.userName + " has been deregistered from the Project " + this.projectID);
+        this.student = null;
+        this.projectStatus = ProjectStatus.AVAILABLE;
+
+        return true;
+    }
 }

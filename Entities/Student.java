@@ -25,10 +25,15 @@ public class Student extends User {
         this.isAssigned = false;
         this.studentHistory = new ArrayList<Request>();
         this.deregisteredProjects = new ArrayList<Project>();
+        this.password = "password";
     }
 
     public UserType getUserType() {
         return Student.userType;
+    }
+
+    public String getStudentName() {
+        return this.userName;
     }
 
     public void setAssignedProject(Project project) {
@@ -62,6 +67,20 @@ public class Student extends User {
 
     public ArrayList<Request> getRequestHistory() {
         return this.studentHistory;
+    }
+
+    public Boolean deregisterProject() {
+        if (this.isAssigned == false) {
+            System.out.println("Student " + this.userName + " does not have a project assigned to them.");
+            return false;
+        }        
+
+        // Update Students' Particulars
+        this.isAssigned = false;
+        addDeregisteredProjects(this.project);
+        this.project = null;
+
+        return true;
     }
 
 }

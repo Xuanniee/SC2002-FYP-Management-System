@@ -19,8 +19,8 @@ public class SupervisorManager {
 
     /*public SupervisorManager(String supervisorUserID, FacultyDB facultyDB) {
         // Determine the Managed Supervisor
-        this.managedSupervisor = facultyDB.getSupervisor(supervisorUserID);
-    };*/
+        this.managedSupervisor = facultyDB.findSupervisor(supervisorUserID);
+    };
 
     /**
      * Function that allows Supervisor to interface with the Menu

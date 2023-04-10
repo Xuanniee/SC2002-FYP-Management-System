@@ -2,7 +2,10 @@ package Controller;
 
 import java.util.ArrayList;
 
+import Entities.Project;
+import Entities.Student;
 import Entities.RequestRegister;
+import enums.ProjectStatus;
 import Entities.User;
 import enums.RequestStatus;
 import enums.UserType;
@@ -93,6 +96,63 @@ public class RequestRegisterDB extends Database {
 
     public void addRequest(RequestRegister requestRegister) {
         requestRegisterList.add(requestRegister);
+    }
+
+    public int viewAllRegisterRequestFYPCoord() {
+        System.out.println("Loading all pending requests to register for a project...");
+        for (int i = 0; i < requestRegisterList.size(); i += 1) {
+            Project currentProject = requestRegisterList.get(i).getProject();
+            System.out.println((i+1) + ". " + currentProject.getProjectTitle() + "  requested by " + requestRegisterList.get(i).getStudent());
+        }
+        System.out.println();
+
+        if (requestRegisterList.size() == 0) {
+            System.out.println("Pending Register Requests: 0");
+            System.out.println("Enter 0 to return to the previous menu.");
+            return 1;
+        }
+
+        System.out.println();
+        System.out.println();       // Prints Empty Line
+        return 0;
+    }
+
+    public RequestRegister viewRegisterRequestDetailedFYPCoord(int requestChoice) {
+        int targetRequestIndex = requestChoice - 1;
+        RequestRegister targetRequest = requestRegisterList.get(targetRequestIndex);
+        System.out.println("Loading selected request...");
+        System.out.println();
+        System.out.println("+------------------------------------------------------------------------------------------------------------+");
+        System.out.println("|                                         Register Request Approval                                          |");
+        System.out.println("|------------------------------------------------------------------------------------------------------------|");
+        targetRequest.getProject().printProjectDetails();
+        System.out.println("Project Status        : " + targetRequest.getProject().getProjectStatus());
+        System.out.println("Student who made request: " + targetRequest.getStudent());
+        System.out.println("|------------------------------------------------------------------------------------------------------------|");
+        System.out.println("Select 1 to approve the request, and 0 to reject the request and return to the previous menu.");
+        System.out.println();
+
+        return targetRequest;
+    }
+
+    public Boolean approveRegisterRequestFYPCoord(RequestRegister approvedRequest) {
+        if (approvedRequest == null) {
+            return false;
+        }
+
+        Project approvedProject = approvedRequest.getProject();
+        Student approvedStudent = approvedProject.getStudent();
+        // Set Project Status
+        approvedProject.setProjectStatus(ProjectStatus.ALLOCATED);
+        // Set Student to Project
+        approvedProject.setStudent(approvedStudent);
+        approvedStudent.setAssignedProject(approvedProject);
+
+        // Remove Request from Database
+        requestRegisterList.remove(requestRegisterList.indexOf(approvedRequest));
+        System.out.println("Project " + approvedProject.getProjectTitle() + " has been successfully allocated to " + approvedStudent.getStudentName());
+
+        return true;
     }
 
     public Boolean findStudent(User student) {
