@@ -1,27 +1,27 @@
 package Entities;
 
-public abstract class Request {
-    /**
-     * Types of Request
-     */
-    enum RequestType {
-        REGISTER, CHANGETITLE, DEREGISTER, TRANSFER
-    }
+import enums.RequestType;
+import enums.RequestStatus;
 
-    /**
-     * Types of Request Status
-     */
-    enum RequestStatus {
-        PENDING, APPROVED, REJECTED
-    }
+public abstract class Request {
 
     private RequestStatus requestStatus;
+    private RequestType requestType;
 
-    public Request() {
+    /**
+     * Constructor 1
+     */
+    public Request(RequestType requestType) {
+        this.requestType = requestType;
+        this.requestStatus = RequestStatus.PENDING;
     }
 
-    public Request(RequestType requestType) {
-        this.requestStatus = RequestStatus.PENDING;
+    /**
+     * Constructor 2
+     */
+    public Request(RequestType requestType, RequestStatus requestStatus) {
+        this.requestType = requestType;
+        this.requestStatus = requestStatus;
     }
 
     public RequestStatus getRequestStatus() {
@@ -30,6 +30,10 @@ public abstract class Request {
 
     public void setRequestStatus(RequestStatus requestStatus) {
         this.requestStatus = requestStatus;
+    }
+
+    public RequestType getRequestType() {
+        return this.requestType;
     }
 
     public abstract void approveRequest(Boolean approve);

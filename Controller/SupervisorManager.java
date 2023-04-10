@@ -10,7 +10,7 @@ public class SupervisorManager {
     // Constructor
     public SupervisorManager(String supervisorUserID, FacultyDB facultyDB) {
         // Determine the Managed Supervisor
-        this.managedSupervisor = facultyDB.getSupervisor(supervisorUserID);
+        this.managedSupervisor = facultyDB.findSupervisor(supervisorUserID);
     };
 
     /**

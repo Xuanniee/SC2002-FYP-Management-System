@@ -37,7 +37,7 @@ public class User {
     }
 
     public String getUserName() {
-        return this.userID;
+        return this.name;
     }
 
     public void setUserName(String userName) {
@@ -57,11 +57,13 @@ public class User {
         return this.password.equals(inputPassword);
     }
 
-    public UserType authenticateUser(String userID, String password, ArrayList<Supervisor> supervisorList, ArrayList<Student> studentList) {
+    public UserType authenticateUser(String userID, String password, ArrayList<Supervisor> supervisorList,
+            ArrayList<Student> studentList) {
         // Determine if the User is a Student, Professor, or FYP Coord
-        for (int i = 0; i < supervisorList.size(); i += 1){
+        for (int i = 0; i < supervisorList.size(); i += 1) {
             // If User is Found
-            if (supervisorList.get(i).getUserID().equalsIgnoreCase(userID) && supervisorList.get(i).getPassword().equalsIgnoreCase(password)) {
+            if (supervisorList.get(i).getUserID().equalsIgnoreCase(userID)
+                    && supervisorList.get(i).getPassword().equalsIgnoreCase(password)) {
                 System.out.println(supervisorList.get(i).getUserID());
                 System.out.println(supervisorList.get(i).getPassword());
                 this.userType = UserType.FACULTY;
@@ -71,7 +73,8 @@ public class User {
         if (this.userType == UserType.UNKNOWN) {
             // If not Faculty, then check if Student
             for (int i = 0; i < studentList.size(); i += 1) {
-                if (studentList.get(i).getUserID().equalsIgnoreCase(userID) && studentList.get(i).getPassword().equalsIgnoreCase(password)) {
+                if (studentList.get(i).getUserID().equalsIgnoreCase(userID)
+                        && studentList.get(i).getPassword().equalsIgnoreCase(password)) {
                     this.userType = UserType.STUDENT;
                 }
             }
@@ -87,8 +90,8 @@ public class User {
         System.out.println("Should never be printed.");
     }
 
-    /*For testing purposes */
-    public void viewDetails(){
+    /* For testing purposes */
+    public void viewDetails() {
         System.out.println(userID + " " + name + " " + userEmail + "\n");
     }
 

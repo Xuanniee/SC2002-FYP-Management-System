@@ -6,7 +6,7 @@ import Entities.*;
 import Controller.*;
 import Controller.SupervisorManager;
 
-public class mainApp{
+public class MainApp{
     public static void main(String[] args){
         /* Initialise Database */
         StudentDB student_list = new StudentDB();
@@ -43,25 +43,31 @@ public class mainApp{
 
             // Create attempted User
             User attemptUser = new User(username, maskedPassword);
-            attemptUserType = attemptUser.authenticateUser(username, maskedPassword, faculty_list.getSupervisorList(), student_list.getStudentList());
+            attemptUserType = attemptUser.authenticateUser(username, maskedPassword, faculty_list.getSupervisorList(),
+                    student_list.getStudentList());
 
             // Check if exceed login limits
             if (numLoginAttempts == 0) {
                 System.exit(1);
-            }
-            else if (attemptUserType == UserType.UNKNOWN) {
+            } else if (attemptUserType == UserType.UNKNOWN) {
                 System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-                System.out.println("Your Login Credentials are errorneous. You have " + numLoginAttempts + " attempts left.");
+                System.out.println(
+                        "Your Login Credentials are errorneous. You have " + numLoginAttempts + " attempts left.");
                 numLoginAttempts -= 1;
             }
 
-        } while(attemptUserType == UserType.UNKNOWN);
+        } while (attemptUserType == UserType.UNKNOWN);
 
         // Find the Corresponding User
-        switch(attemptUserType) {
+        switch (attemptUserType) {
             case STUDENT:
                 Student loggedStudent = student_list.findStudent(username);
-                loggedStudent.displayStudentMenu();
+                StudentManager studentMgr = new StudentManager(loggedStudent);
+                int choice;
+                do {
+                    choice = studentMgr.displayStudentMenu();
+                    studentMgr.processStudentChoice(choice);
+                } while (choice != 0);
                 break;
 
             case FACULTY:
@@ -70,6 +76,13 @@ public class mainApp{
                 break;
 
             case FYPCOORDINATOR:
+                FYPCoordinator fypCoordinator = FYPcoord_list.findFypCoordinator(username);
+                FYPCoordinatorManager fypManager = new FYPCoordinatorManager(fypCoordinator);
+                int fypChoice;
+                do {
+                    fypChoice = fypManager.displayFypCoordinatorMenu();
+                    fypManager.processFypCoordinatorChoice(fypChoice);
+                } while (fypChoice != 0);
                 break;
 
             case UNKNOWN:

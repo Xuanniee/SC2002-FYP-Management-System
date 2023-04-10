@@ -1,38 +1,108 @@
 package Controller;
+
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
 import Entities.Project;
+import Entities.Student;
+import Entities.Supervisor;
+import enums.ProjectStatus;
 
-public class ProjectDB {
-    private ArrayList<Project> projectList = new ArrayList<Project>();
+public class ProjectDB extends Database {
+
+    /*
+     * private ArrayList<Project> projectList = new ArrayList<Project>();
+     * private int projectCount = 0;
+     * 
+     * public ProjectDB() {
+     * String fileName = "./Data/rollover project.txt";
+     * String line;
+     * boolean isFirstLine = true;
+     * try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+     * while ((line = br.readLine()) != null) {
+     * 
+     * if (isFirstLine) {
+     * isFirstLine = false;
+     * continue; // skip the first line
+     * }
+     * // Update the Number of Projects, which is also their Project ID
+     * updateProjectCount();
+     * // Split the line by tabs
+     * String[] values = line.split("\t");
+     * String professorName = values[0];
+     * String projectTitle = values[1];
+     * 
+     * // TODO Get Supervisor Email
+     * projectList.add(new Project(projectCount, professorName, "Unknown Email",
+     * projectTitle));
+     * 
+     * for (String value : values) {
+     * System.out.print(value + "\t");
+     * }
+     * System.out.println();
+     * }
+     * } catch (IOException e) {
+     * e.printStackTrace();
+     * }
+     * }
+     */
+
+    private String filePath = String.join("", super.directory, "rollover project.txt");
+
+    private File file;
+
+    public ArrayList<Project> projectList;
     private int projectCount = 0;
 
-    public ProjectDB() {
-        String fileName = "./Data/rollover project.txt";
-        String line;
-        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
-            while ((line = br.readLine()) != null) {
-                // Update the Number of Projects, which is also their Project ID
-                updateProjectCount();
-                // Split the line by tabs
-                String[] values = line.split("\t");
-                String professorName = values[0];
-                String projectTitle = values[1];
+    private FacultyDB facultyDB = new FacultyDB();
 
-                // TODO Get Supervisor Email
-                projectList.add(new Project(projectCount, professorName, "Unknown Email", projectTitle));
-                
-                for (String value : values) {
-                    System.out.print(value + "\t");
+    public ProjectDB() {
+        this.file = new File(filePath);
+        this.projectList = new ArrayList<Project>();
+        this.readFile();
+    }
+
+    public ProjectDB(String filePath) {
+        this.file = new File(filePath);
+        this.projectList = new ArrayList<Project>();
+        this.readFile();
+    }
+
+    public void readFile() {
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+
+            String projectLine = br.readLine();
+            projectLine = br.readLine();
+            String supervisorName, projectTitle;
+            String[] projectData;
+
+            while (projectLine != null) {
+                projectData = projectLine.split(super.delimiter);
+                supervisorName = projectData[0];
+                projectTitle = projectData[1];
+
+                for (Supervisor currentSupervisor : facultyDB.getSupervisorList()) {
+                    if (currentSupervisor.getUserName().equalsIgnoreCase(supervisorName)) {
+                        Supervisor targetSupervisor = currentSupervisor;
+                        projectList.add(new Project(getProjectCount(), targetSupervisor, projectTitle));
+                        updateProjectCount();
+                        break;
+                    }
                 }
-                System.out.println();
+                projectLine = br.readLine();
             }
+            br.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void updateFile() {
+
     }
 
     public int getProjectCount() {
@@ -43,14 +113,20 @@ public class ProjectDB {
         this.projectCount += 1;
     }
 
-    public Boolean addProject(Project newlyCreatedProject){
-        // Don't need increment projectCount since should incremented before calling this function
+    public Boolean addProject(Project newlyCreatedProject) {
+        // Don't need increment projectCount since should incremented before calling
+        // this function
         if (newlyCreatedProject == null) {
             return false;
         }
         projectList.add(newlyCreatedProject);
 
         return true;
+    }
+
+    public Project findProject(int projectID) {
+        Project targetProject = projectList.get(projectID - 1);
+        return targetProject;
     }
 
     public Boolean changeProjectTitle(int projectID, String newProjectTitle) {
@@ -61,7 +137,7 @@ public class ProjectDB {
 
         // Retrieve the Project whose title is to be changed
         Project targetProject = projectList.get(projectID - 1);
-        targetProject.changeProjectTitle(newProjectTitle);
+        targetProject.setProjectTitle(newProjectTitle);
 
         return true;
     };
@@ -70,8 +146,8 @@ public class ProjectDB {
         // Create Project List to be returned
         ArrayList<Project> supervisorProjectList = new ArrayList<Project>();
 
-        for (int i = 0; i < projectList.size(); i += 1){
-            if (projectList.get(i).getSupervisorName().equalsIgnoreCase(professorName)) {
+        for (int i = 0; i < projectList.size(); i += 1) {
+            if (projectList.get(i).getStudent().getUserName().equalsIgnoreCase(professorName)) {
                 supervisorProjectList.add(projectList.get(i));
             }
         }
@@ -81,12 +157,42 @@ public class ProjectDB {
 
     public int getProjectIndexInSupervisorProjectList(int projectID, ArrayList<Project> supervisorProjectList) {
         int index = -1;
-        for (int i = 0; i < supervisorProjectList.size(); i += 1){
+        for (int i = 0; i < supervisorProjectList.size(); i += 1) {
             if (supervisorProjectList.get(i).getProjectID() == projectID) {
                 index = i;
             }
         }
         return index;
+    }
+
+    public void viewAvailableProjects(Student student) {
+
+        System.out.println(" ----- List of Available Projects ----- ");
+
+        // Do not print projects that student is deregistered from
+        if (!student.getDeregisteredProjects().isEmpty()) {
+            for (Project project : projectList) {
+                if (project.getProjectStatus() == ProjectStatus.AVAILABLE) {
+                    for (Project p : student.getDeregisteredProjects()) {
+                        if (project.getProjectID() != p.getProjectID()) {
+                            project.printProjectDetails();
+                        } else
+                            break;
+                    }
+                }
+            }
+            // Print all other AVAILABLE projects
+        } else {
+            for (Project project : projectList) {
+                if (project.getProjectStatus() == ProjectStatus.AVAILABLE) {
+                    project.printProjectDetails();
+                }
+            }
+        }
+    }
+
+    public ArrayList<Project> getAllProjects() {
+        return projectList;
     }
 
     // TODO Add SUpervisors Email somehow
