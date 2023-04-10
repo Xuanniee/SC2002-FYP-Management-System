@@ -3,6 +3,7 @@ package Controller;
 import java.util.ArrayList;
 
 import Entities.RequestDeregister;
+import Entities.User;
 import enums.RequestStatus;
 
 import java.io.BufferedReader;
@@ -75,7 +76,7 @@ public class RequestDeregisterDB extends Database {
 
             for (RequestDeregister rq : requestDeregisterList) {
                 String studentID = rq.getStudent().getUserID();
-                int projID = rq.getProjectID();
+                int projID = rq.getProject().getProjectID();
                 String reqStatus = rq.getRequestStatus().name();
 
                 pw.println(studentID + "\t" + projID + "\t" + reqStatus);
@@ -88,6 +89,31 @@ public class RequestDeregisterDB extends Database {
 
     public void addRequest(RequestDeregister requestDeregister) {
         requestDeregisterList.add(requestDeregister);
+    }
+
+    public Boolean findStudent(User student) {
+        for (RequestDeregister req : requestDeregisterList) {
+            if (req.getStudent() == student) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void printHistory(User student) {
+        if (findStudent(student)) {
+            System.out.println("Showing all Deregistration Requests ... ");
+            for (RequestDeregister req : requestDeregisterList) {
+                if (req.getStudent() == student) {
+                    System.out.printf("Project to Deregister from (ID/Title): %s/%s", req.getProject().getProjectID(),
+                            req.getProject().getProjectTitle());
+                    System.out.println("Request Status: " + req.getRequestStatus().name());
+                    System.out.println("");
+                }
+            }
+        } else {
+            System.out.println("No requests to Deregister");
+        }
     }
 
 }

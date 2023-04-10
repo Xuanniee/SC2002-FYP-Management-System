@@ -7,13 +7,20 @@ import enums.UserType;
 public class User {
     protected String userID;
     protected String password = "password";
-    protected String name;
+    protected String userName;
     protected String userEmail;
     protected UserType userType = UserType.UNKNOWN;
 
     public User(String userID, String password) {
         this.userID = userID;
         this.password = password;
+        this.userType = UserType.UNKNOWN;
+    }
+
+    public User(String userID, String userName, String userEmail) {
+        this.userID = userID;
+        this.userName = userName;
+        this.userEmail = userEmail;
         this.userType = UserType.UNKNOWN;
     }
 
@@ -37,7 +44,7 @@ public class User {
     }
 
     public String getUserName() {
-        return this.name;
+        return this.userName;
     }
 
     public void setUserName(String userName) {
@@ -50,6 +57,10 @@ public class User {
 
     public void setUserEmail(String userEmail) {
         this.userEmail = userEmail;
+    }
+
+    public UserType getUserType() {
+        return this.userType;
     }
 
     public Boolean checkPassword(String inputPassword) {
@@ -92,7 +103,7 @@ public class User {
 
     /* For testing purposes */
     public void viewDetails() {
-        System.out.println(userID + " " + name + " " + userEmail + "\n");
+        System.out.println(userID + " " + userName + " " + userEmail + "\n");
     }
 
     public void printProfile() {

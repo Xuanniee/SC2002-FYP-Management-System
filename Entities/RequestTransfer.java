@@ -6,19 +6,43 @@ import enums.RequestStatus;
 public class RequestTransfer extends Request {
 
     private Project project;
-    private Supervisor supervisor;
+    private Supervisor currentSupervisor;
+    private Supervisor repSupervisor;
 
-    public RequestTransfer(Project project, Supervisor supervisor) {
+    public RequestTransfer(Project project, Supervisor currentSupervisor, Supervisor repSupervisor) {
         super(RequestType.TRANSFER);
         this.project = project;
-        this.supervisor = supervisor;
+        this.currentSupervisor = currentSupervisor;
+        this.repSupervisor = repSupervisor;
+    }
+
+    public RequestTransfer(Project project, Supervisor currentSupervisor, Supervisor repSupervisor,
+            RequestStatus requestStatus) {
+        super(RequestType.TRANSFER, requestStatus);
+        this.project = project;
+        this.currentSupervisor = currentSupervisor;
+        this.repSupervisor = repSupervisor;
     }
 
     @Override
     public void approveRequest(Boolean approve) {
         this.setRequestStatus(RequestStatus.APPROVED);
-        this.project.setSupervisor(this.supervisor);
-        // Code to make changes for faculty side
+        this.project.setSupervisor(this.repSupervisor);
+        this.repSupervisor.editNumProjects(1);
+        this.currentSupervisor.editNumProjects(-1);
+        // Code to make changes for faculty sides
+    }
+
+    public Supervisor getCurSupervisor() {
+        return this.currentSupervisor;
+    }
+
+    public Supervisor getRepSupervisor() {
+        return this.repSupervisor;
+    }
+
+    public Project getProject() {
+        return this.project;
     }
 
 }
