@@ -79,7 +79,7 @@ public class FacultyDB {
     public void modifyTitle(ProjectDB projectDB) {
         // Retrieve the list of projects owned by this particular supervisor
         ArrayList<Project> supervisorProjectList = projectDB.retrieveProfessorProjects(this.name);
-        // Scanner scObject = new Scanner(System.in);
+        Scanner scObject = new Scanner(System.in);
         int targetProjectID;
         int userInput;
         int projectIndex;

@@ -7,10 +7,11 @@ import Controller.*;
 
 public class Supervisor extends User {
 
-    public Supervisor(String userID, String name, String userEmail) {
-        super(userID, "password");
-        this.userID = userID;
-        this.name = name;
+    private int numProjects = 0;
+    private Boolean isFull = false;
+
+    public Supervisor(String userID, String userName, String userEmail) {
+        super(userID, userName, "password");
         this.userEmail = userEmail;
     }
 
@@ -23,7 +24,21 @@ public class Supervisor extends User {
     }
 
     public String getSupervisorName() {
-        return this.name;
+        return this.userName;
+    }
+
+    public void editNumProjects(int change) {
+        numProjects += change;
+        if (numProjects == 2) {
+            this.isFull = true;
+        }
+        if (numProjects < 2) {
+            this.isFull = false;
+        }
+    }
+
+    public Boolean checkIfFull() {
+        return this.isFull;
     }
 
     /**
@@ -83,7 +98,7 @@ public class Supervisor extends User {
      */
     /*public void modifyTitle(ProjectDB projectDB, Scanner scObject) {
         // Retrieve the list of projects owned by this particular supervisor
-        ArrayList<Project> supervisorProjectList = projectDB.retrieveProfessorProjects(this.name);
+        ArrayList<Project> supervisorProjectList = projectDB.retrieveProfessorProjects(this.userName);
         // Scanner scObject = new Scanner(System.in);
         int targetProjectID;
         int userInput;

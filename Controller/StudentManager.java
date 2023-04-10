@@ -66,7 +66,7 @@ public class StudentManager {
 
             case 7:
                 System.out.println("View all Request History...");
-                // requestManager.viewAvailableProjects(currentStudent);
+                requestManager.getRequestHistory(currentStudent);
                 break;
 
             case 0:
