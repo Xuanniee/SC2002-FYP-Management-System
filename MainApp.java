@@ -73,7 +73,7 @@ public class MainApp{
                 switch (attemptUserType) {
                     case STUDENT:
                         Student loggedStudent = student_list.findStudent(username);
-                        StudentManager studentMgr = new StudentManager(loggedStudent);
+                        StudentManager studentMgr = new StudentManager(loggedStudent,student_list,project_list);
                         int choice;
                         do {
                             choice = studentMgr.displayStudentMenu();
@@ -82,8 +82,13 @@ public class MainApp{
                         break;
         
                     case FACULTY:
-                        SupervisorManager supervisorManager = new SupervisorManager(username, faculty_list);
-                        supervisorManager.processSupervisorChoice(scanner, project_list);
+                        Supervisor loggedSupervisor = faculty_list.findSupervisor(username);
+                        SupervisorManager supervisorManager = new SupervisorManager(loggedSupervisor, faculty_list, project_list);
+                        int supChoice;
+                        do {
+                            supChoice = supervisorManager.displayFacultyMenu();
+                            supervisorManager.processSupervisorChoice(supChoice);
+                        } while (supChoice != 0);
                         break;
         
                     case FYPCOORDINATOR:

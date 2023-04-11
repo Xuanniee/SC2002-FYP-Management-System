@@ -14,7 +14,7 @@ import Entities.Project;
 
 public class StudentDB extends Database {
 
-    private String filePath = String.join("", super.directory, "student list.txt");
+    private String filePath = String.join("", super.directory, "student_list.txt");
 
     private File file;
 
