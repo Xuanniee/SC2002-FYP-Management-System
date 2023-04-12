@@ -125,7 +125,7 @@ public class ProjectDB extends Database {
     }
 
     public Project findProject(int projectID) {
-        Project targetProject = projectList.get(projectID - 1);
+        Project targetProject = projectList.get(projectID);
         return targetProject;
     }
 
@@ -136,7 +136,7 @@ public class ProjectDB extends Database {
         }
 
         // Retrieve the Project whose title is to be changed
-        Project targetProject = projectList.get(projectID - 1);
+        Project targetProject = projectList.get(projectID);
         targetProject.setProjectTitle(newProjectTitle);
 
         return true;
