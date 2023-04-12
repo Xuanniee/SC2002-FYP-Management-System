@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import Entities.RequestChangeTitle;
+import Entities.Supervisor;
+import Entities.Project;
 import Entities.User;
 import enums.RequestStatus;
 import enums.UserType;
@@ -22,17 +24,20 @@ public class RequestChangeTitleDB extends Database {
 
     private ArrayList<RequestChangeTitle> requestChangeTitleList;
 
-    private ProjectDB projectDB = new ProjectDB();
-    private StudentDB studentDB = new StudentDB();
-    private FacultyDB facultyDB = new FacultyDB();
+    private ProjectDB projectDB;
+    private StudentDB studentDB;
+    private FacultyDB facultyDB;
 
-    public RequestChangeTitleDB() {
+    /**
+     * Read in from Data
+     */
+    public RequestChangeTitleDB(ProjectDB projectDB, StudentDB studentDB, FacultyDB facultyDB) {
         this.file = new File(filePath);
         this.requestChangeTitleList = new ArrayList<RequestChangeTitle>();
         this.readFile();
     }
 
-    public RequestChangeTitleDB(String filePath) {
+    public RequestChangeTitleDB(String filePath, ProjectDB projectDB, StudentDB studentDB, FacultyDB facultyDB) {
         this.file = new File(filePath);
         this.requestChangeTitleList = new ArrayList<RequestChangeTitle>();
         this.readFile();
@@ -118,13 +123,107 @@ public class RequestChangeTitleDB extends Database {
         return false;
     }
 
-    public void printHistory(User user) {
+    public int viewAllTitleChangeRequestSupervisor(Supervisor currentSupervisor) {
+        int counter = 1;
+        System.out.println("Loading all pending change title requests...");
+        for (int i = 0; i < requestChangeTitleList.size(); i += 1) {
+            RequestChangeTitle currentRequest = requestChangeTitleList.get(i);
+            if (currentRequest.getRequestStatus() == RequestStatus.PENDING && requestChangeTitleList.get(i).getProject().getSupervisor().equals(currentSupervisor)) {
+                System.out.println(counter + ". Project ID " + currentRequest.getProjectID() + "'s change of title" + " requested by " + requestChangeTitleList.get(i).getStudent());    
+                counter += 1;
+            }
+        }
+        System.out.println();
 
+        if (counter == 1) {
+            System.out.println("Pending Title Change Requests: 0");
+            System.out.println("Enter 0 to return to the previous menu.");
+            return 1;
+        }
+
+        System.out.println();
+        System.out.println();       // Prints Empty Line
+        return 0;
+    }
+
+    /**
+     * View the Details of Title Change Request
+     * @param requestChoice
+     * @return targetRequest
+     */
+    public RequestChangeTitle viewTitleChangeRequestDetailedSupervisor(int requestChoice) {
+        int targetRequestIndex = requestChoice - 1;
+        RequestChangeTitle targetRequest = requestChangeTitleList.get(targetRequestIndex);
+        System.out.println("Loading selected request...");
+        System.out.println();
+        System.out.println("+------------------------------------------------------------------------------------------------------------+");
+        System.out.println("|                                       Title Change Request Approval                                        |");
+        System.out.println("|------------------------------------------------------------------------------------------------------------|");
+        targetRequest.getProject().printProjectDetails();
+        System.out.println("Requestee (Student)     : " + targetRequest.getStudent());
+        System.out.println("Old Title               :" + targetRequest.getPrevTitle());
+        System.out.println("Suggested New Title     : " + targetRequest.getNewTitle());
+        System.out.println("|------------------------------------------------------------------------------------------------------------|");
+        System.out.println("Select 1 to approve the request, and 0 to reject the request and return to the previous menu.");
+        System.out.println();
+
+        return targetRequest;
+    }
+
+    /**
+     * Function for Supervisor to approve change of Project's Title
+     * @param approvedRequest
+     * @return Boolean to note if function was success
+     */
+    public Boolean approveTitleChangeRequest(RequestChangeTitle approvedRequest) {
+        if (approvedRequest == null) {
+            return false;
+        }
+
+        Project approvedProject = approvedRequest.getProject();
+        String newProjectTitle = approvedRequest.getNewTitle();
+
+        // Set Project Title to New
+        approvedProject.setProjectTitle(newProjectTitle);
+
+        // Update Request Status so this.user cannot see it again
+        approvedRequest.setRequestStatus(RequestStatus.APPROVED);
+        System.out.println("Project " + approvedRequest.getPrevTitle() + " has been successfully renamed to " + newProjectTitle);
+
+        return true;
+    }
+
+    /**
+     * For Supervisor to view Pending Title Change Requests only
+     * @param currentSupervisor
+     */
+    public void viewPendingTitleChangeRequests(Supervisor currentSupervisor) {
+        ArrayList<RequestChangeTitle> currentSupervisorList = new ArrayList<>();
+        for (int i = 0; i < requestChangeTitleList.size(); i += 1) {
+            if (requestChangeTitleList.get(i).getProject().getSupervisor().equals(currentSupervisor)) {
+                currentSupervisorList.add(requestChangeTitleList.get(i));
+            }
+        }
+        if (currentSupervisorList.size() != 0) {
+            System.out.println("Showing all Change Title Requests ... ");
+            for (RequestChangeTitle req : currentSupervisorList) {
+                System.out.println("Requester: " + req.getStudent().getUserName());
+                System.out.println("Previous Project Title: " + req.getPrevTitle());
+                System.out.println("New Project Title: " + req.getNewTitle());
+                System.out.println("Request Status: " + req.getRequestStatus().name());
+                System.out.println("");
+            }
+        } else {
+            System.out.println("No requests to Change Title from Students");
+        }
+    }
+
+    public void printHistory(User user) {
         if (user.getUserType() == UserType.STUDENT) {
             if (findStudent(user)) {
                 System.out.println("Showing all Change Title Requests ... ");
                 for (RequestChangeTitle req : requestChangeTitleList) {
-                    if (req.getStudent() == user) {
+                    if (req.getStudent().equals(user)) {
                         System.out.println("Requestee: " + req.getSupervisor().getUserName());
                         System.out.println("Previous Project Title: " + req.getPrevTitle());
                         System.out.println("New Project Title: " + req.getNewTitle());

@@ -15,12 +15,9 @@ public class MainApp{
         RequestTransferDB requestTransferDB = new RequestTransferDB();
         RequestRegisterDB requestRegisterDB = new RequestRegisterDB();
         RequestDeregisterDB deregisterDB = new RequestDeregisterDB();
-        RequestManager requestManager = new RequestManager();
-
-
-        /*For Testing purposes*/
-        //student_list.viewDB();
-        //faculty_list.viewDB();
+        RequestChangeTitleDB requestChangeTitleDB = new RequestChangeTitleDB(project_list, student_list, faculty_list);
+        RequestManager requestManager = new RequestManager(project_list, faculty_list, requestChangeTitleDB, requestRegisterDB, 
+        deregisterDB, requestTransferDB);
         
         Scanner scanner = new Scanner(System.in);
         Console terminalConsole = System.console();
@@ -73,7 +70,7 @@ public class MainApp{
                 switch (attemptUserType) {
                     case STUDENT:
                         Student loggedStudent = student_list.findStudent(username);
-                        StudentManager studentMgr = new StudentManager(loggedStudent,student_list,project_list);
+                        StudentManager studentMgr = new StudentManager(loggedStudent,student_list,project_list, requestManager);
                         int choice;
                         do {
                             choice = studentMgr.displayStudentMenu();
@@ -83,7 +80,7 @@ public class MainApp{
         
                     case FACULTY:
                         Supervisor loggedSupervisor = faculty_list.findSupervisor(username);
-                        SupervisorManager supervisorManager = new SupervisorManager(loggedSupervisor, faculty_list, project_list);
+                        SupervisorManager supervisorManager = new SupervisorManager(loggedSupervisor, faculty_list, project_list, requestManager, requestChangeTitleDB);
                         int supChoice;
                         do {
                             supChoice = supervisorManager.displayFacultyMenu();
@@ -119,13 +116,13 @@ public class MainApp{
      */
     public static void printWelcome() {
         System.out.println();
-        System.out.println("#######   #     #   #######   ##       ##   #######");
-        System.out.println("#          #   #    #     #   # #     # #   #      ");
-        System.out.println("#           # #     #     #   # #    #  #   #      ");
-        System.out.println("#######      #      #######   #  #  #   #   #######");
-        System.out.println("#            #      #         #  #  #   #         #");
-        System.out.println("#            #      #         #   ##    #         #");
-        System.out.println("#            #      #         #   ##    #   #######");
+        System.out.println("88888888888  oooo    oooo   oooooooooo.  oooo         ooo   ooooooo.      ");
+        System.out.println("`88          od8y    y8bo  `888'   `Y8b  8888.       .88'  888   888.     ");
+        System.out.println(" 88           888    888    888     888  88 88b     d'88    '888          ");
+        System.out.println(" 8Y88888888     88888       888oooo888'  88  Y88  8P  88       '888       ");
+        System.out.println(" 88              888        888          88   `888'   88          88b     ");
+        System.out.println(" 88              888        888          88     Y     88   888    88b     ");
+        System.out.println(" 8o              ooo        o88         o88o         o88o   8oo8888b'     ");
         System.out.println();
         System.out.println("****************** Welcome to FYPMS! ******************");
         System.out.println("##### Enter 1 to Log in or Enter 2 to exit FYPMS. #####");

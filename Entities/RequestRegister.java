@@ -23,6 +23,9 @@ public class RequestRegister extends Request {
         this.project = project;
     }
 
+    /**
+     * TODO Duplicated. We will decide which to use later
+     */
     @Override
     public void approveRequest(Boolean approve) {
         if (approve) {

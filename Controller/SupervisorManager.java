@@ -2,19 +2,28 @@ package Controller;
 
 import java.util.Scanner;
 
+import Entities.Request;
 import Entities.Supervisor;
+import enums.RequestStatus;
+import Entities.Project;
+import Entities.RequestChangeTitle;
 
 public class SupervisorManager {
     Supervisor managedSupervisor;
     private FacultyDB facultyDB;
     private ProjectDB projectDB;
+    private RequestChangeTitleDB requestChangeTitleDB;
+    private RequestManager requestManager;
     Scanner scanner = new Scanner(System.in);
 
     // Constructor
-    public SupervisorManager(Supervisor supervisor, FacultyDB facultyDB, ProjectDB projectDB){
+    public SupervisorManager(Supervisor supervisor, FacultyDB facultyDB, ProjectDB projectDB, RequestManager requestManager, 
+    RequestChangeTitleDB requestChangeTitleDB){
         this.managedSupervisor = supervisor;
         this.facultyDB = facultyDB;
         this.projectDB = projectDB;
+        this.requestChangeTitleDB = requestChangeTitleDB;
+        this.requestManager = requestManager;
     }
 
     /*public SupervisorManager(String supervisorUserID, FacultyDB facultyDB) {
@@ -40,10 +49,53 @@ public class SupervisorManager {
             case 3:
                 facultyDB.modifyTitle(projectDB,managedSupervisor);
                 break;
-            case 7:
+            
+            case 4:
+                // View Pending Requests for Approval
+                int selectedTitleChangeRequest;
+                int approvalResult;
+                int noTitleChangeRequest;
+                do {
+                    // View Title Change Requests
+                    noTitleChangeRequest = requestChangeTitleDB.viewAllTitleChangeRequestSupervisor(managedSupervisor);
+                    // Input Validation to return to previous Menu if there are no Requests
+                    if (noTitleChangeRequest == 1) {
+                        break;
+                    }
+                    // Get Index of Title Change Request to look at in detail
+                    selectedTitleChangeRequest = scanner.nextInt();
+
+                    RequestChangeTitle targetRequest = requestChangeTitleDB.viewTitleChangeRequestDetailedSupervisor(selectedTitleChangeRequest);
+                    approvalResult = scanner.nextInt();
+
+                    Project updateProject = targetRequest.getProject();
+                    if (approvalResult == 1) {
+                        requestChangeTitleDB.approveTitleChangeRequest(targetRequest);
+                        targetRequest.setRequestStatus(RequestStatus.APPROVED);
+                    }
+                    else {
+                        // Reject Request
+                        updateProject.setAwaitingTitleChangeRequest(false);
+                        targetRequest.setRequestStatus(RequestStatus.REJECTED);
+                    }
+                    System.out.println("Returning to previous menu...");
+
+                } while (selectedTitleChangeRequest != 0);
+                System.out.println("Returning to main menu...");
                 break;
+
+            case 5:
+                // View Pending History & Status
+                requestManager.getRequestHistoryAndStatus(managedSupervisor);
+                break;
+
+            case 6:
+                // Transfer Supervisor
+                requestManager.changeSupervisorRequest(managedSupervisor);
+                break;
+
             case 0:
-                System.out.println("Returning to homepage...");
+                System.out.println("Logging out...");
                 break;
             default:
                 System.out.println("Please enter a valid choice");
@@ -67,13 +119,15 @@ public class SupervisorManager {
         System.out.println("| 5. View request history & status                      |");
         System.out.println("| 6. Request the transfer of a student                  |");
         System.out.println("|-------------------------------------------------------|");
-        System.out.println("|           Enter 0 to go back to Main Menu             |");
+        System.out.println("|              Enter 0 to Log out of FYPMS              |"); 
         System.out.println("+-------------------------------------------------------+");
         System.out.println(""); // print empty line
 
         System.out.print("Please enter your choice: ");
 
         choice = scanner.nextInt();
+        // Remove \n from Buffer
+        scanner.nextLine();
 
         return choice;
     }

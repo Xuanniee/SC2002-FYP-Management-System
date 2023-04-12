@@ -123,13 +123,18 @@ public class RequestDeregisterDB extends Database {
      */
     public int viewAllDeregisterRequestFYPCoord() {
         System.out.println("Loading all pending requests to deregister a project...");
+        int counter = 1;
         for (int i = 0; i < requestDeregisterList.size(); i += 1) {
-            Project currentProject = requestDeregisterList.get(i).getProject();
-            System.out.println((i+1) + ". " + currentProject.getProjectTitle() + "  requested by " + currentProject.getStudent());
+            RequestDeregister currentRequest = requestDeregisterList.get(i);
+            Project currentProject = currentRequest.getProject();
+            if (currentRequest.getRequestStatus() == RequestStatus.PENDING) {
+                System.out.println(counter + ". " + currentProject.getProjectTitle() + "  requested by " + currentProject.getStudent());
+                counter += 1;
+            }
         }
         System.out.println();
 
-        if (requestDeregisterList.size() == 0) {
+        if (counter == 1) {
             System.out.println("Pending Deregister Requests: 0");
             System.out.println("Enter 0 to return to the previous menu.");
             return 1;
@@ -183,9 +188,10 @@ public class RequestDeregisterDB extends Database {
         // Update Project Status
         deregisteredProject.deregisterStudent();
 
-        // Remove Request from Database
-        int indexCompletedRequest = requestDeregisterList.indexOf(approvedRequest);
-        requestDeregisterList.remove(indexCompletedRequest);
+        // Update Request Status so this.user cannot see it again
+        // int indexCompletedRequest = requestDeregisterList.indexOf(approvedRequest);
+        approvedRequest.setRequestStatus(RequestStatus.APPROVED); 
+        // requestDeregisterList.remove(indexCompletedRequest);
         System.out.println("Student " + deregisteredStudent.getStudentName() + " has been successfully deregistered from Project " + deregisteredProject.getProjectID());
 
         return true;

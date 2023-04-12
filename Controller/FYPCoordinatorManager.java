@@ -3,6 +3,10 @@ package Controller;
 import java.util.Scanner;
 
 import Entities.FYPCoordinator;
+import Entities.Student;
+import Entities.Supervisor;
+import Entities.Project;
+import enums.RequestStatus;
 import Entities.RequestDeregister;
 import Entities.RequestRegister;
 import Entities.RequestTransfer;
@@ -61,13 +65,27 @@ public class FYPCoordinatorManager {
                     if (noAllocateRequest == 1) {
                         break;
                     }
+                    System.out.println("Please indicate which Request you would like to look at: ");
+                    System.out.println("Alternatively, Enter 0 to return to the previous menu.");
                     selectedRequest = scanner.nextInt();
+
+                    if (selectedRequest == 0) {
+                        // After Request has been approved or rejected, to return to main menu.
+                        continue;
+                    }
 
                     RequestRegister targetRequest = requestRegisterDB.viewRegisterRequestDetailedFYPCoord(selectedRequest);
                     approvalResult = scanner.nextInt();
 
+                    Student updateStudent = targetRequest.getStudent();
                     if (approvalResult == 1) {
                         requestRegisterDB.approveRegisterRequestFYPCoord(targetRequest);
+                        targetRequest.setRequestStatus(RequestStatus.APPROVED);
+                    }
+                    else {
+                        // Reject Request
+                        updateStudent.setHasAppliedForProject(false);
+                        targetRequest.setRequestStatus(RequestStatus.REJECTED);
                     }
                     System.out.println("Returning to previous menu...");
 
@@ -92,9 +110,17 @@ public class FYPCoordinatorManager {
                     RequestTransfer targetTransferRequest = requestTransferDB.viewTransferRequestDetailedFYPCoord(selectedSupervisorRequest);
                     approvalTransferResult = scanner.nextInt();
 
+                    Project projectBeingTransferred = targetTransferRequest.getProject();
                     if (approvalTransferResult == 1) {
                         requestTransferDB.approveTransferRequestFYPCoord(targetTransferRequest);
+                        targetTransferRequest.setRequestStatus(RequestStatus.APPROVED);
                     }
+                    else {
+                        // Reject Request
+                        projectBeingTransferred.setAwaitingTransferRequest(false);
+                        targetTransferRequest.setRequestStatus(RequestStatus.REJECTED);
+                    }
+
                     System.out.println("Returning to previous menu...");
 
                 } while (selectedSupervisorRequest != 0);
@@ -120,7 +146,13 @@ public class FYPCoordinatorManager {
 
                     if (approvalDeregisterRequest == 1) {
                         deregisterDB.approveDeregisterRequestFYPCoord(targetDeregisterRequest);
+                        targetDeregisterRequest.setRequestStatus(RequestStatus.APPROVED);
                     }
+                    // else {
+                    //     // Reject Request
+                    //     projectBeingTransferred.setAwaitingTransferRequest(false);
+                    //     targetTransferRequest.setRequestStatus(RequestStatus.REJECTED);
+                    // }
                     System.out.println("Returning to previous menu...");
 
                 } while (selectedDeregisterRequest != 0);

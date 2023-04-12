@@ -4,6 +4,8 @@ import enums.ProjectStatus;
 
 public class Project {
     protected int projectID;
+    protected Boolean awaitingTransferRequest = false;
+    protected Boolean awaitingTitleChangeRequest = false;
     // protected String supervisorName;
     // protected String supervisorEmail;
     protected Supervisor supervisor;
@@ -17,6 +19,32 @@ public class Project {
         this.student = null;
         this.projectTitle = projectTitle;
         this.projectStatus = ProjectStatus.AVAILABLE;
+    }
+
+    public Boolean getAwaitingTitleChangeRequest() {
+        return this.awaitingTitleChangeRequest;
+    }
+
+    public Boolean setAwaitingTitleChangeRequest(Boolean status) {
+        if (status == null) {
+            return false;
+        }
+
+        this.awaitingTitleChangeRequest = status;
+        return true;
+    }
+
+    public Boolean getAwaitingTransferRequest() {
+        return this.awaitingTransferRequest;
+    }
+
+    public Boolean setAwaitingTransferRequest(Boolean status) {
+        if (status == null) {
+            return false;
+        }
+
+        this.awaitingTransferRequest = status;
+        return true;
     }
 
     public int getProjectID() {

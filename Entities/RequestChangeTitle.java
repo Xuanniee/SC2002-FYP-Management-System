@@ -57,6 +57,10 @@ public class RequestChangeTitle extends Request {
         return this.project.getProjectID();
     }
 
+    public Project getProject() {
+        return this.project;
+    }
+
     public String getPrevTitle() {
         return this.prevTitle;
     }

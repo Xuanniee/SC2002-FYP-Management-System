@@ -8,16 +8,17 @@ public class StudentManager {
 
     private StudentDB studentDB;
     private ProjectDB projectDB;
-    private RequestManager requestManager = new RequestManager();
+    private RequestManager requestManager; 
 
     Scanner scanner = new Scanner(System.in);
 
     private Student currentStudent;
 
-    public StudentManager(Student student, StudentDB studentDB, ProjectDB projectDB) {
+    public StudentManager(Student student, StudentDB studentDB, ProjectDB projectDB, RequestManager requestManager) {
         this.currentStudent = student;
         this.studentDB = studentDB;
         this.projectDB = projectDB;
+        this.requestManager = requestManager;
     }
 
     public void processStudentChoice(int choice) {
@@ -47,6 +48,7 @@ public class StudentManager {
             case 5:
                 System.out.println("Request to Change Title of Registered Project...");
                 if (!currentStudent.getIsAssigned()) {
+                    System.out.println("You do not have a registered project yet.");
                     break;
                 } else {
                     System.out.println("Your registered project: ");
@@ -58,6 +60,7 @@ public class StudentManager {
             case 6:
                 System.out.println("Request to Deregister from Registered Project...");
                 if (!currentStudent.getIsAssigned()) {
+                    System.out.println("You do not have a registered project yet.");
                     break;
                 } else {
                     System.out.println("Your registered project: ");
@@ -72,7 +75,7 @@ public class StudentManager {
                 break;
 
             case 0:
-                System.out.println("Returning to homepage...");
+                System.out.println("Logging out...");
                 break;
 
             default:
@@ -97,7 +100,7 @@ public class StudentManager {
         System.out.println("| 6. Request to Deregister from Project                 |");
         System.out.println("| 7. View Request History                               |");
         System.out.println("|-------------------------------------------------------|");
-        System.out.println("|           Enter 0 to go back to Main Menu             |");
+        System.out.println("|              Enter 0 to Log out of FYPMS              |");
         System.out.println("+-------------------------------------------------------+");
         System.out.println(""); // print empty line
 

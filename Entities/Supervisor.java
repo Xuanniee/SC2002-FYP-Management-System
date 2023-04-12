@@ -1,9 +1,6 @@
 package Entities;
 
 import java.util.ArrayList;
-import java.util.Scanner;
-
-import Controller.*;
 
 public class Supervisor extends User {
     private ArrayList<Project> supervisingProjectList;
@@ -16,6 +13,18 @@ public class Supervisor extends User {
 
     public ArrayList<Project> getSupervisingProjectList() {
         return supervisingProjectList;
+    }
+
+    public Project getParticularSupervisingProject(int projectID) {
+        Project targetProject;
+        for (int i = 0; i < supervisingProjectList.size(); i += 1) {
+            if (supervisingProjectList.get(i).getProjectID() == projectID) {
+                targetProject = supervisingProjectList.get(i);
+                return targetProject;
+            }
+        }
+        return null;
+        
     }
 
     /**

@@ -100,13 +100,19 @@ public class RequestRegisterDB extends Database {
 
     public int viewAllRegisterRequestFYPCoord() {
         System.out.println("Loading all pending requests to register for a project...");
+        int counter = 1;
+
         for (int i = 0; i < requestRegisterList.size(); i += 1) {
-            Project currentProject = requestRegisterList.get(i).getProject();
-            System.out.println((i+1) + ". " + currentProject.getProjectTitle() + "  requested by " + requestRegisterList.get(i).getStudent());
+            RequestRegister currentRequest = requestRegisterList.get(i);
+            Project currentProject = currentRequest.getProject();
+            if (currentRequest.getRequestStatus() == RequestStatus.PENDING) {
+                System.out.println(counter + ". " + currentProject.getProjectTitle() + "  requested by " + requestRegisterList.get(i).getStudent().getStudentName());
+                counter += 1;
+            }
         }
         System.out.println();
 
-        if (requestRegisterList.size() == 0) {
+        if (counter == 1) {
             System.out.println("Pending Register Requests: 0");
             System.out.println("Enter 0 to return to the previous menu.");
             return 1;
@@ -141,15 +147,16 @@ public class RequestRegisterDB extends Database {
         }
 
         Project approvedProject = approvedRequest.getProject();
-        Student approvedStudent = approvedProject.getStudent();
+        Student approvedStudent = approvedRequest.getStudent();
         // Set Project Status
         approvedProject.setProjectStatus(ProjectStatus.ALLOCATED);
         // Set Student to Project
         approvedProject.setStudent(approvedStudent);
         approvedStudent.setAssignedProject(approvedProject);
 
-        // Remove Request from Database
-        requestRegisterList.remove(requestRegisterList.indexOf(approvedRequest));
+        // Update Request Status so this.user cannot see it again
+        // requestRegisterList.remove(requestRegisterList.indexOf(approvedRequest));
+        approvedRequest.setRequestStatus(RequestStatus.APPROVED);
         System.out.println("Project " + approvedProject.getProjectTitle() + " has been successfully allocated to " + approvedStudent.getStudentName());
 
         return true;

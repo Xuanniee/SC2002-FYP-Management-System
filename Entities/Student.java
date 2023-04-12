@@ -9,6 +9,7 @@ public class Student extends User {
     private static final UserType userType = UserType.STUDENT;
     private Project project;
     private Boolean isAssigned;
+    private Boolean hasAppliedForProject = false;
     private ArrayList<Request> studentHistory;
     private ArrayList<Project> deregisteredProjects;
 
@@ -26,6 +27,20 @@ public class Student extends User {
         this.studentHistory = new ArrayList<Request>();
         this.deregisteredProjects = new ArrayList<Project>();
         this.password = "password";
+    }
+
+    public Boolean getHasAppliedForProject() {
+        return this.hasAppliedForProject;
+    }
+
+    public Boolean setHasAppliedForProject(Boolean status) {
+        // Input Validation
+        if (status == null) {
+            return false;
+        }
+
+        this.hasAppliedForProject = status;
+        return true;
     }
 
     public UserType getUserType() {

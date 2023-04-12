@@ -103,6 +103,29 @@ public class RequestTransferDB extends Database {
         return false;
     }
 
+    public void viewTransferRequestsForSupervisor(Supervisor currentSupervisor) {
+        ArrayList<RequestTransfer> currentSupervisorList = new ArrayList<>();
+        for (int i = 0; i < requestTransferList.size(); i += 1) {
+            if (requestTransferList.get(i).getCurSupervisor().equals(currentSupervisor)) {
+                currentSupervisorList.add(requestTransferList.get(i));
+            }
+        }
+        if (currentSupervisorList.size() != 0) {
+            System.out.println("Showing all your Transfer Requests ... ");
+            for (RequestTransfer req : requestTransferList) {
+                System.out.println("Project Title: " + req.getProject().getProjectTitle());
+                System.out.println("Requester: " + req.getCurSupervisor().getUserName());
+                System.out.println("Replacement Supervisor ID: " + req.getRepSupervisor().getUserID());
+                System.out.println("Replacement Supervisor Name: " + req.getRepSupervisor().getUserName());
+                System.out.println("Request Status: " + req.getRequestStatus().name());
+                System.out.println("");
+            }
+        } else {
+            System.out.println("You did not apply for any Transfers before.");
+        }
+
+    }
+
     public void printHistory(User supervisor) {
         if (findSupervisor(supervisor)) {
             System.out.println("Showing all Project Transfer Requests ... ");
@@ -125,13 +148,18 @@ public class RequestTransferDB extends Database {
      */
     public int viewAllTransferRequestFYPCoord() {
         System.out.println("Loading all pending requests to change supervisors for a project...");
+        int counter = 1;
         for (int i = 0; i < requestTransferList.size(); i += 1) {
-            Project currentProject = requestTransferList.get(i).getProject();
-            System.out.println((i+1) + ". " + currentProject.getProjectTitle() + "  requested by " + currentProject.getSupervisor());
+            RequestTransfer currentRequest = requestTransferList.get(i);
+            Project currentProject = currentRequest.getProject();
+            if (currentRequest.getRequestStatus() == RequestStatus.PENDING)  {
+                System.out.println(counter + ". " + currentProject.getProjectTitle() + "  requested by " + currentProject.getSupervisor());
+                counter += 1;
+            }
         }
         System.out.println();
 
-        if (requestTransferList.size() == 0) {
+        if (counter == 1) {
             System.out.println("Pending Transfer Requests: 0");
             System.out.println("Enter 0 to return to the previous menu.");
             return 1;
@@ -187,9 +215,10 @@ public class RequestTransferDB extends Database {
         replacementSupervisor.setSupervisingProjectList(approvedProject);
         currentSupervisor.removeSupervisingProjectList(approvedProject);
 
-        // Remove Request from Database
-        int indexCompletedRequest = requestTransferList.indexOf(approvedRequest);
-        requestTransferList.remove(indexCompletedRequest);
+        // Update Request Status so this.user cannot see it again
+        // int indexCompletedRequest = requestTransferList.indexOf(approvedRequest);
+        // requestTransferList.remove(indexCompletedRequest);
+        approvedRequest.setRequestStatus(RequestStatus.APPROVED);
         System.out.println("Project " + approvedProject.getProjectID() + "'s supervisor has been successfully changed from " + currentSupervisor.getSupervisorName() + 
         " to " + replacementSupervisor.getSupervisorName());
 
