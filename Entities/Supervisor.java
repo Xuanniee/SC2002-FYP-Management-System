@@ -11,8 +11,7 @@ public class Supervisor extends User {
     private Boolean isFull = false;
 
     public Supervisor(String userID, String userName, String userEmail) {
-        super(userID, userName, "password");
-        this.userEmail = userEmail;
+        super(userID, userName, userEmail);
     }
 
     public ArrayList<Project> getSupervisingProjectList() {

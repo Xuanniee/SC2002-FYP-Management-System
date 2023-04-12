@@ -21,6 +21,7 @@ public class User {
         this.userID = userID;
         this.userName = userName;
         this.userEmail = userEmail;
+        this.password = "password";
         this.userType = UserType.UNKNOWN;
     }
 

@@ -1,6 +1,6 @@
 package Entities;
 
-public class FYPCoordinator extends User{
+public class FYPCoordinator extends Supervisor{
     /**
      * Constructor for FYP Coordinator
      * @param userID
@@ -8,9 +8,7 @@ public class FYPCoordinator extends User{
      * @param userEmail
      */
     public FYPCoordinator(String userID, String name, String userEmail) {
-        super(userID, "password");
-        this.userName = name;
-        this.userEmail = userEmail;
+        super(userID, name, userEmail);
     }
 
     // Setters and Getters

@@ -147,7 +147,7 @@ public class ProjectDB extends Database {
         ArrayList<Project> supervisorProjectList = new ArrayList<Project>();
 
         for (int i = 0; i < projectList.size(); i += 1) {
-            if (projectList.get(i).getStudent().getUserName().equalsIgnoreCase(professorName)) {
+            if (projectList.get(i).getSupervisor().getUserName().equalsIgnoreCase(professorName)) {
                 supervisorProjectList.add(projectList.get(i));
             }
         }
