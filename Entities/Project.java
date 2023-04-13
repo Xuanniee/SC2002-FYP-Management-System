@@ -6,9 +6,8 @@ public class Project {
     protected int projectID;
     protected Boolean awaitingTransferRequest = false;
     protected Boolean awaitingTitleChangeRequest = false;
-    // protected String supervisorName;
-    // protected String supervisorEmail;
     protected Supervisor supervisor;
+    protected Supervisor creator;
     protected Student student;
     protected String projectTitle;
     protected ProjectStatus projectStatus;
@@ -16,6 +15,7 @@ public class Project {
     public Project(int projectID, Supervisor supervisor, String projectTitle) {
         this.projectID = projectID;
         this.supervisor = supervisor;
+        this.creator = supervisor;
         this.student = null;
         this.projectTitle = projectTitle;
         this.projectStatus = ProjectStatus.AVAILABLE;
@@ -59,6 +59,14 @@ public class Project {
         this.supervisor = supervisor;
     }
 
+    public Supervisor getCreator() {
+        return this.creator;
+    }
+
+    public void setCreator(Supervisor creator) {
+        this.creator = creator;
+    }
+
     public Student getStudent() {
         return this.student;
     }
@@ -97,7 +105,8 @@ public class Project {
     }
 
     public Boolean deregisterStudent() {
-        System.out.println("Student " + this.student.userName + " has been deregistered from the Project " + this.projectID);
+        System.out.println(
+                "Student " + this.student.userName + " has been deregistered from the Project " + this.projectID);
         this.student = null;
         this.projectStatus = ProjectStatus.AVAILABLE;
 

@@ -10,7 +10,7 @@ public class Student extends User {
     private Project project;
     private Boolean isAssigned;
     private Boolean hasAppliedForProject = false;
-    private ArrayList<Request> studentHistory;
+    private Boolean isDeregistered = false;
     private ArrayList<Project> deregisteredProjects;
 
     /**
@@ -24,7 +24,6 @@ public class Student extends User {
         super(userID, userName, userEmail);
         this.project = null;
         this.isAssigned = false;
-        this.studentHistory = new ArrayList<Request>();
         this.deregisteredProjects = new ArrayList<Project>();
         this.password = "password";
     }
@@ -68,8 +67,12 @@ public class Student extends User {
         return this.project;
     }
 
-    public void addHistory(Request request) {
-        this.studentHistory.add(request);
+    public Boolean getIsDeregistered() {
+        return this.isDeregistered;
+    }
+
+    public void setIsDeregistered(Boolean status) {
+        this.isDeregistered = status;
     }
 
     public void addDeregisteredProjects(Project project) {
@@ -80,15 +83,11 @@ public class Student extends User {
         return this.deregisteredProjects;
     }
 
-    public ArrayList<Request> getRequestHistory() {
-        return this.studentHistory;
-    }
-
     public Boolean deregisterProject() {
         if (this.isAssigned == false) {
             System.out.println("Student " + this.userName + " does not have a project assigned to them.");
             return false;
-        }        
+        }
 
         // Update Students' Particulars
         this.isAssigned = false;

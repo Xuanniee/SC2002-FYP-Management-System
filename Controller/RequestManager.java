@@ -13,8 +13,9 @@ public class RequestManager {
     private RequestTransferDB requestTransferDB;
 
     // Constructor
-    public RequestManager(ProjectDB projectDB, FacultyDB facultyDB, RequestChangeTitleDB requestChangeTitleDB, RequestRegisterDB requestRegisterDB,
-    RequestDeregisterDB requestDeregisterDB, RequestTransferDB requestTransferDB) {
+    public RequestManager(ProjectDB projectDB, FacultyDB facultyDB, RequestChangeTitleDB requestChangeTitleDB,
+            RequestRegisterDB requestRegisterDB,
+            RequestDeregisterDB requestDeregisterDB, RequestTransferDB requestTransferDB) {
         this.projectDB = projectDB;
         this.facultyDB = facultyDB;
         this.requestRegisterDB = requestRegisterDB;
@@ -25,12 +26,15 @@ public class RequestManager {
 
     Scanner sc = new Scanner(System.in);
 
+    /**
+     * Method for Student to create request to register for a Project
+     */
     public void studentRegister(Student student) {
         // Student is only allowed to make 1 Register Request at any point in time
         if (student.getHasAppliedForProject()) {
             // Not allowed to make request
             System.out.println("You have already applied for another project. " +
-            "Please wait for the results of the request before making another.");
+                    "Please wait for the results of the request before making another.");
             return;
         }
         System.out.print("Please enter Project ID of the project you want to register for: ");
@@ -44,8 +48,13 @@ public class RequestManager {
         System.out.println("Request submitted successfully.");
     }
 
+    /**
+     * Method for Student to create request to change title of their registered
+     * project
+     */
     public void changeTitle(Student student, Project project) {
-        System.out.println("Please enter new title: ");
+        System.out.print("Please enter new title: ");
+        // Remove \n
         sc.nextLine();
         String newTitle = sc.nextLine();
         RequestChangeTitle requestChangeTitle = new RequestChangeTitle(student, newTitle);
@@ -54,12 +63,15 @@ public class RequestManager {
         System.out.println("Request submitted successfully.");
     }
 
-    public void studentDeregister(Student student) {
+    /**
+     * Method for Student to create request to deregister from their project
+     */
+    public void studentDeregister(Student student, FYPCoordinator fypCoordinator) {
         System.out.print("Please confirm the Project ID of the project you want to deregister from: ");
         int projID = sc.nextInt();
         Project currentProject = student.getAssignedProject();
         if (currentProject.getProjectID() == projID) {
-            RequestDeregister requestDeregister = new RequestDeregister(student, currentProject);
+            RequestDeregister requestDeregister = new RequestDeregister(student, currentProject, fypCoordinator);
             requestDeregisterDB.addRequest(requestDeregister);
             System.out.println("Request submitted successfully.");
         } else {
@@ -67,6 +79,10 @@ public class RequestManager {
         }
     }
 
+    /**
+     * Method for Supervisor to create request to Transfer a project to another
+     * Supervisor
+     */
     public Boolean changeSupervisorRequest(Supervisor requesterSupervisor) {
         if (requesterSupervisor == null) {
             System.out.println("No Supervisor.");
@@ -74,6 +90,8 @@ public class RequestManager {
         }
         System.out.println("Provide the Project ID of the Project you no longer wish to supervise   : ");
         int projectBeingChanged = sc.nextInt();
+        // Remove \n since nextInt does not clear it from the buffer
+        sc.nextLine();
         // Retrieve the Project
         Project targetProject = requesterSupervisor.getParticularSupervisingProject(projectBeingChanged);
 
@@ -90,6 +108,7 @@ public class RequestManager {
 
     /**
      * View History for Students
+     * 
      * @param user
      */
     public void getRequestHistory(User user) {
@@ -99,7 +118,42 @@ public class RequestManager {
     }
 
     /**
+     * For FYP Coordinator to view all Requests from ALL Users
+     * 
+     * @param fypCoordinator
+     */
+    public Boolean getAllRequestHistory(FYPCoordinator fypCoordinator) {
+        if (fypCoordinator == null) {
+            System.out.println("Only FYP Coordinator can access.");
+            return false;
+        }
+
+        System.out.println("###################       Title Change Requests       ###################");
+        requestChangeTitleDB.printAllHistory(fypCoordinator);
+        System.out.println();
+        System.out.println();
+
+        System.out.println("###################         Transfer Requests         ###################");
+        requestTransferDB.printAllHistory(fypCoordinator);
+        System.out.println();
+        System.out.println();
+
+        System.out.println("###################    Student Deregister Requests    ###################");
+        requestDeregisterDB.printAllHistory(fypCoordinator);
+        System.out.println();
+        System.out.println();
+
+        System.out.println("###################     Student Register Requests     ###################");
+        requestRegisterDB.printAllHistory(fypCoordinator);
+        System.out.println();
+        System.out.println();
+
+        return true;
+    }
+
+    /**
      * Viewing Pending Title Change Requests for Supervisor
+     * 
      * @param currentSupervisor
      * @return
      */
@@ -113,7 +167,10 @@ public class RequestManager {
         return true;
     }
 
-
+    /**
+     * Viewing all incoming and outgoing requests for Supervisor regardless of
+     * RequestStatus
+     */
     public void getRequestHistoryAndStatus(Supervisor currentSupervisor) {
         if (currentSupervisor == null) {
             System.out.println("No Supervisor provided.");
@@ -126,7 +183,7 @@ public class RequestManager {
 
         System.out.println("###################    Outgoing Transfer Requests    ###################");
         requestTransferDB.viewTransferRequestsForSupervisor(currentSupervisor);
-        
+
         System.out.println("###########################    END    ###########################");
     }
 

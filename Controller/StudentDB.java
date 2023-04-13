@@ -107,14 +107,10 @@ public class StudentDB extends Database {
     }
 
     public void viewRegisteredProject(Student currentStudent) {
-        if (!currentStudent.getIsAssigned()) {
-            System.out.println("You have not registered for any projects.");
-        } else {
-            for (Student student : students) {
-                if (student.getUserID() == currentStudent.getUserID()) {
-                    Project currentProject = student.getAssignedProject();
-                    currentProject.printProjectDetails();
-                }
+        for (Student student : students) {
+            if (student.getUserID() == currentStudent.getUserID()) {
+                Project currentProject = student.getAssignedProject();
+                currentProject.printProjectDetails();
             }
         }
     }

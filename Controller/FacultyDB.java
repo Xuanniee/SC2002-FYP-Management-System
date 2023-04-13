@@ -41,12 +41,12 @@ public class FacultyDB {
         }
     }
 
-    public void createProject(ProjectDB project_list, Supervisor loggedSupervisor){
+    public void createProject(ProjectDB project_list, Supervisor loggedSupervisor) {
         String projectTitle;
         Scanner scObject = new Scanner(System.in);
         System.out.println("#############     Project Creation     #############");
         System.out.println("Input the Project Title: ");
-        scObject.nextLine();
+        // scObject.nextLine();
         projectTitle = scObject.nextLine();
 
         // Increment the Project ID
@@ -56,18 +56,27 @@ public class FacultyDB {
         Project newlyCreatedProject = new Project(project_list.getProjectCount(), loggedSupervisor, projectTitle);
         project_list.addProject(newlyCreatedProject);
 
+        // Add to Supervisor's List of Created Projects
+        loggedSupervisor.addToCreatedProjectList(newlyCreatedProject);
+
         System.out.println("Project Initialised.");
+
+        scObject.close();
     }
 
-    public void viewOwnProject(ArrayList<Project> supervisorProjectList) {
-        if (supervisorProjectList.size() == 0) {
+    /**
+     * Viewing all projects created by Supervisor (including projects he/she is
+     * supervising)
+     */
+    public void viewOwnProject(ArrayList<Project> createdProjectList) {
+        if (createdProjectList.size() == 0) {
             System.out.println("You have not yet created any projects.");
         }
         int counter = 1;
         System.out.println("############# List of Created Projects #############");
-        for (int i = 0; i < supervisorProjectList.size(); i += 1) {
-            int projectId = supervisorProjectList.get(i).getProjectID();
-            String projectName = supervisorProjectList.get(i).getProjectTitle();
+        for (int i = 0; i < createdProjectList.size(); i += 1) {
+            int projectId = createdProjectList.get(i).getProjectID();
+            String projectName = createdProjectList.get(i).getProjectTitle();
             System.out.println(counter + " | Project ID: " + projectId + " | Project Title: " + projectName);
             counter += 1;
         }
@@ -75,8 +84,12 @@ public class FacultyDB {
     };
 
     public void modifyTitle(ProjectDB projectDB, Supervisor managedSupervisor) {
-        // Retrieve the list of projects owned by this particular supervisor
-        ArrayList<Project> supervisorProjectList = projectDB.retrieveProfessorProjects(managedSupervisor.getSupervisorName());
+        // Retrieve the list of projects created by this particular supervisor
+        ArrayList<Project> supervisorProjectList = projectDB
+                .retrieveSupervisorProjects(managedSupervisor.getSupervisorName());
+        // Print out list of projects created by this particular supervisor
+        viewOwnProject(supervisorProjectList);
+
         Scanner scObject = new Scanner(System.in);
         int targetProjectID;
         int userInput;
@@ -117,6 +130,7 @@ public class FacultyDB {
             }
         } while (true);
 
+        scObject.close();
     }
 
     public Boolean validateProjectID(ArrayList<Project> supervisorProjectList, int unknownProjectId) {

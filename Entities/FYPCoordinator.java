@@ -1,8 +1,9 @@
 package Entities;
 
-public class FYPCoordinator extends Supervisor{
+public class FYPCoordinator extends Supervisor {
     /**
      * Constructor for FYP Coordinator
+     * 
      * @param userID
      * @param name
      * @param userEmail
@@ -60,6 +61,4 @@ public class FYPCoordinator extends Supervisor{
         return true;
     }
 
-
-    
 }

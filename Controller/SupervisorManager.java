@@ -2,7 +2,6 @@ package Controller;
 
 import java.util.Scanner;
 
-import Entities.Request;
 import Entities.Supervisor;
 import enums.RequestStatus;
 import Entities.Project;
@@ -17,8 +16,9 @@ public class SupervisorManager {
     Scanner scanner = new Scanner(System.in);
 
     // Constructor
-    public SupervisorManager(Supervisor supervisor, FacultyDB facultyDB, ProjectDB projectDB, RequestManager requestManager, 
-    RequestChangeTitleDB requestChangeTitleDB){
+    public SupervisorManager(Supervisor supervisor, FacultyDB facultyDB, ProjectDB projectDB,
+            RequestManager requestManager,
+            RequestChangeTitleDB requestChangeTitleDB) {
         this.managedSupervisor = supervisor;
         this.facultyDB = facultyDB;
         this.projectDB = projectDB;
@@ -26,30 +26,34 @@ public class SupervisorManager {
         this.requestManager = requestManager;
     }
 
-    /*public SupervisorManager(String supervisorUserID, FacultyDB facultyDB) {
-        // Determine the Managed Supervisor
-        this.managedSupervisor = facultyDB.findSupervisor(supervisorUserID);
-    };
-
-    /**
+    /*
+     * public SupervisorManager(String supervisorUserID, FacultyDB facultyDB) {
+     * // Determine the Managed Supervisor
+     * this.managedSupervisor = facultyDB.findSupervisor(supervisorUserID);
+     * };
+     * 
+     * /**
      * Function that allows Supervisor to interface with the Menu
+     * 
      * @param scObject
+     * 
      * @param project_list
      */
     public void processSupervisorChoice(int userInput) {
 
-            // Call the Menu for the respective users
-        switch(userInput) {
+        // Call the Menu for the respective users
+        switch (userInput) {
             case 1:
                 facultyDB.createProject(projectDB, managedSupervisor);
                 break;
             case 2:
-                facultyDB.viewOwnProject(projectDB.retrieveProfessorProjects(managedSupervisor.getSupervisorName()));
+                // View own Created Projects, Need pass in the Created Project List
+                facultyDB.viewOwnProject(projectDB.retrieveSupervisorProjects(managedSupervisor.getSupervisorName()));
                 break;
             case 3:
-                facultyDB.modifyTitle(projectDB,managedSupervisor);
+                facultyDB.modifyTitle(projectDB, managedSupervisor);
                 break;
-            
+
             case 4:
                 // View Pending Requests for Approval
                 int selectedTitleChangeRequest;
@@ -62,18 +66,25 @@ public class SupervisorManager {
                     if (noTitleChangeRequest == 1) {
                         break;
                     }
+                    System.out.println("Please indicate which Request you would like to look at: ");
+                    System.out.println("Alternatively, Enter 0 to return to the previous menu.");
                     // Get Index of Title Change Request to look at in detail
                     selectedTitleChangeRequest = scanner.nextInt();
 
-                    RequestChangeTitle targetRequest = requestChangeTitleDB.viewTitleChangeRequestDetailedSupervisor(selectedTitleChangeRequest);
+                    if (selectedTitleChangeRequest == 0) {
+                        // After Request has been approved or rejected, to return to main menu.
+                        continue;
+                    }
+
+                    RequestChangeTitle targetRequest = requestChangeTitleDB
+                            .viewTitleChangeRequestDetailedSupervisor(selectedTitleChangeRequest);
                     approvalResult = scanner.nextInt();
 
                     Project updateProject = targetRequest.getProject();
                     if (approvalResult == 1) {
                         requestChangeTitleDB.approveTitleChangeRequest(targetRequest);
                         targetRequest.setRequestStatus(RequestStatus.APPROVED);
-                    }
-                    else {
+                    } else {
                         // Reject Request
                         updateProject.setAwaitingTitleChangeRequest(false);
                         targetRequest.setRequestStatus(RequestStatus.REJECTED);
@@ -91,6 +102,7 @@ public class SupervisorManager {
 
             case 6:
                 // Transfer Supervisor
+                this.managedSupervisor.viewSupervisingProjectList();
                 requestManager.changeSupervisorRequest(managedSupervisor);
                 break;
 
@@ -102,7 +114,7 @@ public class SupervisorManager {
                 break;
         }
 
-        //System.out.println("Thank you for using FYPMS. You have been logged out.");
+        // System.out.println("Thank you for using FYPMS. You have been logged out.");
     }
 
     public int displayFacultyMenu() {
@@ -119,7 +131,7 @@ public class SupervisorManager {
         System.out.println("| 5. View request history & status                      |");
         System.out.println("| 6. Request the transfer of a student                  |");
         System.out.println("|-------------------------------------------------------|");
-        System.out.println("|              Enter 0 to Log out of FYPMS              |"); 
+        System.out.println("|              Enter 0 to Log out of FYPMS              |");
         System.out.println("+-------------------------------------------------------+");
         System.out.println(""); // print empty line
 
@@ -131,5 +143,5 @@ public class SupervisorManager {
 
         return choice;
     }
-    
+
 }

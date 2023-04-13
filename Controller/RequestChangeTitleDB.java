@@ -11,6 +11,7 @@ import java.io.PrintWriter;
 
 import Entities.RequestChangeTitle;
 import Entities.Supervisor;
+import Entities.FYPCoordinator;
 import Entities.Project;
 import Entities.User;
 import enums.RequestStatus;
@@ -34,6 +35,9 @@ public class RequestChangeTitleDB extends Database {
     public RequestChangeTitleDB(ProjectDB projectDB, StudentDB studentDB, FacultyDB facultyDB) {
         this.file = new File(filePath);
         this.requestChangeTitleList = new ArrayList<RequestChangeTitle>();
+        this.projectDB = projectDB;
+        this.studentDB = studentDB;
+        this.facultyDB = facultyDB;
         this.readFile();
     }
 
@@ -41,6 +45,9 @@ public class RequestChangeTitleDB extends Database {
         this.file = new File(filePath);
         this.requestChangeTitleList = new ArrayList<RequestChangeTitle>();
         this.readFile();
+        this.projectDB = projectDB;
+        this.studentDB = studentDB;
+        this.facultyDB = facultyDB;
     }
 
     public void readFile() {
@@ -101,13 +108,19 @@ public class RequestChangeTitleDB extends Database {
         }
     }
 
-    public void addRequest(RequestChangeTitle requestChangeTitle) {
+    public Boolean addRequest(RequestChangeTitle requestChangeTitle) {
+        if (requestChangeTitle == null) {
+            System.out.println("Change Title Request is NULL.");
+            return false;
+        }
         requestChangeTitleList.add(requestChangeTitle);
+        System.out.println("THIS IS MY SIZE" + requestChangeTitleList.size());
+        return true;
     }
 
-    public Boolean findStudent(User user) {
+    public Boolean findStudent(User student) {
         for (RequestChangeTitle req : requestChangeTitleList) {
-            if (req.getStudent() == user) {
+            if (req.getStudent().equals(student)) {
                 return true;
             }
         }
@@ -125,11 +138,15 @@ public class RequestChangeTitleDB extends Database {
 
     public int viewAllTitleChangeRequestSupervisor(Supervisor currentSupervisor) {
         int counter = 1;
+        System.out.println("");
         System.out.println("Loading all pending change title requests...");
         for (int i = 0; i < requestChangeTitleList.size(); i += 1) {
             RequestChangeTitle currentRequest = requestChangeTitleList.get(i);
-            if (currentRequest.getRequestStatus() == RequestStatus.PENDING && requestChangeTitleList.get(i).getProject().getSupervisor().equals(currentSupervisor)) {
-                System.out.println(counter + ". Project ID " + currentRequest.getProjectID() + "'s change of title" + " requested by " + requestChangeTitleList.get(i).getStudent());    
+            if (currentRequest.getRequestStatus() == RequestStatus.PENDING
+                    && requestChangeTitleList.get(i).getSupervisor().getSupervisorID()
+                            .equalsIgnoreCase(currentSupervisor.getSupervisorID())) {
+                System.out.println(counter + ". Project ID " + currentRequest.getProjectID() + "'s change of title"
+                        + " requested by " + requestChangeTitleList.get(i).getStudent().getUserName());
                 counter += 1;
             }
         }
@@ -142,12 +159,13 @@ public class RequestChangeTitleDB extends Database {
         }
 
         System.out.println();
-        System.out.println();       // Prints Empty Line
+        System.out.println(); // Prints Empty Line
         return 0;
     }
 
     /**
      * View the Details of Title Change Request
+     * 
      * @param requestChoice
      * @return targetRequest
      */
@@ -156,15 +174,20 @@ public class RequestChangeTitleDB extends Database {
         RequestChangeTitle targetRequest = requestChangeTitleList.get(targetRequestIndex);
         System.out.println("Loading selected request...");
         System.out.println();
-        System.out.println("+------------------------------------------------------------------------------------------------------------+");
-        System.out.println("|                                       Title Change Request Approval                                        |");
-        System.out.println("|------------------------------------------------------------------------------------------------------------|");
+        System.out.println(
+                "+------------------------------------------------------------------------------------------------------------+");
+        System.out.println(
+                "|                                       Title Change Request Approval                                        |");
+        System.out.println(
+                "|------------------------------------------------------------------------------------------------------------|");
         targetRequest.getProject().printProjectDetails();
-        System.out.println("Requestee (Student)     : " + targetRequest.getStudent());
-        System.out.println("Old Title               :" + targetRequest.getPrevTitle());
+        System.out.println("Requestee (Student)     : " + targetRequest.getStudent().getUserName());
+        System.out.println("Old Title               : " + targetRequest.getPrevTitle());
         System.out.println("Suggested New Title     : " + targetRequest.getNewTitle());
-        System.out.println("|------------------------------------------------------------------------------------------------------------|");
-        System.out.println("Select 1 to approve the request, and 0 to reject the request and return to the previous menu.");
+        System.out.println(
+                "|------------------------------------------------------------------------------------------------------------|");
+        System.out.println(
+                "Select 1 to approve the request, and 0 to reject the request and return to the previous menu.");
         System.out.println();
 
         return targetRequest;
@@ -172,6 +195,7 @@ public class RequestChangeTitleDB extends Database {
 
     /**
      * Function for Supervisor to approve change of Project's Title
+     * 
      * @param approvedRequest
      * @return Boolean to note if function was success
      */
@@ -188,13 +212,15 @@ public class RequestChangeTitleDB extends Database {
 
         // Update Request Status so this.user cannot see it again
         approvedRequest.setRequestStatus(RequestStatus.APPROVED);
-        System.out.println("Project " + approvedRequest.getPrevTitle() + " has been successfully renamed to " + newProjectTitle);
+        System.out.println(
+                "Project " + approvedRequest.getPrevTitle() + " has been successfully renamed to " + newProjectTitle);
 
         return true;
     }
 
     /**
      * For Supervisor to view Pending Title Change Requests only
+     * 
      * @param currentSupervisor
      */
     public void viewPendingTitleChangeRequests(Supervisor currentSupervisor) {
@@ -218,6 +244,37 @@ public class RequestChangeTitleDB extends Database {
         }
     }
 
+    /**
+     * Function for FYP Coordinator to view all the Title Change Requests
+     * 
+     * @param fypCoordinator
+     * @return the print statements of all the change title requests in FYPMS
+     */
+    public Boolean printAllHistory(FYPCoordinator fypCoordinator) {
+        if (fypCoordinator == null) {
+            System.out.println("Only the FYP Coordinator can access this features.");
+            return false;
+        }
+
+        int counter = 1;
+        for (int i = 0; i < requestChangeTitleList.size(); i += 1) {
+            RequestChangeTitle currentRequest = requestChangeTitleList.get(i);
+            System.out.println(counter + ". | Requester: " + currentRequest.getStudent().getUserName()
+                    + " | Requestee: " + currentRequest.getSupervisor().getUserName() +
+                    " | Status: " + currentRequest.getRequestStatus().toString());
+
+            counter += 1;
+        }
+
+        if (counter == 1) {
+            System.out
+                    .println("There is currently no title change requests submitted by any user in the FYPMS System.");
+        }
+
+        return true;
+
+    }
+
     public void printHistory(User user) {
         if (user.getUserType() == UserType.STUDENT) {
             if (findStudent(user)) {
@@ -233,6 +290,7 @@ public class RequestChangeTitleDB extends Database {
                 }
             } else {
                 System.out.println("No requests to Change Title for Supervisors");
+                System.out.println("");
             }
         }
 

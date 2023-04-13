@@ -14,6 +14,8 @@ public class RequestChangeTitle extends Request {
     public RequestChangeTitle(Student student, String newTitle) {
         super(RequestType.CHANGETITLE);
         this.project = student.getAssignedProject();
+        this.student = student;
+        this.supervisor = this.project.getSupervisor();
         this.prevTitle = student.getAssignedProject().getProjectTitle();
         this.newTitle = newTitle;
     }

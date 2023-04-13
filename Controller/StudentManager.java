@@ -8,16 +8,19 @@ public class StudentManager {
 
     private StudentDB studentDB;
     private ProjectDB projectDB;
-    private RequestManager requestManager; 
+    private FYPcoordDB fyPcoordDB;
+    private RequestManager requestManager;
 
     Scanner scanner = new Scanner(System.in);
 
     private Student currentStudent;
 
-    public StudentManager(Student student, StudentDB studentDB, ProjectDB projectDB, RequestManager requestManager) {
+    public StudentManager(Student student, StudentDB studentDB, ProjectDB projectDB, RequestManager requestManager,
+            FYPcoordDB fyPcoordDB) {
         this.currentStudent = student;
         this.studentDB = studentDB;
         this.projectDB = projectDB;
+        this.fyPcoordDB = fyPcoordDB;
         this.requestManager = requestManager;
     }
 
@@ -31,12 +34,21 @@ public class StudentManager {
 
             case 2:
                 System.out.println("View All Projects...");
-                projectDB.viewAvailableProjects(currentStudent);
+                if (currentStudent.getIsDeregistered()) {
+                    System.out.println(
+                            "You are not allowed to view any projects because you have already deregistered from FYP.");
+                } else {
+                    projectDB.viewAvailableProjects(currentStudent);
+                }
                 break;
 
             case 3:
                 System.out.println("View Registered Project...");
-                studentDB.viewRegisteredProject(currentStudent);
+                if (!currentStudent.getIsAssigned()) {
+                    System.out.println("You have not registered for any projects.");
+                } else {
+                    studentDB.viewRegisteredProject(currentStudent);
+                }
                 break;
 
             case 4:
@@ -65,7 +77,7 @@ public class StudentManager {
                 } else {
                     System.out.println("Your registered project: ");
                     currentStudent.getAssignedProject().printProjectDetails();
-                    requestManager.studentDeregister(currentStudent);
+                    requestManager.studentDeregister(currentStudent, fyPcoordDB.getFypCoordinatorsList().get(0));
                 }
                 break;
 

@@ -2,11 +2,14 @@ package Controller;
 
 import java.util.ArrayList;
 
+import Entities.FYPCoordinator;
 import Entities.Project;
+import Entities.ProjectAllocation;
 import Entities.Student;
+import Entities.Supervisor;
 import Entities.RequestRegister;
-import enums.ProjectStatus;
 import Entities.User;
+import enums.ProjectStatus;
 import enums.RequestStatus;
 import enums.UserType;
 
@@ -26,20 +29,31 @@ public class RequestRegisterDB extends Database {
 
     private ArrayList<RequestRegister> requestRegisterList;
 
-    private ProjectDB projectDB = new ProjectDB();
-    private StudentDB studentDB = new StudentDB();
-    private FacultyDB facultyDB = new FacultyDB();
+    private ProjectDB projectDB;
+    private StudentDB studentDB;
+    private FacultyDB facultyDB;
+    private ProjectAllocationDB projectAllocationDB;
 
-    public RequestRegisterDB() {
+    public RequestRegisterDB(ProjectDB projectDB, StudentDB studentDB, FacultyDB facultyDB,
+            ProjectAllocationDB projectAllocationDB) {
         this.file = new File(filePath);
         this.requestRegisterList = new ArrayList<RequestRegister>();
         this.readFile();
+        this.projectDB = projectDB;
+        this.studentDB = studentDB;
+        this.facultyDB = facultyDB;
+        this.projectAllocationDB = projectAllocationDB;
     }
 
-    public RequestRegisterDB(String filePath) {
+    public RequestRegisterDB(String filePath, ProjectDB projectDB, StudentDB studentDB, FacultyDB facultyDB,
+            ProjectAllocationDB projectAllocationDB) {
         this.file = new File(filePath);
         this.requestRegisterList = new ArrayList<RequestRegister>();
         this.readFile();
+        this.projectDB = projectDB;
+        this.studentDB = studentDB;
+        this.facultyDB = facultyDB;
+        this.projectAllocationDB = projectAllocationDB;
     }
 
     public void readFile() {
@@ -106,7 +120,8 @@ public class RequestRegisterDB extends Database {
             RequestRegister currentRequest = requestRegisterList.get(i);
             Project currentProject = currentRequest.getProject();
             if (currentRequest.getRequestStatus() == RequestStatus.PENDING) {
-                System.out.println(counter + ". " + currentProject.getProjectTitle() + "  requested by " + requestRegisterList.get(i).getStudent().getStudentName());
+                System.out.println(counter + ". " + currentProject.getProjectTitle() + "  requested by "
+                        + requestRegisterList.get(i).getStudent().getUserName());
                 counter += 1;
             }
         }
@@ -119,7 +134,7 @@ public class RequestRegisterDB extends Database {
         }
 
         System.out.println();
-        System.out.println();       // Prints Empty Line
+        System.out.println(); // Prints Empty Line
         return 0;
     }
 
@@ -128,14 +143,19 @@ public class RequestRegisterDB extends Database {
         RequestRegister targetRequest = requestRegisterList.get(targetRequestIndex);
         System.out.println("Loading selected request...");
         System.out.println();
-        System.out.println("+------------------------------------------------------------------------------------------------------------+");
-        System.out.println("|                                         Register Request Approval                                          |");
-        System.out.println("|------------------------------------------------------------------------------------------------------------|");
+        System.out.println(
+                "+------------------------------------------------------------------------------------------------------------+");
+        System.out.println(
+                "|                                         Register Request Approval                                          |");
+        System.out.println(
+                "|------------------------------------------------------------------------------------------------------------|");
         targetRequest.getProject().printProjectDetails();
         System.out.println("Project Status        : " + targetRequest.getProject().getProjectStatus());
-        System.out.println("Student who made request: " + targetRequest.getStudent());
-        System.out.println("|------------------------------------------------------------------------------------------------------------|");
-        System.out.println("Select 1 to approve the request, and 0 to reject the request and return to the previous menu.");
+        System.out.println("Student who made request: " + targetRequest.getStudent().getUserName());
+        System.out.println(
+                "|------------------------------------------------------------------------------------------------------------|");
+        System.out.println(
+                "Select 1 to approve the request, and 0 to reject the request and return to the previous menu.");
         System.out.println();
 
         return targetRequest;
@@ -148,16 +168,23 @@ public class RequestRegisterDB extends Database {
 
         Project approvedProject = approvedRequest.getProject();
         Student approvedStudent = approvedRequest.getStudent();
+        Supervisor supervisingSupervisor = approvedRequest.getSupervisor();
         // Set Project Status
         approvedProject.setProjectStatus(ProjectStatus.ALLOCATED);
         // Set Student to Project
         approvedProject.setStudent(approvedStudent);
         approvedStudent.setAssignedProject(approvedProject);
+        // Update Supervisor Project List
+        supervisingSupervisor.getSupervisingProjectList().add(approvedProject);
+        // Update the Allocation DB
+        projectAllocationDB.addAllocation(new ProjectAllocation(approvedStudent.getUserID(),
+                Integer.toString(approvedProject.getProjectID()), supervisingSupervisor.getUserID()));
 
         // Update Request Status so this.user cannot see it again
         // requestRegisterList.remove(requestRegisterList.indexOf(approvedRequest));
         approvedRequest.setRequestStatus(RequestStatus.APPROVED);
-        System.out.println("Project " + approvedProject.getProjectTitle() + " has been successfully allocated to " + approvedStudent.getStudentName());
+        System.out.println("Project " + approvedProject.getProjectTitle() + " has been successfully allocated to "
+                + approvedStudent.getUserName());
 
         return true;
     }
@@ -180,6 +207,36 @@ public class RequestRegisterDB extends Database {
         return false;
     }
 
+    /**
+     * Function for FYP Coordinator to view all the Register Requests
+     * 
+     * @param fypCoordinator
+     * @return the print statements of all the register requests in FYPMS
+     */
+    public Boolean printAllHistory(FYPCoordinator fypCoordinator) {
+        if (fypCoordinator == null) {
+            System.out.println("Only the FYP Coordinator can access this features.");
+            return false;
+        }
+
+        int counter = 1;
+        for (int i = 0; i < requestRegisterList.size(); i += 1) {
+            RequestRegister currentRequest = requestRegisterList.get(i);
+            System.out.println(counter + ". | Requester: " + currentRequest.getStudent().getUserName()
+                    + " | Requestee: " + currentRequest.getSupervisor().getUserName() +
+                    " | Status: " + currentRequest.getRequestStatus().toString());
+
+            counter += 1;
+        }
+
+        if (counter == 1) {
+            System.out
+                    .println("There is currently no register requests submitted by any user in the FYPMS System.");
+        }
+
+        return true;
+    }
+
     public void printHistory(User user) {
 
         if (user.getUserType() == UserType.STUDENT) {
@@ -187,8 +244,9 @@ public class RequestRegisterDB extends Database {
                 System.out.println("Showing all Registration Requests ... ");
                 for (RequestRegister req : requestRegisterList) {
                     if (req.getStudent() == user) {
-                        System.out.printf("Registering for Project(ID/Title): %s/%s", req.getProject().getProjectID(),
+                        System.out.printf("Registering for Project(ID/Title): %s / %s", req.getProject().getProjectID(),
                                 req.getProject().getProjectTitle());
+                        System.out.println("");
                         System.out.println("Requestee: " + req.getSupervisor().getSupervisorName());
                         System.out.println("Request Status: " + req.getRequestStatus().name());
                         System.out.println("");
@@ -196,6 +254,7 @@ public class RequestRegisterDB extends Database {
                 }
             } else {
                 System.out.println("No requests to Register");
+                System.out.println("");
             }
         }
 

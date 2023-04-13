@@ -4,7 +4,6 @@ import java.util.Scanner;
 
 import Entities.FYPCoordinator;
 import Entities.Student;
-import Entities.Supervisor;
 import Entities.Project;
 import enums.RequestStatus;
 import Entities.RequestDeregister;
@@ -16,18 +15,30 @@ public class FYPCoordinatorManager {
 
     // Attributes
     private FYPCoordinator currentFypCoordinator;
+    private ProjectDB projectDB;
+    private RequestRegisterDB requestRegisterDB;
+    private RequestTransferDB requestTransferDB;
+    private RequestDeregisterDB requestDeregisterDB;
+    private RequestManager requestManager;
 
     /**
      * Constructor for FYP Manager
+     * 
      * @param currentFypCoordinator
      */
-    public FYPCoordinatorManager(FYPCoordinator currentFypCoordinator) {
+    public FYPCoordinatorManager(FYPCoordinator currentFypCoordinator, ProjectDB projectDB,
+            RequestRegisterDB requestRegisterDB, RequestTransferDB requestTransferDB,
+            RequestDeregisterDB requestDeregisterDB, RequestManager requestManager) {
         this.currentFypCoordinator = currentFypCoordinator;
+        this.projectDB = projectDB;
+        this.requestRegisterDB = requestRegisterDB;
+        this.requestTransferDB = requestTransferDB;
+        this.requestDeregisterDB = requestDeregisterDB;
+        this.requestManager = requestManager;
     }
 
-    public void processFypCoordinatorChoice (int choice, ProjectDB projectDB, RequestRegisterDB requestRegisterDB, RequestTransferDB requestTransferDB, 
-    RequestDeregisterDB deregisterDB, RequestManager requestManager) {
-        switch(choice) {
+    public void processFypCoordinatorChoice(int choice) {
+        switch (choice) {
             case 0:
                 System.out.println("Logging off...");
                 // Newlines
@@ -50,7 +61,44 @@ public class FYPCoordinatorManager {
             case 3:
                 // TODO Generate Project Menu
                 System.out.println("Opening Project Report Menu...");
-                displayProjectReportMenu();
+                Boolean invalidProjectMenuOption = true;
+                do {
+                    // Main Project Menu
+                    displayProjectReportMenu();
+
+                    // Open the Relevant Filtered Menu for each of the Option
+                    int reportFilterOption = scanner.nextInt();
+                    // scanner.nextLine();
+
+                    switch (reportFilterOption) {
+                        case 0:
+                            // Quit to Previous Menu
+                            invalidProjectMenuOption = false;
+                            break;
+
+                        case 1:
+                            // Filter based on Project Status - ProjectDB
+                            projectDB.projectStatusFilteredMenu(scanner);
+                            invalidProjectMenuOption = false;
+                            break;
+
+                        case 2:
+                            // Filter based on Project Supervisor
+                            projectDB.projectSupervisorFilteredMenu(scanner);
+                            invalidProjectMenuOption = false;
+                            break;
+
+                        case 3:
+                            // Filter based on Allocated Student
+                            projectDB.projectStudentFilteredMenu(scanner);
+                            invalidProjectMenuOption = false;
+                            break;
+
+                        default:
+                            System.out.println("Invalid Choice. Please choose again.");
+                            break;
+                    }
+                } while (invalidProjectMenuOption == true);
                 break;
 
             case 4:
@@ -74,15 +122,15 @@ public class FYPCoordinatorManager {
                         continue;
                     }
 
-                    RequestRegister targetRequest = requestRegisterDB.viewRegisterRequestDetailedFYPCoord(selectedRequest);
+                    RequestRegister targetRequest = requestRegisterDB
+                            .viewRegisterRequestDetailedFYPCoord(selectedRequest);
                     approvalResult = scanner.nextInt();
 
                     Student updateStudent = targetRequest.getStudent();
                     if (approvalResult == 1) {
                         requestRegisterDB.approveRegisterRequestFYPCoord(targetRequest);
                         targetRequest.setRequestStatus(RequestStatus.APPROVED);
-                    }
-                    else {
+                    } else {
                         // Reject Request
                         updateStudent.setHasAppliedForProject(false);
                         targetRequest.setRequestStatus(RequestStatus.REJECTED);
@@ -92,7 +140,7 @@ public class FYPCoordinatorManager {
                 } while (selectedRequest != 0);
                 System.out.println("Returning to main menu...");
                 break;
-            
+
             case 5:
                 // Changing Supervisor
                 int selectedSupervisorRequest;
@@ -105,17 +153,24 @@ public class FYPCoordinatorManager {
                     if (noTransferRequest == 1) {
                         break;
                     }
+                    System.out.println("Please indicate which Request you would like to look at: ");
+                    System.out.println("Alternatively, Enter 0 to return to the previous menu.");
                     selectedSupervisorRequest = scanner.nextInt();
 
-                    RequestTransfer targetTransferRequest = requestTransferDB.viewTransferRequestDetailedFYPCoord(selectedSupervisorRequest);
+                    if (selectedSupervisorRequest == 0) {
+                        // After Request has been approved or rejected, to return to main menu.
+                        continue;
+                    }
+
+                    RequestTransfer targetTransferRequest = requestTransferDB
+                            .viewTransferRequestDetailedFYPCoord(selectedSupervisorRequest);
                     approvalTransferResult = scanner.nextInt();
 
                     Project projectBeingTransferred = targetTransferRequest.getProject();
                     if (approvalTransferResult == 1) {
                         requestTransferDB.approveTransferRequestFYPCoord(targetTransferRequest);
                         targetTransferRequest.setRequestStatus(RequestStatus.APPROVED);
-                    }
-                    else {
+                    } else {
                         // Reject Request
                         projectBeingTransferred.setAwaitingTransferRequest(false);
                         targetTransferRequest.setRequestStatus(RequestStatus.REJECTED);
@@ -126,7 +181,7 @@ public class FYPCoordinatorManager {
                 } while (selectedSupervisorRequest != 0);
                 System.out.println("Returning to main menu...");
                 break;
-            
+
             case 6:
                 // Deregister Student
                 int selectedDeregisterRequest;
@@ -134,37 +189,44 @@ public class FYPCoordinatorManager {
                 int noDeregisterRequest;
                 do {
                     // View Deregister Requests
-                    noDeregisterRequest = deregisterDB.viewAllDeregisterRequestFYPCoord();
+                    noDeregisterRequest = requestDeregisterDB.viewAllDeregisterRequestFYPCoord();
                     // Input Validation to return to previous Menu if there are no Requests
                     if (noDeregisterRequest == 1) {
                         break;
                     }
+                    System.out.println("Please indicate which Request you would like to look at: ");
+                    System.out.println("Alternatively, Enter 0 to return to the previous menu.");
                     selectedDeregisterRequest = scanner.nextInt();
 
-                    RequestDeregister targetDeregisterRequest = deregisterDB.viewDeregisterRequestDetailedFYPCoord(selectedDeregisterRequest);
+                    if (selectedDeregisterRequest == 0) {
+                        // After Request has been approved or rejected, to return to main menu.
+                        continue;
+                    }
+                    RequestDeregister targetDeregisterRequest = requestDeregisterDB
+                            .viewDeregisterRequestDetailedFYPCoord(selectedDeregisterRequest);
                     approvalDeregisterRequest = scanner.nextInt();
 
                     if (approvalDeregisterRequest == 1) {
-                        deregisterDB.approveDeregisterRequestFYPCoord(targetDeregisterRequest);
+                        requestDeregisterDB.approveDeregisterRequestFYPCoord(targetDeregisterRequest);
                         targetDeregisterRequest.setRequestStatus(RequestStatus.APPROVED);
                     }
                     // else {
-                    //     // Reject Request
-                    //     projectBeingTransferred.setAwaitingTransferRequest(false);
-                    //     targetTransferRequest.setRequestStatus(RequestStatus.REJECTED);
+                    // // Reject Request
+                    // projectBeingTransferred.setAwaitingTransferRequest(false);
+                    // targetTransferRequest.setRequestStatus(RequestStatus.REJECTED);
                     // }
                     System.out.println("Returning to previous menu...");
 
                 } while (selectedDeregisterRequest != 0);
                 System.out.println("Returning to main menu...");
                 break;
-            
+
             case 7:
                 // View History & Status
                 System.out.println("Viewing History...");
                 requestManager.getRequestHistory(currentFypCoordinator);
                 break;
-                
+
             default:
                 System.out.println("Error!! Invalid Input!!");
 
@@ -197,9 +259,7 @@ public class FYPCoordinatorManager {
         return choice;
     }
 
-    public int displayProjectReportMenu() {
-        int choice;
-
+    public void displayProjectReportMenu() {
         System.out.println(""); // print empty line
         System.out.println("+-------------------------------------------------------+");
         System.out.println("|                  Project Report Portal                |");
@@ -214,10 +274,6 @@ public class FYPCoordinatorManager {
         System.out.println(""); // print empty line
 
         System.out.print("Please enter your choice: ");
-
-        choice = scanner.nextInt();
-
-        return choice;
     }
-    
+
 }
