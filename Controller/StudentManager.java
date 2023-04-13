@@ -37,6 +37,8 @@ public class StudentManager {
                 if (currentStudent.getIsDeregistered()) {
                     System.out.println(
                             "You are not allowed to view any projects because you have already deregistered from FYP.");
+                } else if(currentStudent.getIsAssigned()){
+                    System.out.println("You are currently allocated to a FYP and do not have access to available project list.");
                 } else {
                     projectDB.viewAvailableProjects(currentStudent);
                 }
