@@ -3,6 +3,7 @@ package Controller;
 import java.util.Scanner;
 
 import Entities.*;
+import enums.ProjectStatus;
 
 public class RequestManager {
     private ProjectDB projectDB;
@@ -30,16 +31,11 @@ public class RequestManager {
      * Method for Student to create request to register for a Project
      */
     public void studentRegister(Student student) {
-        // Student is only allowed to make 1 Register Request at any point in time
-        if (student.getHasAppliedForProject()) {
-            // Not allowed to make request
-            System.out.println("You have already applied for another project. " +
-                    "Please wait for the results of the request before making another.");
-            return;
-        }
         System.out.print("Please enter Project ID of the project you want to register for: ");
         int projID = sc.nextInt();
         Project targetProject = projectDB.findProject(projID);
+        targetProject.setProjectStatus(ProjectStatus.RESERVED);
+
         RequestRegister requestRegister = new RequestRegister(student, targetProject);
         requestRegisterDB.addRequest(requestRegister);
 
@@ -59,6 +55,7 @@ public class RequestManager {
         String newTitle = sc.nextLine();
         RequestChangeTitle requestChangeTitle = new RequestChangeTitle(student, newTitle);
         requestChangeTitleDB.addRequest(requestChangeTitle);
+        // Update status
         student.getAssignedProject().setAwaitingTitleChangeRequest(true);
         System.out.println("Request submitted successfully.");
     }
@@ -111,10 +108,10 @@ public class RequestManager {
      * 
      * @param user
      */
-    public void getRequestHistory(User user) {
-        requestChangeTitleDB.printHistory(user);
-        requestDeregisterDB.printHistory(user);
-        requestRegisterDB.printHistory(user);
+    public void getRequestHistory(Student student) {
+        requestChangeTitleDB.printStudentHistory(student);
+        requestDeregisterDB.printStudentHistory(student);
+        requestRegisterDB.printStudentHistory(student);
     }
 
     /**
@@ -128,22 +125,18 @@ public class RequestManager {
             return false;
         }
 
-        System.out.println("###################       Title Change Requests       ###################");
         requestChangeTitleDB.printAllHistory(fypCoordinator);
         System.out.println();
         System.out.println();
 
-        System.out.println("###################         Transfer Requests         ###################");
         requestTransferDB.printAllHistory(fypCoordinator);
         System.out.println();
         System.out.println();
 
-        System.out.println("###################    Student Deregister Requests    ###################");
         requestDeregisterDB.printAllHistory(fypCoordinator);
         System.out.println();
         System.out.println();
 
-        System.out.println("###################     Student Register Requests     ###################");
         requestRegisterDB.printAllHistory(fypCoordinator);
         System.out.println();
         System.out.println();

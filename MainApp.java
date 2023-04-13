@@ -37,15 +37,21 @@ public class MainApp {
         int mainMenuInput;
         do {
             printWelcome();
+            System.out.print("Your choice is: ");
             mainMenuInput = scanner.nextInt();
             // Remove Enter
             scanner.nextLine();
+            System.out.println("");
 
             if (mainMenuInput == 2) {
+                System.out.println("Exiting FYPMS...");
                 break;
             } else if (mainMenuInput == 1) {
                 do {
-                    System.out.println("Enter your username:");
+                    System.out.println("+-----------------------------------------------------------------------+");
+                    System.out.println("|                            Login Interface                            |");
+                    System.out.println("+-----------------------------------------------------------------------+");
+                    System.out.print("Enter your username: ");
                     username = scanner.nextLine();
 
                     char passwordArray[] = terminalConsole.readPassword("Enter your Password: ");
@@ -123,16 +129,17 @@ public class MainApp {
      */
     public static void printWelcome() {
         System.out.println();
-        System.out.println("88888888888  oooo    oooo   oooooooooo.  oooo         ooo   ooooooo.      ");
-        System.out.println("`88          od8y    y8bo  `888'   `Y8b  8888.       .88'  888   888.     ");
-        System.out.println(" 88           888    888    888     888  88 88b     d'88    '888          ");
-        System.out.println(" 8Y88888888     88888       888oooo888'  88  Y88  8P  88       '888       ");
-        System.out.println(" 88              888        888          88   `888'   88          88b     ");
-        System.out.println(" 88              888        888          88     Y     88   888    88b     ");
-        System.out.println(" 8o              ooo        o88         o88o         o88o   8oo8888b'     ");
+        System.out.println(" 88888888888  oooo    oooo   oooooooooo.  oooo         ooo   ooooooo.     ");
+        System.out.println(" `88          od8y    y8bo  `888'   `Y8b  8888.       .88'  888   888.    ");
+        System.out.println("  88           888    888    888     888  88 88b     d'88    '888         ");
+        System.out.println("  8Y88888888     88888       888oooo888'  88  Y88  8P  88       '888      ");
+        System.out.println("  88              888        888          88   `888'   88          88b    ");
+        System.out.println("  88              888        888          88     Y     88   888    88b    ");
+        System.out.println("  8o              ooo        o88         o88o         o88o   8oo8888b'    ");
         System.out.println();
-        System.out.println("****************** Welcome to FYPMS! ******************");
-        System.out.println("##### Enter 1 to Log in or Enter 2 to exit FYPMS. #####");
+        System.out.println("+-------------------------- Welcome to FYPMS! --------------------------+");
+        System.out.println("|              Enter 1 to Log in or Enter 2 to exit FYPMS.              |");
+        System.out.println("+-----------------------------------------------------------------------+");
     }
 
 }

@@ -1,17 +1,14 @@
 package Entities;
 
-import java.util.ArrayList;
-
 import enums.*;
 
 public class Student extends User {
 
     private static final UserType userType = UserType.STUDENT;
     private Project project;
-    private Boolean isAssigned;
+    private Boolean isAssigned = false;
     private Boolean hasAppliedForProject = false;
     private Boolean isDeregistered = false;
-    private ArrayList<Project> deregisteredProjects;
 
     /**
      * Constructor for Student
@@ -23,8 +20,6 @@ public class Student extends User {
     public Student(String userID, String userName, String userEmail) {
         super(userID, userName, userEmail);
         this.project = null;
-        this.isAssigned = false;
-        this.deregisteredProjects = new ArrayList<Project>();
         this.password = "password";
     }
 
@@ -74,27 +69,4 @@ public class Student extends User {
     public void setIsDeregistered(Boolean status) {
         this.isDeregistered = status;
     }
-
-    public void addDeregisteredProjects(Project project) {
-        this.deregisteredProjects.add(project);
-    }
-
-    public ArrayList<Project> getDeregisteredProjects() {
-        return this.deregisteredProjects;
-    }
-
-    public Boolean deregisterProject() {
-        if (this.isAssigned == false) {
-            System.out.println("Student " + this.userName + " does not have a project assigned to them.");
-            return false;
-        }
-
-        // Update Students' Particulars
-        this.isAssigned = false;
-        addDeregisteredProjects(this.project);
-        this.project = null;
-
-        return true;
-    }
-
 }

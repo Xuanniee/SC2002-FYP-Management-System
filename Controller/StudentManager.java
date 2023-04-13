@@ -26,14 +26,16 @@ public class StudentManager {
 
     public void processStudentChoice(int choice) {
 
+        System.out.println("");
+
         switch (choice) {
             case 1:
-                System.out.println("View Student Profile...");
+                System.out.println("Viewing Student Profile...");
                 studentDB.viewStudentProfile(currentStudent);
                 break;
 
             case 2:
-                System.out.println("View All Projects...");
+                System.out.println("Viewing All Projects...");
                 if (currentStudent.getIsDeregistered()) {
                     System.out.println(
                             "You are not allowed to view any projects because you have already deregistered from FYP.");
@@ -43,7 +45,7 @@ public class StudentManager {
                 break;
 
             case 3:
-                System.out.println("View Registered Project...");
+                System.out.println("Viewing Registered Project...");
                 if (!currentStudent.getIsAssigned()) {
                     System.out.println("You have not registered for any projects.");
                 } else {
@@ -53,8 +55,15 @@ public class StudentManager {
 
             case 4:
                 System.out.println("Request to Register for a Project...");
-                projectDB.viewAvailableProjects(currentStudent);
-                requestManager.studentRegister(currentStudent);
+                // Student is only allowed to make 1 Register Request at any point in time
+                if (currentStudent.getHasAppliedForProject()) {
+                    System.out.println("You have already applied for another project. " +
+                            "Please wait for the results of the request before making another.");
+                    return;
+                } else {
+                    projectDB.viewAvailableProjects(currentStudent);
+                    requestManager.studentRegister(currentStudent);
+                }
                 break;
 
             case 5:
@@ -62,6 +71,9 @@ public class StudentManager {
                 if (!currentStudent.getIsAssigned()) {
                     System.out.println("You do not have a registered project yet.");
                     break;
+                } else if (currentStudent.getAssignedProject().getAwaitingTitleChangeRequest()) {
+                    System.out.println("You have already requested for a Title Change. " +
+                            "Please wait for the results of the request before making another.");
                 } else {
                     System.out.println("Your registered project: ");
                     currentStudent.getAssignedProject().printProjectDetails();
@@ -82,7 +94,7 @@ public class StudentManager {
                 break;
 
             case 7:
-                System.out.println("View all Request History...");
+                System.out.println("Viewing all Request History...");
                 requestManager.getRequestHistory(currentStudent);
                 break;
 

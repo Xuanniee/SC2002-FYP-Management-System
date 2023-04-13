@@ -10,12 +10,12 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import Entities.RequestChangeTitle;
+import Entities.Student;
 import Entities.Supervisor;
 import Entities.FYPCoordinator;
 import Entities.Project;
 import Entities.User;
 import enums.RequestStatus;
-import enums.UserType;
 
 public class RequestChangeTitleDB extends Database {
 
@@ -251,11 +251,12 @@ public class RequestChangeTitleDB extends Database {
      * @return the print statements of all the change title requests in FYPMS
      */
     public Boolean printAllHistory(FYPCoordinator fypCoordinator) {
-        if (fypCoordinator == null) {
-            System.out.println("Only the FYP Coordinator can access this features.");
-            return false;
-        }
-
+        System.out.println(
+                "+----------------------------------------------------------------------------------+");
+        System.out.println(
+                "|                        List of All Change Title Requests                         |");
+        System.out.println(
+                "+----------------------------------------------------------------------------------+");
         int counter = 1;
         for (int i = 0; i < requestChangeTitleList.size(); i += 1) {
             RequestChangeTitle currentRequest = requestChangeTitleList.get(i);
@@ -275,43 +276,30 @@ public class RequestChangeTitleDB extends Database {
 
     }
 
-    public void printHistory(User user) {
-        if (user.getUserType() == UserType.STUDENT) {
-            if (findStudent(user)) {
-                System.out.println("Showing all Change Title Requests ... ");
-                for (RequestChangeTitle req : requestChangeTitleList) {
-                    if (req.getStudent().equals(user)) {
-                        System.out.println("Requestee: " + req.getSupervisor().getUserName());
-                        System.out.println("Previous Project Title: " + req.getPrevTitle());
-                        System.out.println("New Project Title: " + req.getNewTitle());
-                        System.out.println("Request Status: " + req.getRequestStatus().name());
-                        System.out.println("");
-                    }
+    /**
+     * Method for Student to view his/her change title request history
+     */
+    public void printStudentHistory(Student student) {
+        System.out.println(
+                "+----------------------------------------------------------------------------------+");
+        System.out.println(
+                "|                  List of All Requests to Change Title of Project                 |");
+        System.out.println(
+                "+----------------------------------------------------------------------------------+");
+        if (findStudent(student)) {
+            for (RequestChangeTitle req : requestChangeTitleList) {
+                if (req.getStudent().equals(student)) {
+                    System.out.println("Requestee: " + req.getSupervisor().getUserName());
+                    System.out.println("Previous Project Title: " + req.getPrevTitle());
+                    System.out.println("New Project Title: " + req.getNewTitle());
+                    System.out.println("Request Status: " + req.getRequestStatus().name());
+                    System.out.println("");
                 }
-            } else {
-                System.out.println("No requests to Change Title for Supervisors");
-                System.out.println("");
             }
+        } else {
+            System.out.println("No requests to Change Title");
+            System.out.println("");
         }
-
-        else if (user.getUserType() == UserType.FACULTY) {
-            if (findSupervisor(user)) {
-                System.out.println("Showing all Change Title Requests ... ");
-                for (RequestChangeTitle req : requestChangeTitleList) {
-                    if (req.getSupervisor() == user) {
-                        System.out.println("Requester: " + req.getStudent().getUserName());
-                        System.out.println("Previous Project Title: " + req.getPrevTitle());
-                        System.out.println("New Project Title: " + req.getNewTitle());
-                        System.out.println("Request Status: " + req.getRequestStatus().name());
-                        System.out.println("");
-                    }
-                }
-            } else {
-                System.out.println("No requests to Change Title from Students");
-            }
-
-        }
-
     }
 
 }
