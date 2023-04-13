@@ -136,9 +136,32 @@ public class RequestRegisterDB extends Database {
         return 0;
     }
 
+    /**
+     * Method to find the index of the target request based on input of user
+     * 
+     * @param requestChoice
+     * @return
+     */
+    public int findRegisterRequestIndex(int requestChoice) {
+        int counter = 1;
+        for (int i = 0; i < requestRegisterList.size(); i += 1) {
+            RequestRegister currentRequest = requestRegisterList.get(i);
+            if (currentRequest.getRequestStatus() == RequestStatus.PENDING) {
+                if (counter == requestChoice) {
+                    return i;
+                }
+                counter += 1;
+            }
+        }
+        return -1;
+    }
+
     public RequestRegister viewRegisterRequestDetailedFYPCoord(int requestChoice) {
-        int targetRequestIndex = requestChoice - 1;
+        // int targetRequestIndex = requestChoice - 1;
+
+        int targetRequestIndex = findRegisterRequestIndex(requestChoice);
         RequestRegister targetRequest = requestRegisterList.get(targetRequestIndex);
+        // RequestRegister targetRequest = requestRegisterList.get(targetRequestIndex);
         System.out.println("Loading selected request...");
         System.out.println();
         System.out.println(
