@@ -48,7 +48,7 @@ public class SupervisorManager {
                 break;
             case 2:
                 // View own Created Projects, Need pass in the Created Project List
-                facultyDB.viewOwnProject(projectDB.retrieveSupervisorProjects(managedSupervisor.getSupervisorName()));
+                facultyDB.viewOwnProject(projectDB.retrieveSupervisorProjects(managedSupervisor.getSupervisorID()));
                 break;
             case 3:
                 facultyDB.modifyTitle(projectDB, managedSupervisor);

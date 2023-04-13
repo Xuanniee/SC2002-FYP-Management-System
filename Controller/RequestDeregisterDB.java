@@ -118,10 +118,12 @@ public class RequestDeregisterDB extends Database {
      * @return the print statements of all the deregister requests in FYPMS
      */
     public Boolean printAllHistory(FYPCoordinator fypCoordinator) {
-        if (fypCoordinator == null) {
-            System.out.println("Only the FYP Coordinator can access this features.");
-            return false;
-        }
+        System.out.println(
+                "+----------------------------------------------------------------------------------+");
+        System.out.println(
+                "|                   List of All Student Deregistration Requests                    |");
+        System.out.println(
+                "+----------------------------------------------------------------------------------+");
 
         int counter = 1;
         for (int i = 0; i < requestDeregisterList.size(); i += 1) {
@@ -141,11 +143,16 @@ public class RequestDeregisterDB extends Database {
         return true;
     }
 
-    public void printHistory(User student) {
-        if (findStudent(student)) {
-            System.out.println("Showing all Deregistration Requests ... ");
+    public void printStudentHistory(Student Student) {
+        System.out.println(
+                "+----------------------------------------------------------------------------------+");
+        System.out.println(
+                "|                    List of All Requests to Deregister from FYP                   |");
+        System.out.println(
+                "+----------------------------------------------------------------------------------+");
+        if (findStudent(Student)) {
             for (RequestDeregister req : requestDeregisterList) {
-                if (req.getStudent() == student) {
+                if (req.getStudent() == Student) {
                     System.out.printf("Project to Deregister from (ID/Title): %s/%s", req.getProject().getProjectID(),
                             req.getProject().getProjectTitle());
                     System.out.println("Request Status: " + req.getRequestStatus().name());
@@ -231,7 +238,8 @@ public class RequestDeregisterDB extends Database {
         Student deregisteredStudent = approvedRequest.getStudent();
 
         // Update Student's Project
-        deregisteredStudent.deregisterProject();
+        deregisteredStudent.setAssignedProject(null);
+        deregisteredStudent.setIsAssigned(false);
         deregisteredStudent.setIsDeregistered(true);
 
         // Update Project Status

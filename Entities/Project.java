@@ -15,7 +15,6 @@ public class Project {
     public Project(int projectID, Supervisor supervisor, String projectTitle) {
         this.projectID = projectID;
         this.supervisor = supervisor;
-        this.creator = supervisor;
         this.student = null;
         this.projectTitle = projectTitle;
         this.projectStatus = ProjectStatus.AVAILABLE;
@@ -59,14 +58,6 @@ public class Project {
         this.supervisor = supervisor;
     }
 
-    public Supervisor getCreator() {
-        return this.creator;
-    }
-
-    public void setCreator(Supervisor creator) {
-        this.creator = creator;
-    }
-
     public Student getStudent() {
         return this.student;
     }
@@ -94,12 +85,12 @@ public class Project {
     public void printProjectDetails() {
         System.out.println("ProjectID: " + this.projectID);
         System.out.println("Title of Project: " + this.projectTitle);
-        System.out.println("Faculty In-charge's Name: " + this.getSupervisor().getUserName());
-        System.out.println("Faculty In-charge's Email: " + this.getSupervisor().getUserEmail());
+        System.out.println("    Faculty In-charge's Name: " + this.getSupervisor().getUserName());
+        System.out.println("    Faculty In-charge's Email: " + this.getSupervisor().getUserEmail());
         if (this.projectStatus == ProjectStatus.ALLOCATED) {
             System.out.println("This project is allocated to the following student:");
-            System.out.println("Student's Name: " + this.getStudent().getUserName());
-            System.out.println("Student's Email: " + this.getStudent().getUserEmail());
+            System.out.println("    Student's Name: " + this.getStudent().getUserName());
+            System.out.println("    Student's Email: " + this.getStudent().getUserEmail());
         }
         System.out.println("");
     }
