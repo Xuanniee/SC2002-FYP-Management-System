@@ -242,7 +242,8 @@ public class RequestTransferDB extends Database {
         // Update Supervisors {Both Old and New}
         replacementSupervisor.setSupervisingProjectList(approvedProject);
         currentSupervisor.removeSupervisingProjectList(approvedProject);
-
+        currentSupervisor.editNumProjects(-1);
+        
         // Update Request Status so this.user cannot see it again
         // int indexCompletedRequest = requestTransferList.indexOf(approvedRequest);
         // requestTransferList.remove(indexCompletedRequest);

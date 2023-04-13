@@ -36,5 +36,5 @@ public abstract class Request {
         return this.requestType;
     }
 
-    public abstract void approveRequest(Boolean approve);
+    //public abstract void approveRequest(Boolean approve);
 }

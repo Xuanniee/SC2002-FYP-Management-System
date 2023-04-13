@@ -42,7 +42,7 @@ public class StudentManager {
                 } else if(currentStudent.getIsAssigned()){
                     System.out.println("You are currently allocated to a FYP and do not have access to available project list.");
                 } else {
-                    projectDB.viewAvailableProjects(currentStudent);
+                    projectDB.viewAvailableProjects();
                 }
                 break;
 
@@ -63,7 +63,7 @@ public class StudentManager {
                             "Please wait for the results of the request before making another.");
                     return;
                 } else {
-                    projectDB.viewAvailableProjects(currentStudent);
+                    projectDB.viewAvailableProjects();
                     requestManager.studentRegister(currentStudent);
                 }
                 break;
@@ -76,6 +76,8 @@ public class StudentManager {
                 } else if (currentStudent.getAssignedProject().getAwaitingTitleChangeRequest()) {
                     System.out.println("You have already requested for a Title Change. " +
                             "Please wait for the results of the request before making another.");
+                } else if(currentStudent.getIsDeregistered()){
+                    System.out.println("You are not allowed to view any projects because you have already deregistered from FYP.");
                 } else {
                     System.out.println("Your registered project: ");
                     currentStudent.getAssignedProject().printProjectDetails();

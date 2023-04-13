@@ -4,19 +4,19 @@ import java.util.ArrayList;
 
 public class Supervisor extends User {
     private ArrayList<Project> supervisingProjectList = new ArrayList<Project>();
-    private ArrayList<Project> listOfCreatedProjects = new ArrayList<Project>();
+    //private ArrayList<Project> listOfCreatedProjects = new ArrayList<Project>();
     private int numProjects = 0;
-    private Boolean isFull = false;
+    //private Boolean isFull = false;
 
     public Supervisor(String userID, String userName, String userEmail) {
         super(userID, userName, userEmail);
     }
 
-    public ArrayList<Project> getCreatedProjectList() {
-        return supervisingProjectList;
-    }
+    /*public ArrayList<Project> getCreatedProjectList() {
+        return listOfCreatedProjects;
+    }*/
 
-    public Boolean addToCreatedProjectList(Project newlyCreatedProject) {
+    /*public Boolean addToCreatedProjectList(Project newlyCreatedProject) {
         if (newlyCreatedProject != null) {
             System.out.println("No Project was passed");
             return false;
@@ -24,10 +24,15 @@ public class Supervisor extends User {
 
         listOfCreatedProjects.add(newlyCreatedProject);
         return true;
-    }
+    }*/
 
     public ArrayList<Project> getSupervisingProjectList() {
         return supervisingProjectList;
+    }
+
+    public void addSupervisingProject(Project project){
+        supervisingProjectList.add(project);
+        numProjects += 1;
     }
 
     public Boolean viewSupervisingProjectList() {
@@ -113,19 +118,17 @@ public class Supervisor extends User {
         return this.userName;
     }
 
-    public void editNumProjects(int change) {
-        numProjects += change;
-        if (numProjects == 2) {
-            this.isFull = true;
-        }
-        if (numProjects < 2) {
-            this.isFull = false;
-        }
+    public int getNumProj(){
+        return this.numProjects;
     }
 
-    public Boolean checkIfFull() {
-        return this.isFull;
+    public void editNumProjects(int change) {
+        this.numProjects += change;
     }
+
+    /*public Boolean checkIfFull() {
+        return this.isFull;
+    }*/
 
     /**
      * Displays all the options of the system. Abstract so can be overridden

@@ -2,7 +2,7 @@ package Entities;
 
 import enums.RequestStatus;
 import enums.RequestType;
-import enums.ProjectStatus;
+//import enums.ProjectStatus;
 
 public class RequestDeregister extends Request {
 
@@ -25,7 +25,7 @@ public class RequestDeregister extends Request {
         this.fypCoordinator = fypCoordinator;
     }
 
-    @Override
+    /*@Override
     public void approveRequest(Boolean approve) {
         if (approve) {
             this.setRequestStatus(RequestStatus.APPROVED);
@@ -33,7 +33,7 @@ public class RequestDeregister extends Request {
         } else {
             this.setRequestStatus(RequestStatus.REJECTED);
         }
-    }
+    }*/
 
     public Supervisor getRequestCoordinator() {
         return this.fypCoordinator;

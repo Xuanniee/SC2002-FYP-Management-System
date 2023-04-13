@@ -12,6 +12,7 @@ import java.io.PrintWriter;
 import Entities.Project;
 import Entities.RequestDeregister;
 import Entities.Student;
+import Entities.Supervisor;
 import Entities.FYPCoordinator;
 import Entities.User;
 import enums.RequestStatus;
@@ -194,13 +195,33 @@ public class RequestDeregisterDB extends Database {
     }
 
     /**
+     * Method to find the index of the target deregister request based on input of user
+     * 
+     * @param requestChoice
+     * @return
+     */
+    public int findDeregisterRequestIndex(int requestChoice) {
+        int counter = 1;
+        for (int i = 0; i < requestDeregisterList.size(); i += 1) {
+            RequestDeregister currentRequest = requestDeregisterList.get(i);
+            if (currentRequest.getRequestStatus() == RequestStatus.PENDING) {
+                if (counter == requestChoice) {
+                    return i;
+                }
+                counter += 1;
+            }
+        }
+        return -1;
+    }
+
+    /**
      * Allow FYP coordinator to see the specific details of the Deregister Request
      * 
      * @param requestChoice
      * @return
      */
     public RequestDeregister viewDeregisterRequestDetailedFYPCoord(int requestChoice) {
-        int targetRequestIndex = requestChoice - 1;
+        int targetRequestIndex = findDeregisterRequestIndex(requestChoice);
         RequestDeregister targetRequest = requestDeregisterList.get(targetRequestIndex);
         System.out.println("Loading selected request...");
         System.out.println();
@@ -233,9 +254,10 @@ public class RequestDeregisterDB extends Database {
             return false;
         }
 
-        // Retrieve the Project and Replacement Supervisor
+        // Retrieve the Project, student & supervisor
         Project deregisteredProject = approvedRequest.getProject();
         Student deregisteredStudent = approvedRequest.getStudent();
+        Supervisor deregisteredSupervisor = approvedRequest.getProject().getSupervisor();
 
         // Update Student's Project
         deregisteredStudent.setAssignedProject(null);
@@ -245,10 +267,14 @@ public class RequestDeregisterDB extends Database {
         // Update Project Status
         deregisteredProject.deregisterStudent();
 
+        // Update Supervisor supervising list and number of projects
+        deregisteredSupervisor.removeSupervisingProjectList(deregisteredProject);
+        deregisteredSupervisor.editNumProjects(-1);
+        
         // Update Request Status so this.user cannot see it again
         // int indexCompletedRequest = requestDeregisterList.indexOf(approvedRequest);
         approvedRequest.setRequestStatus(RequestStatus.APPROVED);
-        // requestDeregisterList.remove(indexCompletedRequest);
+        
         System.out.println("Student " + deregisteredStudent.getStudentName()
                 + " has been successfully deregistered from Project " + deregisteredProject.getProjectID());
 
