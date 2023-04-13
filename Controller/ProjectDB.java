@@ -115,7 +115,7 @@ public class ProjectDB extends Database {
             pw.println("Supervisor" + "\t" + "Title");
 
             for (Project proj : projectList) {
-                String creatorName = proj.getCreator().getUserName();
+                String creatorName = proj.getSupervisor().getUserName();
                 String projTitle = proj.getProjectTitle();
 
                 pw.println(creatorName + "\t" + projTitle);
@@ -164,14 +164,14 @@ public class ProjectDB extends Database {
     };
 
     /**
-     * Return list of projects created by particular Supervisor
+     * Return list of projects owned by particular Supervisor
      */
-    public ArrayList<Project> retrieveSupervisorProjects(String professorName) {
+    public ArrayList<Project> retrieveSupervisorProjects(String supervisorID) {
         // Create Project List to be returned
         ArrayList<Project> supervisorProjectList = new ArrayList<Project>();
 
         for (int i = 0; i < projectList.size(); i += 1) {
-            if (projectList.get(i).getCreator().getUserName().equalsIgnoreCase(professorName)) {
+            if (projectList.get(i).getSupervisor().getUserName().equalsIgnoreCase(supervisorID)) {
                 supervisorProjectList.add(projectList.get(i));
             }
         }
@@ -189,27 +189,21 @@ public class ProjectDB extends Database {
         return index;
     }
 
+    /**
+     * Viewing Available projects for Student
+     * 
+     * @param student
+     */
     public void viewAvailableProjects(Student student) {
-        System.out.println(" ----- List of Available Projects ----- ");
-
-        // Do not print projects that student is deregistered from
-        if (!student.getDeregisteredProjects().isEmpty()) {
-            for (Project project : projectList) {
-                if (project.getProjectStatus() == ProjectStatus.AVAILABLE) {
-                    for (Project p : student.getDeregisteredProjects()) {
-                        if (project.getProjectID() != p.getProjectID()) {
-                            project.printProjectDetails();
-                        } else
-                            break;
-                    }
-                }
-            }
-            // Print all other AVAILABLE projects
-        } else {
-            for (Project project : projectList) {
-                if (project.getProjectStatus() == ProjectStatus.AVAILABLE) {
-                    project.printProjectDetails();
-                }
+        System.out.println(
+                "+----------------------------------------------------------------------------------+");
+        System.out.println(
+                "|                           List of All Available Projects                         |");
+        System.out.println(
+                "+----------------------------------------------------------------------------------+");
+        for (Project project : projectList) {
+            if (project.getProjectStatus() == ProjectStatus.AVAILABLE) {
+                project.printProjectDetails();
             }
         }
     }
@@ -225,7 +219,12 @@ public class ProjectDB extends Database {
         Boolean unavailable = false;
 
         System.out.println();
-        System.out.println(" ----- List of Available Projects ----- ");
+        System.out.println(
+                "+----------------------------------------------------------------------------------+");
+        System.out.println(
+                "|                           List of All Available Projects                         |");
+        System.out.println(
+                "+----------------------------------------------------------------------------------+");
         for (Project project : projectList) {
             if (project.getProjectStatus() == ProjectStatus.AVAILABLE) {
                 project.printProjectDetails();
@@ -238,7 +237,12 @@ public class ProjectDB extends Database {
         }
 
         System.out.println();
-        System.out.println(" ----- List of Allocated Projects ----- ");
+        System.out.println(
+                "+----------------------------------------------------------------------------------+");
+        System.out.println(
+                "|                           List of All Allocated Projects                         |");
+        System.out.println(
+                "+----------------------------------------------------------------------------------+");
         for (Project project : projectList) {
             if (project.getProjectStatus() == ProjectStatus.ALLOCATED) {
                 project.printProjectDetails();
@@ -251,7 +255,12 @@ public class ProjectDB extends Database {
         }
 
         System.out.println();
-        System.out.println(" ----- List of Reserved Projects ----- ");
+        System.out.println(
+                "+----------------------------------------------------------------------------------+");
+        System.out.println(
+                "|                           List of All Reserved Projects                          |");
+        System.out.println(
+                "+----------------------------------------------------------------------------------+");
         for (Project project : projectList) {
             if (project.getProjectStatus() == ProjectStatus.RESERVED) {
                 project.printProjectDetails();
@@ -264,7 +273,12 @@ public class ProjectDB extends Database {
         }
 
         System.out.println();
-        System.out.println(" ----- List of Unavailable Projects ----- ");
+        System.out.println(
+                "+----------------------------------------------------------------------------------+");
+        System.out.println(
+                "|                         List of All Unavailable Projects                         |");
+        System.out.println(
+                "+----------------------------------------------------------------------------------+");
         for (Project project : projectList) {
             if (project.getProjectStatus() == ProjectStatus.UNAVAILABLE) {
                 project.printProjectDetails();
@@ -291,7 +305,7 @@ public class ProjectDB extends Database {
                 System.out.println("Project " + counter);
                 currentProject.printProjectDetails();
                 System.out.println();
-                
+
                 counter += 1;
             }
         }

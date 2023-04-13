@@ -49,7 +49,7 @@ public class FYPCoordinatorManager {
                 break;
 
             case 1:
-                System.out.println("Opening your profile...");
+                System.out.println("Viewing your profile...");
                 currentFypCoordinator.printProfile();
                 break;
 
@@ -224,7 +224,7 @@ public class FYPCoordinatorManager {
             case 7:
                 // View History & Status
                 System.out.println("Viewing History...");
-                requestManager.getRequestHistory(currentFypCoordinator);
+                requestManager.getAllRequestHistory(currentFypCoordinator);
                 break;
 
             default:

@@ -137,10 +137,12 @@ public class RequestTransferDB extends Database {
      * @return the print statements of all the transfer requests in FYPMS
      */
     public Boolean printAllHistory(FYPCoordinator fypCoordinator) {
-        if (fypCoordinator == null) {
-            System.out.println("Only the FYP Coordinator can access this features.");
-            return false;
-        }
+        System.out.println(
+                "+----------------------------------------------------------------------------------+");
+        System.out.println(
+                "|                           List of All Transfer Requests                          |");
+        System.out.println(
+                "+----------------------------------------------------------------------------------+");
 
         int counter = 1;
         for (int i = 0; i < requestTransferList.size(); i += 1) {
@@ -158,23 +160,6 @@ public class RequestTransferDB extends Database {
         }
 
         return true;
-    }
-
-    public void printHistory(User supervisor) {
-        if (findSupervisor(supervisor)) {
-            System.out.println("Showing all Project Transfer Requests ... ");
-            for (RequestTransfer req : requestTransferList) {
-                if (req.getCurSupervisor() == supervisor) {
-                    System.out.printf("Supervisor (Requestor): " + req.getCurSupervisor().getUserName());
-                    System.out.println("Project: " + req.getProject().getProjectTitle());
-                    System.out.println("Replacement Supervisor: " + req.getRepSupervisor().getSupervisorName());
-                    System.out.println("Request Status: " + req.getRequestStatus().name());
-                    System.out.println("");
-                }
-            }
-        } else {
-            System.out.println("No requests to Transfer Project");
-        }
     }
 
     /**
