@@ -1,1 +1,1 @@
-Student (Requestor)    Project ID    Request Status
+Student (Requestor)    Coordinator (Requestee)    Project ID    Request Status
