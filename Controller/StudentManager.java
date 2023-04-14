@@ -103,10 +103,8 @@ public class StudentManager {
                 break;
 
             case 8:
-                System.out.println("Input new password");
-                Scanner sc = new Scanner(System.in);
-                String newpassword = sc.nextLine();
-                currentStudent.setPassword(newpassword);
+                System.out.println("Changing password...");
+                requestManager.changePassword(currentStudent);
                 break;
 
             case 0:

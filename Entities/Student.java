@@ -20,7 +20,7 @@ public class Student extends User {
     public Student(String userID, String userName, String userEmail) {
         super(userID, userName, userEmail);
         this.project = null;
-        this.password = "password";
+        this.password = "Password";
     }
 
     public Boolean getHasAppliedForProject() {

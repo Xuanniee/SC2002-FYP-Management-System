@@ -15,8 +15,8 @@ public class RequestManager {
 
     // Constructor
     public RequestManager(ProjectDB projectDB, FacultyDB facultyDB, RequestChangeTitleDB requestChangeTitleDB,
-            RequestRegisterDB requestRegisterDB,
-            RequestDeregisterDB requestDeregisterDB, RequestTransferDB requestTransferDB) {
+            RequestRegisterDB requestRegisterDB,RequestDeregisterDB requestDeregisterDB, 
+            RequestTransferDB requestTransferDB) {
         this.projectDB = projectDB;
         this.facultyDB = facultyDB;
         this.requestRegisterDB = requestRegisterDB;
@@ -25,7 +25,20 @@ public class RequestManager {
         this.requestTransferDB = requestTransferDB;
     }
 
+
     Scanner sc = new Scanner(System.in);
+
+    /**
+     * Method for students to change password
+     */
+    public void changePassword(Student student) {
+        System.out.print("Please enter your new password: ");
+        String newpassword = sc.nextLine();
+        student.setPassword(newpassword);
+        System.out.println("Your password has been saved successfully.");
+    }
+
+
 
     /**
      * Method for Student to create request to register for a Project
@@ -77,6 +90,16 @@ public class RequestManager {
     }
 
     /**
+     * Method for Supervisor to change password
+     */
+    public void changePassword(Supervisor supervisor) {
+        System.out.print("Please enter your new password: ");
+        String newpassword = sc.nextLine();
+        supervisor.setPassword(newpassword);
+        System.out.println("Password has been saved successfully.");
+    }
+
+    /**
      * Method for Supervisor to create request to Transfer a project to another
      * Supervisor
      */
@@ -112,6 +135,21 @@ public class RequestManager {
         requestChangeTitleDB.printStudentHistory(student);
         requestDeregisterDB.printStudentHistory(student);
         requestRegisterDB.printStudentHistory(student);
+    }
+
+    /**
+     * Method for FYP Coordinator to change password
+     */
+    public void changePassword(FYPCoordinator fypCoordinator) {
+        System.out.print("Please enter your new password: ");
+        String newpassword = sc.nextLine();
+        fypCoordinator.setPassword(newpassword);
+
+        // Also, FYPCoord is a supervisor as well
+        Supervisor fypSupervisor = facultyDB.findSupervisor(fypCoordinator.getFYPCoordID());
+        fypSupervisor.setPassword(newpassword);      
+
+        System.out.println("Password has been saved successfully.");
     }
 
     /**

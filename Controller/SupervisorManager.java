@@ -105,6 +105,11 @@ public class SupervisorManager {
                 requestManager.changeSupervisorRequest(managedSupervisor);
                 break;
 
+            case 7:
+                System.out.println("Changing password...");
+                requestManager.changePassword(managedSupervisor);
+                break;
+
             case 0:
                 System.out.println("Logging out...");
                 break;
@@ -129,6 +134,7 @@ public class SupervisorManager {
         System.out.println("| 4. View pending requests                              |");
         System.out.println("| 5. View request history & status                      |");
         System.out.println("| 6. Request the transfer of a student                  |");
+        System.out.println("| 7. Set New Password                                   |");
         System.out.println("|-------------------------------------------------------|");
         System.out.println("|              Enter 0 to Log out of FYPMS              |");
         System.out.println("+-------------------------------------------------------+");

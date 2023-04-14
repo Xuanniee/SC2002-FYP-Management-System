@@ -3,6 +3,7 @@ package Controller;
 import java.util.Scanner;
 
 import Entities.FYPCoordinator;
+import Entities.Supervisor;
 import Entities.Student;
 import Entities.Project;
 import enums.RequestStatus;
@@ -227,6 +228,11 @@ public class FYPCoordinatorManager {
                 requestManager.getAllRequestHistory(currentFypCoordinator);
                 break;
 
+            case 8:
+                System.out.println("Changing password...");
+                requestManager.changePassword(currentFypCoordinator);
+                break;
+
             default:
                 System.out.println("Error!! Invalid Input!!");
 
@@ -247,6 +253,7 @@ public class FYPCoordinatorManager {
         System.out.println("| 5. Request for Changing Supervisor of Project         |");
         System.out.println("| 6. Request for Deregister a Student from Project      |");
         System.out.println("| 7. View Request History & Status                      |");
+        System.out.println("| 8. Set New Password                                   |");
         System.out.println("|-------------------------------------------------------|");
         System.out.println("|             Enter 0 to log out from FYPMS             |");
         System.out.println("+-------------------------------------------------------+");
