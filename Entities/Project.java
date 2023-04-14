@@ -7,7 +7,6 @@ public class Project {
     protected Boolean awaitingTransferRequest = false;
     protected Boolean awaitingTitleChangeRequest = false;
     protected Supervisor supervisor;
-    protected Supervisor creator;
     protected Student student;
     protected String projectTitle;
     protected ProjectStatus projectStatus;

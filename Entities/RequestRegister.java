@@ -26,7 +26,7 @@ public class RequestRegister extends Request {
     /**
      * TODO Duplicated. We will decide which to use later
      */
-    @Override
+    /*@Override
     public void approveRequest(Boolean approve) {
         if (approve) {
             this.setRequestStatus(RequestStatus.APPROVED);
@@ -35,7 +35,7 @@ public class RequestRegister extends Request {
         } else {
             this.setRequestStatus(RequestStatus.REJECTED);
         }
-    }
+    }*/
 
     public Student getStudent() {
         return this.student;

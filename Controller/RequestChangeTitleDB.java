@@ -164,13 +164,33 @@ public class RequestChangeTitleDB extends Database {
     }
 
     /**
+     * Method to find the index of the target titlechange request based on input of user
+     * 
+     * @param requestChoice
+     * @return
+     */
+    public int findTitleChangeRequestIndex(int requestChoice) {
+        int counter = 1;
+        for (int i = 0; i < requestChangeTitleList.size(); i += 1) {
+            RequestChangeTitle currentRequest = requestChangeTitleList.get(i);
+            if (currentRequest.getRequestStatus() == RequestStatus.PENDING) {
+                if (counter == requestChoice) {
+                    return i;
+                }
+                counter += 1;
+            }
+        }
+        return -1;
+    }
+
+    /**
      * View the Details of Title Change Request
      * 
      * @param requestChoice
      * @return targetRequest
      */
     public RequestChangeTitle viewTitleChangeRequestDetailedSupervisor(int requestChoice) {
-        int targetRequestIndex = requestChoice - 1;
+        int targetRequestIndex = findTitleChangeRequestIndex(requestChoice);
         RequestChangeTitle targetRequest = requestChangeTitleList.get(targetRequestIndex);
         System.out.println("Loading selected request...");
         System.out.println();
@@ -215,6 +235,9 @@ public class RequestChangeTitleDB extends Database {
         System.out.println(
                 "Project " + approvedRequest.getPrevTitle() + " has been successfully renamed to " + newProjectTitle);
 
+        // Remove request from list after approval
+        //requestChangeTitleList.remove(approvedRequest);
+        
         return true;
     }
 
