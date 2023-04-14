@@ -49,7 +49,7 @@ public class RequestDeregisterDB extends Database {
      * Represents a Database of all students in FYPMS.
      */
     private StudentDB studentDB;
-    
+
     /**
      * Represents a Database of all FYP Coordinators in FYPMS,
      */

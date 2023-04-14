@@ -44,7 +44,7 @@ public class RequestTransferDB extends Database {
      * Represents the Database of all projects in FYPMS.
      */
     private ProjectDB projectDB;
-    
+
     /**
      * Represents the Database of all faculties in FYPMS.
      */
