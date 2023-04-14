@@ -1,6 +1,7 @@
 package Entities;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import enums.UserType;
 
@@ -106,7 +107,7 @@ public class User {
     }
 
     /**
-     * Displays all the options of the system. Abstract so can be overridden
+     * Displays all the options of the system. Should not be Abstract as User must not be an Abstract Class for instantiation
      */
     public void printMenuOptions() {
         System.out.println("Should never be printed.");
@@ -122,4 +123,41 @@ public class User {
         System.out.println("UserID : " + getUserID());
         System.out.println("Email  : " + getUserEmail());
     }
+
+    // public Boolean changeUserPassword(User loggedUser, Scanner scObject) {
+    //     int validationAttempts = 3;
+    //     do {
+    //         System.out.println(""); // print empty line
+    //         System.out.println("+----------------------------------------------------------+");
+    //         System.out.println("|                   Password Change Portal                 |");
+    //         System.out.println("|----------------------------------------------------------|");
+    //         System.out.println("|  Please re-enter your password to verify your identity.  |");
+    //         System.out.println("|----------------------------------------------------------|");
+    //         System.out.println("|              Enter 0 to go back to Main Menu             |");
+    //         System.out.println("+----------------------------------------------------------+");
+    //         System.out.println(""); // print empty line
+
+    //         System.out.println("Enter your Password: ");
+    //         String userPassword = scObject.nextLine();
+
+    //         // Check if Password is correct (Case Sensitive)
+    //         if (loggedUser.getPassword().equals(userPassword)) {
+    //             System.out.println("Enter your New Password   : ");
+    //             String newPassword1 = scObject.nextLine();
+
+    //             System.out.println("Re-Enter your New Password: ");
+    //             String newPassword2 = scObject.nextLine();
+
+    //             if (newPassword1.equals(newPassword2)) {
+
+    //             }
+
+
+    //         }
+    //     } while();
+
+
+
+
+    // }
 }

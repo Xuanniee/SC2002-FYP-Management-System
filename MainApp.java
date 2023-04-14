@@ -51,7 +51,7 @@ public class MainApp {
                     System.out.println("+-----------------------------------------------------------------------+");
                     System.out.println("|                            Login Interface                            |");
                     System.out.println("+-----------------------------------------------------------------------+");
-                    System.out.print("Enter your username: ");
+                    System.out.print("Enter your Username: ");
                     username = scanner.nextLine();
 
                     char passwordArray[] = terminalConsole.readPassword("Enter your Password: ");
