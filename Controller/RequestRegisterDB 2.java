@@ -109,8 +109,6 @@ public class RequestRegisterDB extends Database {
 
     public void addRequest(RequestRegister requestRegister) {
         requestRegisterList.add(requestRegister);
-        // Update Supervisor number of supervising project
-        requestRegister.getSupervisor().editNumProjects(1);
     }
 
     public int viewAllRegisterRequestFYPCoord() {
@@ -137,7 +135,7 @@ public class RequestRegisterDB extends Database {
         System.out.println(); // Prints Empty Line
         return 0;
     }
-    
+
     /**
      * Method to find the index of the target request based on input of user
      * 
@@ -157,10 +155,13 @@ public class RequestRegisterDB extends Database {
         }
         return -1;
     }
-    
+
     public RequestRegister viewRegisterRequestDetailedFYPCoord(int requestChoice) {
+        // int targetRequestIndex = requestChoice - 1;
+
         int targetRequestIndex = findRegisterRequestIndex(requestChoice);
         RequestRegister targetRequest = requestRegisterList.get(targetRequestIndex);
+        // RequestRegister targetRequest = requestRegisterList.get(targetRequestIndex);
         System.out.println("Loading selected request...");
         System.out.println();
         System.out.println(
@@ -197,15 +198,14 @@ public class RequestRegisterDB extends Database {
         approvedStudent.setAssignedProject(approvedProject);
         // Update Supervisor Project List
         supervisingSupervisor.getSupervisingProjectList().add(approvedProject);
-        
         // Update the Allocation DB
-        //projectAllocationDB.addAllocation(new ProjectAllocation(approvedStudent.getUserID(),
-                //Integer.toString(approvedProject.getProjectID()), supervisingSupervisor.getUserID()));
+        projectAllocationDB.addAllocation(new ProjectAllocation(approvedStudent.getUserID(),
+                Integer.toString(approvedProject.getProjectID()), supervisingSupervisor.getUserID()));
 
         // Update Request Status so this.user cannot see it again
         // requestRegisterList.remove(requestRegisterList.indexOf(approvedRequest));
         approvedRequest.setRequestStatus(RequestStatus.APPROVED);
-        
+
         System.out.println("Project " + approvedProject.getProjectTitle() + " has been successfully allocated to "
                 + approvedStudent.getUserName());
         System.out.println("");

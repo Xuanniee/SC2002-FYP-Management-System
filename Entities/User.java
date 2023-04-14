@@ -77,11 +77,8 @@ public class User {
             // If User is Found
             if (supervisorList.get(i).getUserID().equalsIgnoreCase(userID)
                     && supervisorList.get(i).getPassword().equalsIgnoreCase(password)) {
-<<<<<<< Updated upstream
-=======
                 System.out.println(supervisorList.get(i).getUserID());
                 System.out.println(supervisorList.get(i).getPassword());
->>>>>>> Stashed changes
                 this.userType = UserType.FACULTY;
             }
         }
@@ -102,11 +99,7 @@ public class User {
             // If Faculty, Check if FYP Coord
             for (int i = 0; i < fypCoordinatorsList.size(); i += 1) {
                 if (fypCoordinatorsList.get(i).getUserID().equalsIgnoreCase(userID)
-<<<<<<< Updated upstream
-                        && fypCoordinatorsList.get(i).getPassword().equalsIgnoreCase(password)) {
-=======
                 && fypCoordinatorsList.get(i).getPassword().equalsIgnoreCase(password)) {
->>>>>>> Stashed changes
                     this.userType = UserType.FYPCOORDINATOR;
                 }
             }

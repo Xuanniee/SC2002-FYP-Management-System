@@ -156,10 +156,6 @@ public class FacultyDB {
         if (targetIndex == -1) {
             return null;
         }
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
         return supervisors.get(targetIndex);
     }
 

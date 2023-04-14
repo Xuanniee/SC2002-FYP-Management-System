@@ -102,6 +102,13 @@ public class StudentManager {
                 requestManager.getRequestHistory(currentStudent);
                 break;
 
+            case 8:
+                System.out.println("Input new password");
+                Scanner sc = new Scanner(System.in);
+                String newpassword = sc.nextLine();
+                currentStudent.setPassword(newpassword);
+                break;
+
             case 0:
                 System.out.println("Logging out...");
                 break;
@@ -127,6 +134,7 @@ public class StudentManager {
         System.out.println("| 5. Request to Change Title of Project                 |");
         System.out.println("| 6. Request to Deregister from Project                 |");
         System.out.println("| 7. View Request History                               |");
+        System.out.println("| 8. Set New Password                                   |");
         System.out.println("|-------------------------------------------------------|");
         System.out.println("|              Enter 0 to Log out of FYPMS              |");
         System.out.println("+-------------------------------------------------------+");
