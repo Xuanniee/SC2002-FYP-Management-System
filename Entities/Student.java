@@ -1,16 +1,14 @@
 package Entities;
 
-import java.util.ArrayList;
-
 import enums.*;
 
 public class Student extends User {
 
     private static final UserType userType = UserType.STUDENT;
     private Project project;
-    private Boolean isAssigned;
-    private ArrayList<Request> studentHistory;
-    private ArrayList<Project> deregisteredProjects;
+    private Boolean isAssigned = false;
+    private Boolean hasAppliedForProject = false;
+    private Boolean isDeregistered = false;
 
     /**
      * Constructor for Student
@@ -22,13 +20,29 @@ public class Student extends User {
     public Student(String userID, String userName, String userEmail) {
         super(userID, userName, userEmail);
         this.project = null;
-        this.isAssigned = false;
-        this.studentHistory = new ArrayList<Request>();
-        this.deregisteredProjects = new ArrayList<Project>();
+        this.password = "password";
+    }
+
+    public Boolean getHasAppliedForProject() {
+        return this.hasAppliedForProject;
+    }
+
+    public Boolean setHasAppliedForProject(Boolean status) {
+        // Input Validation
+        if (status == null) {
+            return false;
+        }
+
+        this.hasAppliedForProject = status;
+        return true;
     }
 
     public UserType getUserType() {
         return Student.userType;
+    }
+
+    public String getStudentName() {
+        return this.userName;
     }
 
     public void setAssignedProject(Project project) {
@@ -48,20 +62,11 @@ public class Student extends User {
         return this.project;
     }
 
-    public void addHistory(Request request) {
-        this.studentHistory.add(request);
+    public Boolean getIsDeregistered() {
+        return this.isDeregistered;
     }
 
-    public void addDeregisteredProjects(Project project) {
-        this.deregisteredProjects.add(project);
+    public void setIsDeregistered(Boolean status) {
+        this.isDeregistered = status;
     }
-
-    public ArrayList<Project> getDeregisteredProjects() {
-        return this.deregisteredProjects;
-    }
-
-    public ArrayList<Request> getRequestHistory() {
-        return this.studentHistory;
-    }
-
 }

@@ -14,7 +14,7 @@ import Entities.Project;
 
 public class StudentDB extends Database {
 
-    private String filePath = String.join("", super.directory, "student list.txt");
+    private String filePath = String.join("", super.directory, "student_list.txt");
 
     private File file;
 
@@ -107,14 +107,10 @@ public class StudentDB extends Database {
     }
 
     public void viewRegisteredProject(Student currentStudent) {
-        if (!currentStudent.getIsAssigned()) {
-            System.out.println("You have not registered for any projects.");
-        } else {
-            for (Student student : students) {
-                if (student.getUserID() == currentStudent.getUserID()) {
-                    Project currentProject = student.getAssignedProject();
-                    currentProject.printProjectDetails();
-                }
+        for (Student student : students) {
+            if (student.getUserID() == currentStudent.getUserID()) {
+                Project currentProject = student.getAssignedProject();
+                currentProject.printProjectDetails();
             }
         }
     }

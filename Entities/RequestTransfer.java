@@ -9,6 +9,12 @@ public class RequestTransfer extends Request {
     private Supervisor currentSupervisor;
     private Supervisor repSupervisor;
 
+    /**
+     * Constructor to create Transfer Request Actually
+     * @param project
+     * @param currentSupervisor
+     * @param repSupervisor
+     */
     public RequestTransfer(Project project, Supervisor currentSupervisor, Supervisor repSupervisor) {
         super(RequestType.TRANSFER);
         this.project = project;
@@ -16,6 +22,13 @@ public class RequestTransfer extends Request {
         this.repSupervisor = repSupervisor;
     }
 
+    /**
+     * Constructor for Reading in Transfer Request
+     * @param project
+     * @param currentSupervisor
+     * @param repSupervisor
+     * @param requestStatus
+     */
     public RequestTransfer(Project project, Supervisor currentSupervisor, Supervisor repSupervisor,
             RequestStatus requestStatus) {
         super(RequestType.TRANSFER, requestStatus);
@@ -24,14 +37,14 @@ public class RequestTransfer extends Request {
         this.repSupervisor = repSupervisor;
     }
 
-    @Override
+    /*@Override
     public void approveRequest(Boolean approve) {
         this.setRequestStatus(RequestStatus.APPROVED);
         this.project.setSupervisor(this.repSupervisor);
         this.repSupervisor.editNumProjects(1);
         this.currentSupervisor.editNumProjects(-1);
         // Code to make changes for faculty sides
-    }
+    }*/
 
     public Supervisor getCurSupervisor() {
         return this.currentSupervisor;

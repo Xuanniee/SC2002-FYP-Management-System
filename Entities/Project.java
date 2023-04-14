@@ -4,8 +4,8 @@ import enums.ProjectStatus;
 
 public class Project {
     protected int projectID;
-    // protected String supervisorName;
-    // protected String supervisorEmail;
+    protected Boolean awaitingTransferRequest = false;
+    protected Boolean awaitingTitleChangeRequest = false;
     protected Supervisor supervisor;
     protected Student student;
     protected String projectTitle;
@@ -17,6 +17,32 @@ public class Project {
         this.student = null;
         this.projectTitle = projectTitle;
         this.projectStatus = ProjectStatus.AVAILABLE;
+    }
+
+    public Boolean getAwaitingTitleChangeRequest() {
+        return this.awaitingTitleChangeRequest;
+    }
+
+    public Boolean setAwaitingTitleChangeRequest(Boolean status) {
+        if (status == null) {
+            return false;
+        }
+
+        this.awaitingTitleChangeRequest = status;
+        return true;
+    }
+
+    public Boolean getAwaitingTransferRequest() {
+        return this.awaitingTransferRequest;
+    }
+
+    public Boolean setAwaitingTransferRequest(Boolean status) {
+        if (status == null) {
+            return false;
+        }
+
+        this.awaitingTransferRequest = status;
+        return true;
     }
 
     public int getProjectID() {
@@ -58,13 +84,22 @@ public class Project {
     public void printProjectDetails() {
         System.out.println("ProjectID: " + this.projectID);
         System.out.println("Title of Project: " + this.projectTitle);
-        System.out.println("Faculty In-charge's Name: " + this.getSupervisor().getUserName());
-        System.out.println("Faculty In-charge's Email: " + this.getSupervisor().getUserEmail());
+        System.out.println("    Faculty In-charge's Name: " + this.getSupervisor().getUserName());
+        System.out.println("    Faculty In-charge's Email: " + this.getSupervisor().getUserEmail());
         if (this.projectStatus == ProjectStatus.ALLOCATED) {
             System.out.println("This project is allocated to the following student:");
-            System.out.println("Student's Name: " + this.getStudent().getUserName());
-            System.out.println("Student's Email: " + this.getStudent().getUserEmail());
+            System.out.println("    Student's Name: " + this.getStudent().getUserName());
+            System.out.println("    Student's Email: " + this.getStudent().getUserEmail());
         }
         System.out.println("");
+    }
+
+    public Boolean deregisterStudent() {
+        System.out.println(
+                "Student " + this.student.userName + " has been deregistered from the Project " + this.projectID);
+        this.student = null;
+        this.projectStatus = ProjectStatus.AVAILABLE;
+
+        return true;
     }
 }

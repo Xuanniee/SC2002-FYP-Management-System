@@ -21,6 +21,7 @@ public class User {
         this.userID = userID;
         this.userName = userName;
         this.userEmail = userEmail;
+        this.password = "password";
         this.userType = UserType.UNKNOWN;
     }
 
@@ -69,8 +70,9 @@ public class User {
     }
 
     public UserType authenticateUser(String userID, String password, ArrayList<Supervisor> supervisorList,
-            ArrayList<Student> studentList) {
+            ArrayList<Student> studentList, ArrayList<FYPCoordinator> fypCoordinatorsList) {
         // Determine if the User is a Student, Professor, or FYP Coord
+        // Supervisor
         for (int i = 0; i < supervisorList.size(); i += 1) {
             // If User is Found
             if (supervisorList.get(i).getUserID().equalsIgnoreCase(userID)
@@ -81,6 +83,7 @@ public class User {
             }
         }
 
+        // Check if Student
         if (this.userType == UserType.UNKNOWN) {
             // If not Faculty, then check if Student
             for (int i = 0; i < studentList.size(); i += 1) {
@@ -91,6 +94,16 @@ public class User {
             }
         }
 
+        // Check if FYP Coordinator {Can be Supervisor}
+        if (this.userType == UserType.UNKNOWN || this.userType == UserType.FACULTY) {
+            // If Faculty, Check if FYP Coord
+            for (int i = 0; i < fypCoordinatorsList.size(); i += 1) {
+                if (fypCoordinatorsList.get(i).getUserID().equalsIgnoreCase(userID)
+                && fypCoordinatorsList.get(i).getPassword().equalsIgnoreCase(password)) {
+                    this.userType = UserType.FYPCOORDINATOR;
+                }
+            }
+        }
         return this.userType;
     }
 
@@ -111,5 +124,4 @@ public class User {
         System.out.println("UserID: " + getUserID());
         System.out.println("Email: " + getUserEmail());
     }
-
 }
