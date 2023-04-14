@@ -11,7 +11,11 @@ public class MainApp {
         StudentDB student_list = new StudentDB();
         FacultyDB faculty_list = new FacultyDB();
         FYPcoordDB FYPcoord_list = new FYPcoordDB();
+<<<<<<< Updated upstream
         ProjectDB project_list = new ProjectDB(faculty_list, student_list);
+=======
+        ProjectDB project_list = new ProjectDB(faculty_list);
+>>>>>>> Stashed changes
         ProjectAllocationDB allocation_list = new ProjectAllocationDB();
         RequestTransferDB requestTransferDB = new RequestTransferDB(project_list, faculty_list);
         RequestRegisterDB requestRegisterDB = new RequestRegisterDB(project_list, student_list, faculty_list,
