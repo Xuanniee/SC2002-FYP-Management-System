@@ -6,18 +6,53 @@ import java.util.Scanner;
 
 import enums.UserType;
 
+/**
+ * Represents a User in the FYP Management System.
+ * A User can only be classified with 1 User Type, that is either Student, Faculty, or FYP Coordinator
+ * @author Lab A34 Assignment Team 1
+ * @version 1.0
+ * @since 2023-04-14
+ */
 public class User {
+    /**
+     * Unique Identifier of every User
+     */
     protected String userID;
+
+    /**
+     * Password of User to log into the System. Default is "password"
+     */
     protected String password = "password";
+
+    /**
+     * First & Last Name of the User
+     */
     protected String userName;
+
+    /**
+     * Email Address of User
+     */
     protected String userEmail;
+
+    /**
+     * Classification of User. 
+     * User can only be 1 of 3 types: Student, Faculty, FYP Coordinator
+     */
     protected UserType userType = UserType.UNKNOWN;
 
+    /**
+     * Constructor
+     * Creates a new User Object with the given UserID and Password.
+     * This object does not represent an actual user of FYPMS yet. Becomes an actual user only after identifying the User Type.
+     * @param userID
+     * @param password
+     */
     public User(String userID, String password) {
         this.userID = userID;
         this.password = password;
         this.userType = UserType.UNKNOWN;
     }
+
 
     public User(String userID, String userName, String userEmail) {
         this.userID = userID;
@@ -28,12 +63,20 @@ public class User {
     }
 
     /**
-     * Setters and Getters
+     * Gets the Unique ID of this User
+     * 
+     * @return this User's ID
      */
     public String getUserID() {
         return this.userID;
     }
 
+    /**
+     * Changes the User ID of this User.
+     * 
+     * @param userID This User's new UserID. Must be a unique identifier if used.
+     * @return a Boolean to inform us if the function is working as intended.
+     */
     public Boolean setUserID(String userID) {
         if (userID.isEmpty()) {
             return false;
@@ -42,10 +85,21 @@ public class User {
         return true;
     }
 
+    /**
+     * Gets the Password of this User
+     * 
+     * @return this User's password. Be careful when calling this function to avoid security issues.
+     */
     public String getPassword() {
         return this.password;
     }
 
+    /**
+     * Changes the Password of this User.
+     * 
+     * @param password This User's new password.
+     * @return a Boolean to inform us if the function is working as intended.
+     */
     public Boolean setPassword(String password) {
         if (password.isEmpty()) {
             return false;
@@ -54,10 +108,21 @@ public class User {
         return true;
     }
 
+    /**
+     * Gets the First and Last Name of this User.
+     * 
+     * @return this User's legal name.
+     */
     public String getUserName() {
         return this.userName;
     }
 
+    /**
+     * Changes the full legal name of this User.
+     * 
+     * @param userName this User's new legal name.
+     * @return a Boolean to inform us if the function is working as intended.
+     */
     public Boolean setUserName(String userName) {
         if (userName.isEmpty()) {
             return false;
@@ -66,10 +131,21 @@ public class User {
         return true;
     }
 
+    /**
+     * Gets this User's electronic mail address.
+     * 
+     * @return this user's email.
+     */
     public String getUserEmail() {
         return this.userEmail;
     }
 
+    /**
+     * Updates this User's email address.
+     * 
+     * @param userEmail this User's new email address.
+     * @return a Boolean to inform us if the function is working as intended.
+     */
     public Boolean setUserEmail(String userEmail) {
         if (userEmail.isEmpty()) {
             return false;
@@ -78,15 +154,37 @@ public class User {
         return true;
     }
 
+    /**
+     * Retrieves the classification / type of User.
+     * 
+     * @return an Enumeration representing the UserType.
+     */
     public UserType getUserType() {
         return this.userType;
     }
 
+    /**
+     * Verifies if the provided password matches the User's password in the database.
+     * 
+     * @param inputPassword this User's input.
+     * @return a Boolean to inform us if the provided password is correct.
+     */
     public Boolean checkPassword(String inputPassword) {
         // Returns True if the Password matches
         return this.password.equals(inputPassword);
     }
 
+    /**
+     * Authenticates the User trying to log into FYPMS.
+     * Verifies and identifies what type of User is trying to log in so as to classify them.
+     * 
+     * @param userID Provided UserID Input
+     * @param password Provided Password Input
+     * @param supervisorList ArrayList of Registered Supervisors in FYPMS
+     * @param studentList ArrayList of Registered Students in FYPMS
+     * @param fypCoordinatorsList ArrayList of FYP Coordinators in FYPMS {Usually 1 for every course}
+     * @return the UserType Enumeration to identify if it is a valid user.
+     */
     public UserType authenticateUser(String userID, String password, ArrayList<Supervisor> supervisorList,
             ArrayList<Student> studentList, ArrayList<FYPCoordinator> fypCoordinatorsList) {
         // Determine if the User is a Student, Professor, or FYP Coord
@@ -123,25 +221,29 @@ public class User {
         return this.userType;
     }
 
-    // /**
-    //  * Displays all the options of the system. Should not be Abstract as User must not be an Abstract Class for instantiation
-    //  */
-    // public int printMenuOptions(Scanner scObject) {
-    //     System.out.println("Should never be printed.");
-    //     return 0;
+    // /* For testing purposes */
+    // public void viewDetails() {
+    //     System.out.println(userID + " " + userName + " " + userEmail + "\n");
     // }
 
-    /* For testing purposes */
-    public void viewDetails() {
-        System.out.println(userID + " " + userName + " " + userEmail + "\n");
-    }
-
+    /**
+     * Prints the Profile Details of the Logged User
+     */
     public void printProfile() {
         System.out.println("Name   : " + getUserName());
         System.out.println("UserID : " + getUserID());
         System.out.println("Email  : " + getUserEmail());
     }
 
+    /**
+     * Provides an interface for User to change their Password.
+     * Users must verify their identity by providing their password and any password input is masked for security reasons.
+     * 
+     * @param loggedUser Logged User
+     * @param scObject Scanner to read input from User
+     * @param terminalConsole Console to mask the Password of User
+     * @return a Boolean to inform us if the provided password is correct.
+     */
     public Boolean changeUserPassword(User loggedUser, Scanner scObject, Console terminalConsole) {
         int validationAttempts = 3;
         do {

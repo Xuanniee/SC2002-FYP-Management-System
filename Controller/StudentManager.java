@@ -5,28 +5,81 @@ import java.util.Scanner;
 
 import Entities.*;
 
+/**
+ * Represents a Student Manager in the FYP Management System.
+ * The Student Manager class processes the Student's choice of action throughout
+ * the user session.
+ * 
+ * @author Lab A34 Assignment Team 1
+ * @version 1.0
+ * @since 2023-04-14
+ */
 public class StudentManager {
 
+    /**
+     * Represents the Database of students in the FYP Management System.
+     */
     private StudentDB studentDB;
-    private ProjectDB projectDB;
-    private FYPcoordDB fyPcoordDB;
-    private RequestManager requestManager;
-    private Scanner scanner;
-    private Console terminaConsole;
 
+    /**
+     * Represents the Database of projects in the FYP Management System.
+     */
+    private ProjectDB projectDB;
+
+    /**
+     * Represents the Database of FYP Coordinators in the FYP Management System.
+     */
+    private FYPcoordDB fypCoordDB;
+
+    /**
+     * Represents the Request Manager required to process requests made by this
+     * student.
+     */
+    private RequestManager requestManager;
+
+    /**
+     * Instance of the scanner used to retrieve this student's inputs.
+     */
+    private Scanner scanner;
+
+    /**
+     * Represents the terminal console used in the FYP Management System.
+     */
+    private Console terminalConsole;
+
+    /**
+     * Represents the student using the FYP Management System currently.
+     */
     private Student currentStudent;
 
+    /**
+     * Constructor
+     * Creates a Student Manager.
+     * 
+     * @param student         Student currently logged in to FYPMS.
+     * @param studentDB       Database of all students in FYPMS.
+     * @param projectDB       Database of all projects in FYPMS.
+     * @param requestManager  Request Manager to process Student's requests.
+     * @param fypCoordDB      Database of all FYP coordinators in FYPMS.
+     * @param scanner         Scanner used to retrieve student's inputs.
+     * @param terminalConsole Terminal console.
+     */
     public StudentManager(Student student, StudentDB studentDB, ProjectDB projectDB, RequestManager requestManager,
-            FYPcoordDB fyPcoordDB, Scanner scanner, Console terminalConsole) {
+            FYPcoordDB fypCoordDB, Scanner scanner, Console terminalConsole) {
         this.currentStudent = student;
         this.studentDB = studentDB;
         this.projectDB = projectDB;
-        this.fyPcoordDB = fyPcoordDB;
+        this.fypCoordDB = fypCoordDB;
         this.requestManager = requestManager;
         this.scanner = scanner;
-        this.terminaConsole = terminalConsole;
+        this.terminalConsole = terminalConsole;
     }
 
+    /**
+     * Function that allows Student to interact with the Menu
+     * 
+     * @param choice Student's selected action.
+     */
     public void processStudentChoice(int choice) {
 
         System.out.println("");
@@ -46,8 +99,9 @@ public class StudentManager {
                 if (currentStudent.getIsDeregistered()) {
                     System.out.println(
                             "You are not allowed to view any projects because you have already deregistered from FYP.");
-                } else if(currentStudent.getIsAssigned()){
-                    System.out.println("You are currently allocated to a FYP and do not have access to available project list.");
+                } else if (currentStudent.getIsAssigned()) {
+                    System.out.println(
+                            "You are currently allocated to a FYP and do not have access to available project list.");
                 } else {
                     projectDB.viewAvailableProjects();
                 }
@@ -83,8 +137,9 @@ public class StudentManager {
                 } else if (currentStudent.getAssignedProject().getAwaitingTitleChangeRequest()) {
                     System.out.println("You have already requested for a Title Change. " +
                             "Please wait for the results of the request before making another.");
-                } else if(currentStudent.getIsDeregistered()){
-                    System.out.println("You are not allowed to view any projects because you have already deregistered from FYP.");
+                } else if (currentStudent.getIsDeregistered()) {
+                    System.out.println(
+                            "You are not allowed to view any projects because you have already deregistered from FYP.");
                 } else {
                     System.out.println("Your registered project: ");
                     currentStudent.getAssignedProject().printProjectDetails();
@@ -100,7 +155,7 @@ public class StudentManager {
                 } else {
                     System.out.println("Your registered project: ");
                     currentStudent.getAssignedProject().printProjectDetails();
-                    requestManager.studentDeregister(currentStudent, fyPcoordDB.getFypCoordinatorsList().get(0));
+                    requestManager.studentDeregister(currentStudent, fypCoordDB.getFypCoordinatorsList().get(0));
                 }
                 break;
 
@@ -111,13 +166,12 @@ public class StudentManager {
 
             case 8:
                 // Change password
-                this.currentStudent.changeUserPassword(currentStudent, scanner, terminaConsole);
+                this.currentStudent.changeUserPassword(currentStudent, scanner, terminalConsole);
                 break;
 
             default:
                 System.out.println("Please enter a valid choice");
                 break;
         }
-
     }
 }

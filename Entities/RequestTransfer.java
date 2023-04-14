@@ -3,10 +3,27 @@ package Entities;
 import enums.RequestType;
 import enums.RequestStatus;
 
+/**
+ * Represents a Transfer Request in the FYP Management System.
+ * @author Lab A34 Assignment Team 1
+ * @version 1.0
+ * @since 2023-04-14
+ */
 public class RequestTransfer extends Request {
 
+    /**
+     * The Project whose supervisor is being replaced.
+     */
     private Project project;
+
+    /**
+     * The current supervising faculty member that made the Transfer Request.
+     */
     private Supervisor currentSupervisor;
+
+    /**
+     * The replacement supervising faculty member that is replacing the requester.
+     */
     private Supervisor repSupervisor;
 
     /**
@@ -37,25 +54,30 @@ public class RequestTransfer extends Request {
         this.repSupervisor = repSupervisor;
     }
 
-    /*@Override
-    public void approveRequest(Boolean approve) {
-        this.setRequestStatus(RequestStatus.APPROVED);
-        this.project.setSupervisor(this.repSupervisor);
-        this.repSupervisor.editNumProjects(1);
-        this.currentSupervisor.editNumProjects(-1);
-        // Code to make changes for faculty sides
-    }*/
-
+    /**
+     * Retrieves the Current Supervisor who made the Transfer Request.
+     * 
+     * @return the Current Supervisor.
+     */
     public Supervisor getCurSupervisor() {
         return this.currentSupervisor;
     }
 
+    /**
+     * Retrieves the Replacement Supervisor who is replacing the Requester.
+     * 
+     * @return the Replacement Supervisor.
+     */
     public Supervisor getRepSupervisor() {
         return this.repSupervisor;
     }
 
+    /**
+     * Retrieves the Project in the Transfer Request.
+     * 
+     * @return the Transfer Request Project.
+     */
     public Project getProject() {
         return this.project;
     }
-
 }

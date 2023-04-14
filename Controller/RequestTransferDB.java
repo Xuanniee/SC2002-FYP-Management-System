@@ -16,17 +16,48 @@ import Entities.FYPCoordinator;
 import Entities.User;
 import enums.RequestStatus;
 
+/**
+ * Represents a Database of Transfer Requests in FYP Management System.
+ * 
+ * @author Lab A34 Assignment Team 1
+ * @version 1.0
+ * @since 2023-04-14
+ */
 public class RequestTransferDB extends Database {
 
+    /**
+     * Represents the file path of the Database of Transfer Requests in FYPMS.
+     */
     private String filePath = String.join("", super.directory, "request_transfer_list.txt");
 
+    /**
+     * Represents the file containing database of all Transfer Requests.
+     */
     private File file;
 
+    /**
+     * Represents a list of Transfer Requests in FYPMS.
+     */
     private ArrayList<RequestTransfer> requestTransferList;
 
+    /**
+     * Represents the Database of all projects in FYPMS.
+     */
     private ProjectDB projectDB;
+    
+    /**
+     * Represents the Database of all faculties in FYPMS.
+     */
     private FacultyDB facultyDB;
 
+    /**
+     * Constructor
+     * Creates a Database of all Transfer Requests in FYPMS when the application is
+     * first initialised.
+     * 
+     * @param projectDB Database of all projects in FYPMS.
+     * @param facultyDB Database of all faculties in FYPMS.
+     */
     public RequestTransferDB(ProjectDB projectDB, FacultyDB facultyDB) {
         this.file = new File(filePath);
         this.requestTransferList = new ArrayList<RequestTransfer>();
@@ -35,14 +66,9 @@ public class RequestTransferDB extends Database {
         this.facultyDB = facultyDB;
     }
 
-    public RequestTransferDB(String filePath, ProjectDB projectDB, FacultyDB facultyDB) {
-        this.file = new File(filePath);
-        this.requestTransferList = new ArrayList<RequestTransfer>();
-        this.readFile();
-        this.projectDB = projectDB;
-        this.facultyDB = facultyDB;
-    }
-
+    /**
+     * Reads Transfer Requests from file.
+     */
     public void readFile() {
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));
@@ -73,6 +99,9 @@ public class RequestTransferDB extends Database {
         }
     }
 
+    /**
+     * Writes updated Transfer Requests data to the text file.
+     */
     public void updateFile() {
         try {
             BufferedWriter bf = new BufferedWriter(new FileWriter(file, false));
@@ -94,10 +123,21 @@ public class RequestTransferDB extends Database {
         }
     }
 
+    /**
+     * Add a new request to the list of all Transfer Requests.
+     * 
+     * @param requestTransfer New transfer request to be added to list.
+     */
     public void addRequest(RequestTransfer requestTransfer) {
         requestTransferList.add(requestTransfer);
     }
 
+    /**
+     * Checks whether target Supervisor can be found in list of Transfer Requests.
+     * 
+     * @param supervisor Target supervisor.
+     * @return Boolean variable to indicate whether supervisor can be found in list.
+     */
     public Boolean findSupervisor(User supervisor) {
         for (RequestTransfer req : requestTransferList) {
             if (req.getCurSupervisor() == supervisor) {
@@ -107,6 +147,13 @@ public class RequestTransferDB extends Database {
         return false;
     }
 
+    /**
+     * View details of all Transfer Requests made by specified Supervisor.
+     * 
+     * @param currentSupervisor Target supervisor.
+     * @return print statements of all Transfer Requests made by specified
+     *         Supervisor.
+     */
     public void viewTransferRequestsForSupervisor(Supervisor currentSupervisor) {
         ArrayList<RequestTransfer> currentSupervisorList = new ArrayList<>();
         for (int i = 0; i < requestTransferList.size(); i += 1) {
@@ -163,8 +210,9 @@ public class RequestTransferDB extends Database {
     }
 
     /**
-     * Allow FYP Coordinator to see Supervisors' Transfer Requests to change their
-     * Supervisors
+     * For FYP Coordinators to view all pending Transfer Requests.
+     * 
+     * @return integer indicating whether there are any pending Transfer Requests.
      */
     public int viewAllTransferRequestFYPCoord() {
         System.out.println("Loading all pending requests to change supervisors for a project...");
@@ -194,8 +242,8 @@ public class RequestTransferDB extends Database {
     /**
      * Method to find the index of the target request based on input of user
      * 
-     * @param requestChoice
-     * @return
+     * @param requestChoice User's input based on which Request they want to manage.
+     * @return Index of target request in the list of all Transfer Requests.
      */
     public int findRegisterRequestIndex(int requestChoice) {
         int counter = 1;
@@ -214,8 +262,9 @@ public class RequestTransferDB extends Database {
     /**
      * Allow FYP coordinator to see the specific details of the Transfer Request
      * 
-     * @param requestChoice
-     * @return
+     * @param requestChoice FYP coordinator's input based on which Request they want
+     *                      to manage.
+     * @return Target Request chosen by FYP coordinator.
      */
     public RequestTransfer viewTransferRequestDetailedFYPCoord(int requestChoice) {
         int targetRequestIndex = findRegisterRequestIndex(requestChoice);
@@ -242,10 +291,10 @@ public class RequestTransferDB extends Database {
     }
 
     /**
-     * For FYP Coordinator to approve Transfer
+     * Process the approved request by updating relevant entities.
      * 
-     * @param approvedRequest
-     * @return
+     * @param approvedRequest Request that is approved by FYP coordinator.
+     * @return a Boolean to inform us if the function is working as intended.
      */
     public Boolean approveTransferRequestFYPCoord(RequestTransfer approvedRequest) {
         if (approvedRequest == null) {
@@ -259,12 +308,12 @@ public class RequestTransferDB extends Database {
 
         // Replace Project Supervisor
         approvedProject.setSupervisor(replacementSupervisor);
-        
+
         // Update Supervisors {Both Old and New}
         replacementSupervisor.setSupervisingProjectList(approvedProject);
         currentSupervisor.removeSupervisingProjectList(approvedProject);
         currentSupervisor.editNumProjects(-1);
-        
+
         // Update Request Status so this.user cannot see it again
         // int indexCompletedRequest = requestTransferList.indexOf(approvedRequest);
         // requestTransferList.remove(indexCompletedRequest);

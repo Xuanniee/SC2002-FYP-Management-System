@@ -11,27 +11,71 @@ import Entities.RequestRegister;
 import Entities.RequestTransfer;
 import enums.RequestStatus;
 
+/**
+ * Represents a FYP Coordinator Manager in FYP Management System.
+ * The FYPCoordinatorManager class processes the Student's choice of action
+ * throughout the user session.
+ * 
+ * @author Lab A34 Assignment Team 1
+ * @version 1.0
+ * @since 2023-04-14
+ */
 public class FYPCoordinatorManager {
+    /**
+     * Instance of the scanner used to retrieve this student's inputs.
+     */
     private Scanner scanner;
+
+    /**
+     * Represents the terminal console used in the FYP Management System.
+     */
     private Console terminaConsole;
 
-    // Attributes
+    /**
+     * Represents the FYP Coordinator using the FYP Management System currently.
+     */
     private FYPCoordinator currentFypCoordinator;
+
+    /**
+     * Represents the Database of projects in the FYP Management System.
+     */
     private ProjectDB projectDB;
+
+    /**
+     * Represents the Database of faculties in the FYP Management System.
+     */
     private FacultyDB facultyDB;
+
+    /**
+     * Represents the Database of Register Requests in the FYP Management System.
+     */
     private RequestRegisterDB requestRegisterDB;
+
+    /**
+     * Represents the Database of Transfer Requests in the FYP Management System.
+     */
     private RequestTransferDB requestTransferDB;
+    
+    /**
+     * Represents the Database of Deregister Requests in the FYP Management System.
+     */
     private RequestDeregisterDB requestDeregisterDB;
+
+    /**
+     * Represents the Request Manager that processes various Requests.
+     */
     private RequestManager requestManager;
 
     /**
      * Constructor for FYP Manager
+     * Creates a FYP Coordinator Manager Object with the given inputs that manages a
+     * specific FYP Coordinator.
      * 
-     * @param currentFypCoordinator
+     * @param currentFypCoordinator Selected FYP Coordinator
      */
     public FYPCoordinatorManager(FYPCoordinator currentFypCoordinator, ProjectDB projectDB,
-            FacultyDB facultyDB, RequestRegisterDB requestRegisterDB, 
-            RequestTransferDB requestTransferDB, RequestDeregisterDB requestDeregisterDB, 
+            FacultyDB facultyDB, RequestRegisterDB requestRegisterDB,
+            RequestTransferDB requestTransferDB, RequestDeregisterDB requestDeregisterDB,
             RequestManager requestManager, Scanner scanner, Console terminaConsole) {
         this.currentFypCoordinator = currentFypCoordinator;
         this.projectDB = projectDB;
@@ -44,6 +88,11 @@ public class FYPCoordinatorManager {
         this.terminaConsole = terminaConsole;
     }
 
+    /**
+     * Processes the FYP Coordinator Input from the Main Menu
+     * 
+     * @param choice Selected Action by FYP Coordinator
+     */
     public void processFypCoordinatorChoice(int choice) {
         switch (choice) {
             case 0:
@@ -60,20 +109,20 @@ public class FYPCoordinatorManager {
                 System.out.println("Viewing your profile...");
                 currentFypCoordinator.printProfile();
                 break;
-            
+
             case 2:
                 // Create Project
-                facultyDB.createProject(projectDB, currentFypCoordinator);
+                facultyDB.createProject(projectDB, currentFypCoordinator, scanner);
                 break;
 
             case 3:
                 // View own Project(s)
                 facultyDB.viewOwnProject(projectDB.retrieveSupervisorProjects(currentFypCoordinator.getUserID()));
                 break;
-            
+
             case 4:
                 // Modify the Title of your Project(s)
-                facultyDB.modifyTitle(projectDB, currentFypCoordinator);
+                facultyDB.modifyTitle(projectDB, currentFypCoordinator, scanner);
                 break;
 
             case 5:
@@ -188,6 +237,15 @@ public class FYPCoordinatorManager {
 
                     RequestTransfer targetTransferRequest = requestTransferDB
                             .viewTransferRequestDetailedFYPCoord(selectedSupervisorRequest);
+
+                    // Add hint message in scenario where the replacement supervisor has already
+                    // reached his/her cap
+                    if (targetTransferRequest.getRepSupervisor().getNumProj() >= 2) {
+                        System.out.printf("Warning: Replacement Supervisor already has %d allocated projects.\n",
+                                targetTransferRequest.getRepSupervisor().getNumProj());
+                    }
+
+                    System.out.print("Your choice is: ");
                     approvalTransferResult = scanner.nextInt();
 
                     Project projectBeingTransferred = targetTransferRequest.getProject();
@@ -246,18 +304,12 @@ public class FYPCoordinatorManager {
                 break;
 
             case 10:
-                // Request the Transfer of a Student
-                this.currentFypCoordinator.viewSupervisingProjectList();
-                requestManager.changeSupervisorRequest(currentFypCoordinator);
-                break;
-
-            case 11:
                 // View History & Status
                 System.out.println("Viewing History...");
                 requestManager.getAllRequestHistory(currentFypCoordinator);
                 break;
 
-            case 12:
+            case 11:
                 // Change Password
                 this.currentFypCoordinator.changeUserPassword(currentFypCoordinator, scanner, terminaConsole);
                 break;

@@ -15,55 +15,53 @@ import Entities.Student;
 import Entities.Supervisor;
 import enums.ProjectStatus;
 
+/**
+ * Represents a Database of Projects in the FYP Management System.
+ * 
+ * @author Lab A34 Assignment Team 1
+ * @version 1.0
+ * @since 2023-04-14
+ */
 public class ProjectDB extends Database {
 
-    /*
-     * private ArrayList<Project> projectList = new ArrayList<Project>();
-     * private int projectCount = 0;
-     * 
-     * public ProjectDB() {
-     * String fileName = "./Data/rollover project.txt";
-     * String line;
-     * boolean isFirstLine = true;
-     * try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
-     * while ((line = br.readLine()) != null) {
-     * 
-     * if (isFirstLine) {
-     * isFirstLine = false;
-     * continue; // skip the first line
-     * }
-     * // Update the Number of Projects, which is also their Project ID
-     * updateProjectCount();
-     * // Split the line by tabs
-     * String[] values = line.split("\t");
-     * String professorName = values[0];
-     * String projectTitle = values[1];
-     * 
-     * // TODO Get Supervisor Email
-     * projectList.add(new Project(projectCount, professorName, "Unknown Email",
-     * projectTitle));
-     * 
-     * for (String value : values) {
-     * System.out.print(value + "\t");
-     * }
-     * System.out.println();
-     * }
-     * } catch (IOException e) {
-     * e.printStackTrace();
-     * }
-     * }
+    /**
+     * Represents the file path of the Database of Projects in FYPMS.
      */
-
     private String filePath = String.join("", super.directory, "rollover project.txt");
 
+    /**
+     * Represents the file containing the database of all Projects.
+     */
     private File file;
 
+    /**
+     * ArrayList containing all the Projects in FYPMS
+     */
     public ArrayList<Project> projectList;
+
+    /**
+     * Integer attribute storing the number of projects.
+     */
     private int projectCount = 0;
 
+    /**
+     * Represents the Database contianing all Supervisor Users in FYPMS
+     */
     private FacultyDB facultyDB;
+
+    /**
+     * Represents the Database contianing all Student Users in FYPMS
+     */
     private StudentDB studentDB;
 
+    /**
+     * Constructor
+     * Creates a ProjectDB object that stores all the Projects and their relevant
+     * details in FYPMS.
+     * 
+     * @param facultyDB Reference to Faculty Database
+     * @param studentDB Reference to Student Database
+     */
     public ProjectDB(FacultyDB facultyDB, StudentDB studentDB) {
         this.facultyDB = facultyDB;
         this.studentDB = studentDB;
@@ -72,14 +70,17 @@ public class ProjectDB extends Database {
         this.readFile();
     }
 
-    public ProjectDB(String filePath, FacultyDB facultyDB, StudentDB studentDB) {
-        this.facultyDB = facultyDB;
-        this.studentDB = studentDB;
-        this.file = new File(filePath);
-        this.projectList = new ArrayList<Project>();
-        this.readFile();
-    }
+    // public ProjectDB(String filePath, FacultyDB facultyDB, StudentDB studentDB) {
+    // this.facultyDB = facultyDB;
+    // this.studentDB = studentDB;
+    // this.file = new File(filePath);
+    // this.projectList = new ArrayList<Project>();
+    // this.readFile();
+    // }
 
+    /**
+     * Reads the Projects from provided file.
+     */
     public void readFile() {
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));
@@ -110,6 +111,9 @@ public class ProjectDB extends Database {
         }
     }
 
+    /**
+     * Writes the updated Projects data back into the text file.
+     */
     public void updateFile() {
         try {
             BufferedWriter bf = new BufferedWriter(new FileWriter(file, false));
@@ -129,14 +133,28 @@ public class ProjectDB extends Database {
         }
     }
 
+    /**
+     * Retrieves the Number of Projects.
+     * 
+     * @return Project Count
+     */
     public int getProjectCount() {
         return projectCount;
     }
 
+    /**
+     * Updates the Number of Projects by incrementing by 1.
+     */
     public void updateProjectCount() {
         this.projectCount += 1;
     }
 
+    /**
+     * Appending a newly created project to the database arraylist.
+     * 
+     * @param newlyCreatedProject New Project that is created
+     * @return a Boolean to inform us if the function is working as intended.
+     */
     public Boolean addProject(Project newlyCreatedProject) {
         // Don't need increment projectCount since should incremented before calling
         // this function
@@ -148,11 +166,24 @@ public class ProjectDB extends Database {
         return true;
     }
 
+    /**
+     * Finds a Project using their Project ID.
+     * 
+     * @param projectID
+     * @return
+     */
     public Project findProject(int projectID) {
         Project targetProject = projectList.get(projectID);
         return targetProject;
     }
 
+    /**
+     * Updates the Project Title after being approved.
+     * 
+     * @param projectID       Unique Project ID
+     * @param newProjectTitle New Project Title
+     * @return a Boolean to inform us if the function is working as intended.
+     */
     public Boolean changeProjectTitle(int projectID, String newProjectTitle) {
         // Input Validation
         if (projectID > projectCount) {
@@ -168,6 +199,9 @@ public class ProjectDB extends Database {
 
     /**
      * Return list of projects owned by particular Supervisor
+     * 
+     * @param supervisorID Target Supervisor's ID
+     * @return ArrayList of Supervisor's Projects
      */
     public ArrayList<Project> retrieveSupervisorProjects(String supervisorID) {
         // Create Project List to be returned
@@ -178,10 +212,17 @@ public class ProjectDB extends Database {
                 supervisorProjectList.add(projectList.get(i));
             }
         }
-
         return supervisorProjectList;
     }
 
+    /**
+     * Retrieves the Index of the Target Project within the ArrayList
+     * 
+     * @param projectID             Unique Project ID
+     * @param supervisorProjectList List of Projects supervised by Specific Faculty
+     *                              Member
+     * @return the index of target project
+     */
     public int getProjectIndexInSupervisorProjectList(int projectID, ArrayList<Project> supervisorProjectList) {
         int index = -1;
         for (int i = 0; i < supervisorProjectList.size(); i += 1) {
@@ -192,14 +233,17 @@ public class ProjectDB extends Database {
         return index;
     }
 
+    /**
+     * Retrieves all the Projects in the FYPMS
+     * 
+     * @return ArrayList of All Projects
+     */
     public ArrayList<Project> getAllProjects() {
         return projectList;
     }
 
     /**
      * Viewing Available projects for Student
-     * 
-     * @param student
      */
     public void viewAvailableProjects() {
         System.out.println(
@@ -215,6 +259,9 @@ public class ProjectDB extends Database {
         }
     }
 
+    /**
+     * Views all the Projects in FYPMS regardless of their type.
+     */
     public void viewAllProjectsFYPCoord() {
         Boolean available = false;
         Boolean allocated = false;
@@ -318,8 +365,9 @@ public class ProjectDB extends Database {
     }
 
     /**
-     * Project Report Generation Function
-     * @param scObject
+     * Prints the Project Report Menu for User to filter.
+     * 
+     * @param scObject Scanner to read User Input
      */
     public void projectStatusFilteredMenu(Scanner scObject) {
         int statusMenuChoice;
@@ -394,6 +442,11 @@ public class ProjectDB extends Database {
 
     }
 
+    /**
+     * Prints the Menu to filter by Supervisor ID
+     * 
+     * @param scObject Scanner
+     */
     public void projectSupervisorFilteredMenu(Scanner scObject) {
         int choice;
 
@@ -457,6 +510,11 @@ public class ProjectDB extends Database {
         } while (choice == 1);
     }
 
+    /**
+     * Prints the Menu to filter by Student ID
+     * 
+     * @param scObject Scanner
+     */
     public void projectStudentFilteredMenu(Scanner scObject) {
         int choice;
 

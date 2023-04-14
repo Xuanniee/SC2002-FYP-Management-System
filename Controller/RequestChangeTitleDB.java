@@ -17,20 +17,51 @@ import Entities.Project;
 import Entities.User;
 import enums.RequestStatus;
 
+/**
+ * Represents a Database of all Title Change Requests in FYP Management System.
+ * 
+ * @author Lab A34 Assignment Team 1
+ * @version 1.0
+ * @since 2023-04-14
+ */
 public class RequestChangeTitleDB extends Database {
-
+    /**
+     * Represents the file path of the Database of Title Change Requests in FYPMS.
+     */
     private String filePath = String.join("", super.directory, "request_change_title_list.txt");
 
+    /**
+     * Represents the file containing the databse of all Title Change Requests
+     */
     private File file;
 
+    /**
+     * ArrayList containing all the Title Change Requests in FYPMS
+     */
     private ArrayList<RequestChangeTitle> requestChangeTitleList;
 
+    /**
+     * Represents the Database containing all Projects in FYPMS
+     */
     private ProjectDB projectDB;
+
+    /**
+     * Represents the Database contianing all Student Users in FYPMS
+     */
     private StudentDB studentDB;
+
+    /**
+     * Represents the Database contianing all Supervisor Users in FYPMS
+     */
     private FacultyDB facultyDB;
 
     /**
-     * Read in from Data
+     * Constructor
+     * Creates a Database Object storing all the Title Change Requests.
+     * 
+     * @param projectDB Database containing all Projects in FYPMS
+     * @param studentDB Database contianing all Student Users in FYPMS
+     * @param facultyDB Database contianing all Supervisor Users in FYPMS
      */
     public RequestChangeTitleDB(ProjectDB projectDB, StudentDB studentDB, FacultyDB facultyDB) {
         this.file = new File(filePath);
@@ -41,15 +72,9 @@ public class RequestChangeTitleDB extends Database {
         this.readFile();
     }
 
-    public RequestChangeTitleDB(String filePath, ProjectDB projectDB, StudentDB studentDB, FacultyDB facultyDB) {
-        this.file = new File(filePath);
-        this.requestChangeTitleList = new ArrayList<RequestChangeTitle>();
-        this.readFile();
-        this.projectDB = projectDB;
-        this.studentDB = studentDB;
-        this.facultyDB = facultyDB;
-    }
-
+    /**
+     * Reads the Title Change Requests from provided file.
+     */
     public void readFile() {
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));
@@ -83,6 +108,9 @@ public class RequestChangeTitleDB extends Database {
         }
     }
 
+    /**
+     * Writes the updated Title Change Requests data back into the text file.
+     */
     public void updateFile() {
         try {
             BufferedWriter bf = new BufferedWriter(new FileWriter(file, false));
@@ -108,6 +136,12 @@ public class RequestChangeTitleDB extends Database {
         }
     }
 
+    /**
+     * Appends a Title Change Request to the Database containing all such requests.
+     * 
+     * @param requestChangeTitle Title Change Request to be appended
+     * @return a Boolean to inform us if the function is working as intended.
+     */
     public Boolean addRequest(RequestChangeTitle requestChangeTitle) {
         if (requestChangeTitle == null) {
             System.out.println("Change Title Request is NULL.");
@@ -117,6 +151,12 @@ public class RequestChangeTitleDB extends Database {
         return true;
     }
 
+    /**
+     * Checks whether a Student User has submitted a Title Change Request.
+     * 
+     * @param student Target Student
+     * @return a Boolean to inform us if the Student submitted a request.
+     */
     public Boolean findStudent(User student) {
         for (RequestChangeTitle req : requestChangeTitleList) {
             if (req.getStudent().equals(student)) {
@@ -126,6 +166,14 @@ public class RequestChangeTitleDB extends Database {
         return false;
     }
 
+    /**
+     * Checks whether a Supervisor User has one of their projects receive a Title
+     * Change Request.
+     * 
+     * @param supervisor Target Supervisor
+     * @return a boolean indicating to us if a request associated with Supervisor is
+     *         found.
+     */
     public Boolean findSupervisor(User user) {
         for (RequestChangeTitle req : requestChangeTitleList) {
             if (req.getSupervisor() == user) {
@@ -135,6 +183,12 @@ public class RequestChangeTitleDB extends Database {
         return false;
     }
 
+    /**
+     * Allows Supervisor to view all the Title Change Requests they had received.
+     * 
+     * @param currentSupervisor Target Supervisor
+     * @return an integer representing whether there is no requests at all.
+     */
     public int viewAllTitleChangeRequestSupervisor(Supervisor currentSupervisor) {
         int counter = 1;
         System.out.println("");
@@ -163,10 +217,11 @@ public class RequestChangeTitleDB extends Database {
     }
 
     /**
-     * Method to find the index of the target titlechange request based on input of user
+     * Method to find the index of the target title change request based on input of
+     * user
      * 
-     * @param requestChoice
-     * @return
+     * @param requestChoice Selected Request by User
+     * @return Target Request Index
      */
     public int findTitleChangeRequestIndex(int requestChoice) {
         int counter = 1;
@@ -185,8 +240,8 @@ public class RequestChangeTitleDB extends Database {
     /**
      * View the Details of Title Change Request
      * 
-     * @param requestChoice
-     * @return targetRequest
+     * @param requestChoice Target Request's Menu Number
+     * @return Target Request
      */
     public RequestChangeTitle viewTitleChangeRequestDetailedSupervisor(int requestChoice) {
         int targetRequestIndex = findTitleChangeRequestIndex(requestChoice);
@@ -215,7 +270,7 @@ public class RequestChangeTitleDB extends Database {
     /**
      * Function for Supervisor to approve change of Project's Title
      * 
-     * @param approvedRequest
+     * @param approvedRequest Target Request
      * @return Boolean to note if function was success
      */
     public Boolean approveTitleChangeRequest(RequestChangeTitle approvedRequest) {
@@ -235,8 +290,8 @@ public class RequestChangeTitleDB extends Database {
                 "Project " + approvedRequest.getPrevTitle() + " has been successfully renamed to " + newProjectTitle);
 
         // Remove request from list after approval
-        //requestChangeTitleList.remove(approvedRequest);
-        
+        // requestChangeTitleList.remove(approvedRequest);
+
         return true;
     }
 
@@ -300,6 +355,8 @@ public class RequestChangeTitleDB extends Database {
 
     /**
      * Method for Student to view his/her change title request history
+     * 
+     * @param student Target Student
      */
     public void printStudentHistory(Student student) {
         System.out.println(

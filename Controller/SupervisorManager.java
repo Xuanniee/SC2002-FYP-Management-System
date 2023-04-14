@@ -8,17 +8,59 @@ import enums.RequestStatus;
 import Entities.Project;
 import Entities.RequestChangeTitle;
 
+/**
+ * Represents a Supervisor Manager in the FYP Management System.
+ * The Student Manager class processes the Supervisor's choice of action
+ * throughout the user session.
+ * 
+ * @author Lab A34 Assignment Team 1
+ * @version 1.0
+ * @since 2023-04-14
+ */
 public class SupervisorManager {
-    Supervisor managedSupervisor;
+
+    /**
+     * Represents the Supervisor using the FYPMS currently.
+     */
+    private Supervisor managedSupervisor;
+    /**
+     * Representst the Database of faculties in the FYPMS.
+     */
     private FacultyDB facultyDB;
+    /**
+     * Represents the Database of projects in the FYPMS.
+     */
     private ProjectDB projectDB;
+    /**
+     * Represents the Database of Change Title Requests in FYPMS.
+     */
     private RequestChangeTitleDB requestChangeTitleDB;
+    /**
+     * Represents the Request Manager required to process Supervisor's requests.
+     */
     private RequestManager requestManager;
+    /**
+     * Instance of the scanner used to retrieve Supervisor's inputs.
+     */
     private Scanner scanner;
+    /**
+     * Represents the terminal console used in the FYPMS.
+     */
     private Console terminaConsole;
 
-
-    // Constructor
+    /**
+     * Constructor
+     * Creates a Supervisor Manager.
+     * 
+     * @param supervisor           Current Supervisor that is logged in.
+     * @param facultyDB            Database of faculties in FYPMS.
+     * @param projectDB            Database of projects in FYPMS.
+     * @param requestManager       Request Manager used to process requests of
+     *                             current Supervisor.
+     * @param requestChangeTitleDB Database of Requests to Change Title in FYPMS.
+     * @param scanner              Scanner used to process inputs of Supervisor.
+     * @param terminalConsole      Terminal console.
+     */
     public SupervisorManager(Supervisor supervisor, FacultyDB facultyDB, ProjectDB projectDB,
             RequestManager requestManager, RequestChangeTitleDB requestChangeTitleDB,
             Scanner scanner, Console terminalConsole) {
@@ -31,18 +73,10 @@ public class SupervisorManager {
         this.terminaConsole = terminalConsole;
     }
 
-    /*
-     * public SupervisorManager(String supervisorUserID, FacultyDB facultyDB) {
-     * // Determine the Managed Supervisor
-     * this.managedSupervisor = facultyDB.findSupervisor(supervisorUserID);
-     * };
+    /**
+     * Function that allows Supervisor to interact with the Menu
      * 
-     * /**
-     * Function that allows Supervisor to interface with the Menu
-     * 
-     * @param scObject
-     * 
-     * @param project_list
+     * @param userInput Supervisor's selected action.
      */
     public void processSupervisorChoice(int userInput) {
 
@@ -53,7 +87,7 @@ public class SupervisorManager {
                 break;
 
             case 1:
-                facultyDB.createProject(projectDB, managedSupervisor);
+                facultyDB.createProject(projectDB, managedSupervisor, scanner);
                 break;
 
             case 2:
@@ -61,7 +95,7 @@ public class SupervisorManager {
                 break;
 
             case 3:
-                facultyDB.modifyTitle(projectDB, managedSupervisor);
+                facultyDB.modifyTitle(projectDB, managedSupervisor, scanner);
                 break;
 
             case 4:

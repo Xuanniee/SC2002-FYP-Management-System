@@ -5,39 +5,57 @@ import java.util.Scanner;
 
 import Boundary.Menu;
 
+/**
+ * Represents a Supervisor user in the FYP Management System.
+ * @author Lab A34 Assignment Team 1
+ * @version 1.0
+ * @since 2023-04-14
+ */
 public class Supervisor extends User implements Menu{
-    private ArrayList<Project> supervisingProjectList = new ArrayList<Project>();
-    //private ArrayList<Project> listOfCreatedProjects = new ArrayList<Project>();
-    private int numProjects = 0;
-    //private Boolean isFull = false;
 
+    /**
+     * List of all projects Supervised by this Supervisor.
+     */
+    private ArrayList<Project> supervisingProjectList = new ArrayList<Project>();
+    
+    /**
+     * Number of projects being supervised by this Supervisor.
+     */
+    private int numProjects = 0;
+
+    /**
+     * Constructor
+     * Creates a new Supervisor with the given User ID, Name, and Email address.
+     * 
+     * @param userID Login ID of user
+     * @param userName User's legal name
+     * @param userEmail User's email address
+     */
     public Supervisor(String userID, String userName, String userEmail) {
         super(userID, userName, userEmail);
     }
 
-    /*public ArrayList<Project> getCreatedProjectList() {
-        return listOfCreatedProjects;
-    }*/
-
-    /*public Boolean addToCreatedProjectList(Project newlyCreatedProject) {
-        if (newlyCreatedProject != null) {
-            System.out.println("No Project was passed");
-            return false;
-        }
-
-        listOfCreatedProjects.add(newlyCreatedProject);
-        return true;
-    }*/
-
+    /**
+     * Get list of Projects that Supervisor is supervising.
+     * @return this Supervisor's projects 
+     */
     public ArrayList<Project> getSupervisingProjectList() {
         return supervisingProjectList;
     }
 
+    /**
+     * Add newly created project to Supervisor's list of projects
+     * and increase number of Supervising projects by 1.
+     */
     public void addSupervisingProject(Project project){
         supervisingProjectList.add(project);
         numProjects += 1;
     }
 
+    /**
+     * Prints the details of Projects that Supervisor is supervising.
+     * @return a Boolean to inform us if the function is working as intended.
+     */
     public Boolean viewSupervisingProjectList() {
         int counter = 1;
         for (int i = 0; i < supervisingProjectList.size(); i += 1) {
@@ -55,6 +73,11 @@ public class Supervisor extends User implements Menu{
         return true;
     }
 
+    /**
+     * Get a particular project from Supervisor's projects using projectID.
+     * @param projectID projectID of target project.
+     * @return target project.
+     */
     public Project getParticularSupervisingProject(int projectID) {
         Project targetProject;
         for (int i = 0; i < supervisingProjectList.size(); i += 1) {
@@ -70,7 +93,7 @@ public class Supervisor extends User implements Menu{
     /**
      * Removes the Project from the Replaced Supervisor's Project List
      * 
-     * @param oldProject
+     * @param oldProject Project to be removed from Supervisor's project list.
      * @return
      */
     public Boolean removeSupervisingProjectList(Project oldProject) {
@@ -90,25 +113,26 @@ public class Supervisor extends User implements Menu{
     /**
      * Updates the Replacement Supervisor with the Project.
      * 
-     * 
      * @param oldProject
      * @param replacementProject
-     * @return
+     * @return a Boolean to inform us if the function is working as intended.
      */
     public Boolean setSupervisingProjectList(Project replacementProject) {
         if (replacementProject == null) {
             return false;
-        } else if (numProjects == 2) {
-            System.out.println("Supervisor " + this.userName + " is already supervising two FYP Projects.");
-            return false;
-        }
+        } 
 
         supervisingProjectList.add(replacementProject);
+        
         numProjects += 1;
 
         return true;
     }
 
+    /** 
+     * Get number of projects Supervisor is currently supervising.
+     * @return integer that represents the number of projects Supervisor is supervising.
+     */
     public int getNumProj(){
         return this.numProjects;
     }
@@ -119,6 +143,7 @@ public class Supervisor extends User implements Menu{
 
     /**
      * Implements the User Menu to print the Supervisor Menu
+     * @return integer that represents User's choice.
      */
     public int printMenuOptions(Scanner scObject) {
         // Supervisor Menu
@@ -281,12 +306,4 @@ public class Supervisor extends User implements Menu{
      * }
      */
 
-    public void viewPendingRequests() {
-    };
-
-    public void viewCreatedProjects() {
-    };
-
-    public void requestTransfer() {
-    };
 }

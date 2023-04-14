@@ -19,41 +19,64 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+/**
+ * Represents a Database of all Register Requests in FYP Management System.
+ * 
+ * @author Lab A34 Assignment Team 1
+ * @version 1.0
+ * @since 2023-04-14
+ */
 public class RequestRegisterDB extends Database {
-
+    /**
+     * Represents the file path of the Database of Register Requests in FYPMS.
+     */
     private String filePath = String.join("", super.directory, "request_register_list.txt");
 
+    /**
+     * Represents the file containing the database of all Registration Requests
+     */
     private File file;
 
+    /**
+     * ArrayList containing all the Register Requests in FYPMS
+     */
     private ArrayList<RequestRegister> requestRegisterList;
 
+    /**
+     * Represents the Database containing all Projects in FYPMS
+     */
     private ProjectDB projectDB;
+
+    /**
+     * Represents the Database contianing all Student Users in FYPMS
+     */
     private StudentDB studentDB;
+
+    /**
+     * Represents the Database contianing all Supervisor Users in FYPMS
+     */
     private FacultyDB facultyDB;
-    private ProjectAllocationDB projectAllocationDB;
 
-    public RequestRegisterDB(ProjectDB projectDB, StudentDB studentDB, FacultyDB facultyDB,
-            ProjectAllocationDB projectAllocationDB) {
+    /**
+     * Constructor
+     * Creates the Register Request Database when the system is first initialised.
+     * 
+     * @param projectDB Database containing all projects in FYPMS
+     * @param studentDB Database containing all students in FYPMS
+     * @param facultyDB Database containing all faculty supervisors in FYPMS
+     */
+    public RequestRegisterDB(ProjectDB projectDB, StudentDB studentDB, FacultyDB facultyDB) {
         this.file = new File(filePath);
         this.requestRegisterList = new ArrayList<RequestRegister>();
         this.readFile();
         this.projectDB = projectDB;
         this.studentDB = studentDB;
         this.facultyDB = facultyDB;
-        this.projectAllocationDB = projectAllocationDB;
     }
 
-    public RequestRegisterDB(String filePath, ProjectDB projectDB, StudentDB studentDB, FacultyDB facultyDB,
-            ProjectAllocationDB projectAllocationDB) {
-        this.file = new File(filePath);
-        this.requestRegisterList = new ArrayList<RequestRegister>();
-        this.readFile();
-        this.projectDB = projectDB;
-        this.studentDB = studentDB;
-        this.facultyDB = facultyDB;
-        this.projectAllocationDB = projectAllocationDB;
-    }
-
+    /**
+     * Reads the Register Requests from provided file.
+     */
     public void readFile() {
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));
@@ -84,6 +107,9 @@ public class RequestRegisterDB extends Database {
         }
     }
 
+    /**
+     * Writes the updated Registered Requests data back into the text file.
+     */
     public void updateFile() {
         try {
             BufferedWriter bf = new BufferedWriter(new FileWriter(file, false));
@@ -106,12 +132,24 @@ public class RequestRegisterDB extends Database {
         }
     }
 
+    /**
+     * Appends a Register Request to the Database containing all such requests.
+     * 
+     * @param requestRegister
+     */
     public void addRequest(RequestRegister requestRegister) {
         requestRegisterList.add(requestRegister);
         // Update Supervisor number of supervising project
+        // System.out.println("Before Adding: ");
         requestRegister.getSupervisor().editNumProjects(1);
     }
 
+    /**
+     * Prints all the pending Register Requests that were submitted to the FYP
+     * Coordinator for their approval.
+     * 
+     * @return an integer representing whether there is no requests at all.
+     */
     public int viewAllRegisterRequestFYPCoord() {
         System.out.println("Loading all pending requests to register for a project...");
         int counter = 1;
@@ -140,8 +178,8 @@ public class RequestRegisterDB extends Database {
     /**
      * Method to find the index of the target request based on input of user
      * 
-     * @param requestChoice
-     * @return
+     * @param requestChoice Selected Request by User
+     * @return index of target request
      */
     public int findRegisterRequestIndex(int requestChoice) {
         int counter = 1;
@@ -157,6 +195,13 @@ public class RequestRegisterDB extends Database {
         return -1;
     }
 
+    /**
+     * Prints the specific details of the Register Requests for FYP Coordinator to
+     * evaluate whether it should be approved.
+     * 
+     * @param requestChoice Selected Request by FYP Coordinator
+     * @return Selected Register Request Object
+     */
     public RequestRegister viewRegisterRequestDetailedFYPCoord(int requestChoice) {
         int targetRequestIndex = findRegisterRequestIndex(requestChoice);
         RequestRegister targetRequest = requestRegisterList.get(targetRequestIndex);
@@ -182,6 +227,12 @@ public class RequestRegisterDB extends Database {
         return targetRequest;
     }
 
+    /**
+     * Approves and Allocate the Project to the Student.
+     * 
+     * @param approvedRequest Target Request that was approved
+     * @return a Boolean to inform us if the function is working as intended.
+     */
     public Boolean approveRegisterRequestFYPCoord(RequestRegister approvedRequest) {
         if (approvedRequest == null) {
             return false;
@@ -215,6 +266,12 @@ public class RequestRegisterDB extends Database {
         return true;
     }
 
+    /**
+     * Checks whether a Student User has submitted a Register Request.
+     * 
+     * @param student Target Student
+     * @return a Boolean to inform us if the Student submitted a request.
+     */
     public Boolean findStudent(User student) {
         for (RequestRegister req : requestRegisterList) {
             if (req.getStudent() == student) {
@@ -224,6 +281,14 @@ public class RequestRegisterDB extends Database {
         return false;
     }
 
+    /**
+     * Checks whether a Supervisor User has one of their projects receive a Register
+     * Request.
+     * 
+     * @param supervisor Target Supervisor
+     * @return a boolean indicating to us if a request associated with Supervisor is
+     *         found.
+     */
     public Boolean findSupervisor(User supervisor) {
         for (RequestRegister req : requestRegisterList) {
             if (req.getSupervisor() == supervisor) {
@@ -265,6 +330,11 @@ public class RequestRegisterDB extends Database {
         return true;
     }
 
+    /**
+     * Prints the Register Request History for Students
+     * 
+     * @param student
+     */
     public void printStudentHistory(Student student) {
         System.out.println(
                 "+----------------------------------------------------------------------------------+");

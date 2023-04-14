@@ -13,10 +13,8 @@ public class MainApp {
         FacultyDB faculty_list = new FacultyDB();
         FYPcoordDB FYPcoord_list = new FYPcoordDB();
         ProjectDB project_list = new ProjectDB(faculty_list, student_list);
-        ProjectAllocationDB allocation_list = new ProjectAllocationDB();
         RequestTransferDB requestTransferDB = new RequestTransferDB(project_list, faculty_list);
-        RequestRegisterDB requestRegisterDB = new RequestRegisterDB(project_list, student_list, faculty_list,
-                allocation_list);
+        RequestRegisterDB requestRegisterDB = new RequestRegisterDB(project_list, student_list, faculty_list);
         RequestDeregisterDB requestDeregisterDB = new RequestDeregisterDB(project_list, student_list, FYPcoord_list);
         RequestChangeTitleDB requestChangeTitleDB = new RequestChangeTitleDB(project_list, student_list, faculty_list);
         RequestManager requestManager = new RequestManager(project_list, faculty_list, requestChangeTitleDB,

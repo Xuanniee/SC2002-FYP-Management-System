@@ -11,28 +11,47 @@ import java.util.ArrayList;
 
 import Entities.FYPCoordinator;
 
+/**
+ * Represents a Database of all FYP Coordinators in FYP Management System.
+ * 
+ * @author Lab A34 Assignment Team 1
+ * @version 1.0
+ * @since 2023-04-14
+ */
 public class FYPcoordDB extends Database {
-
+    /**
+     * Represents the file path of the Database of FYP Coordinator in FYPMS.
+     */
     private String filePath = String.join("", super.directory, "FYP coordinator.txt");
 
+    /**
+     * Represents the file containing the database of all FYP Coordinator
+     */
     private File file;
 
+    /**
+     * ArrayList containing all the FYP Coordinator in FYPMS
+     */
     private ArrayList<FYPCoordinator> fypCoordinators = new ArrayList<FYPCoordinator>();
 
+    /**
+     * Creates a FYPCoordDB Object that stores all the FYP Coordinator when FYPMS is
+     * first initalised.
+     */
     public FYPcoordDB() {
         this.file = new File(filePath);
         this.fypCoordinators = new ArrayList<FYPCoordinator>();
         this.readFile();
     }
 
-    public FYPcoordDB(String filePath) {
-        this.file = new File(filePath);
-        this.fypCoordinators = new ArrayList<FYPCoordinator>();
-        this.readFile();
-    }
+    // public FYPcoordDB(String filePath) {
+    // this.file = new File(filePath);
+    // this.fypCoordinators = new ArrayList<FYPCoordinator>();
+    // this.readFile();
+    // }
 
     /**
-     * Reads FYPCoordinator data from FYP coordinator.txt
+     * Reads FYPCoordinator data from the text file.
      */
     public void readFile() {
         try {
@@ -80,6 +99,12 @@ public class FYPcoordDB extends Database {
         }
     }
 
+    /**
+     * Search and Retrieves a particular FYP Coordinator based on their User ID
+     * 
+     * @param userID FYP Coordinator User ID
+     * @return Target FYP Coordinator
+     */
     public FYPCoordinator findFypCoordinator(String userID) {
         FYPCoordinator targetFypCoordinator = fypCoordinators.get(0);
         for (FYPCoordinator fypCoordinator : fypCoordinators) {
@@ -90,6 +115,11 @@ public class FYPcoordDB extends Database {
         return targetFypCoordinator;
     }
 
+    /**
+     * Retrieves the ArrayList of all FYP Coordinators in FYPMS.
+     * 
+     * @return ArrayList<FYPCoordinator>
+     */
     public ArrayList<FYPCoordinator> getFypCoordinatorsList() {
         return fypCoordinators;
     }

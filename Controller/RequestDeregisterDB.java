@@ -17,36 +17,64 @@ import Entities.FYPCoordinator;
 import Entities.User;
 import enums.RequestStatus;
 
+/**
+ * Represents a Database of all Deregister Requests in FYP Management System.
+ * 
+ * @author Lab A34 Assignment Team 1
+ * @version 1.0
+ * @since 2023-04-14
+ */
 public class RequestDeregisterDB extends Database {
-
+    /**
+     * Represents the file path of the Database of Deregister Requests in FYPMS.
+     */
     private String filePath = String.join("", super.directory, "request_deregister_list.txt");
 
+    /**
+     * Represents the file containing database of all Deregister Requests.
+     */
     private File file;
 
+    /**
+     * Represents a list of Deregister Requests in FYPMS.
+     */
     private ArrayList<RequestDeregister> requestDeregisterList;
 
+    /**
+     * Represents a Database of all projects in FYPMS.
+     */
     private ProjectDB projectDB;
+
+    /**
+     * Represents a Database of all students in FYPMS.
+     */
     private StudentDB studentDB;
-    private FYPcoordDB fyPcoordDB;
+    
+    /**
+     * Represents a Database of all FYP Coordinators in FYPMS,
+     */
+    private FYPcoordDB fypCoordDB;
 
-    public RequestDeregisterDB(ProjectDB projectDB, StudentDB studentDB, FYPcoordDB fyPcoordDB) {
+    /**
+     * Creates a Database of Deregister Requests in FYPMS when the application is
+     * first initialised.
+     * 
+     * @param projectDB  Database of projects in FYPMS.
+     * @param studentDB  Database of students in FYPMS.
+     * @param fypCoordDB Database of FYP coordinators in FYPMS.
+     */
+    public RequestDeregisterDB(ProjectDB projectDB, StudentDB studentDB, FYPcoordDB fypCoordDB) {
         this.file = new File(filePath);
         this.requestDeregisterList = new ArrayList<RequestDeregister>();
         this.readFile();
         this.projectDB = projectDB;
         this.studentDB = studentDB;
-        this.fyPcoordDB = fyPcoordDB;
+        this.fypCoordDB = fypCoordDB;
     }
 
-    public RequestDeregisterDB(String filePath, ProjectDB projectDB, StudentDB studentDB, FYPcoordDB fyPcoordDB) {
-        this.file = new File(filePath);
-        this.requestDeregisterList = new ArrayList<RequestDeregister>();
-        this.readFile();
-        this.projectDB = projectDB;
-        this.studentDB = studentDB;
-        this.fyPcoordDB = fyPcoordDB;
-    }
-
+    /**
+     * Reads Deregister Requests from request_deregister_list.txt
+     */
     public void readFile() {
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));
@@ -67,7 +95,7 @@ public class RequestDeregisterDB extends Database {
 
                 // Add new record to list
                 requestDeregisterList.add(new RequestDeregister(studentDB.findStudent(studentID),
-                        projectDB.findProject(projectID), reqStatus, fyPcoordDB.findFypCoordinator(coordinatorID)));
+                        projectDB.findProject(projectID), reqStatus, fypCoordDB.findFypCoordinator(coordinatorID)));
 
                 requestLine = br.readLine();
             }
@@ -77,6 +105,9 @@ public class RequestDeregisterDB extends Database {
         }
     }
 
+    /**
+     * Writes updated Deregister Requests data to the text file.
+     */
     public void updateFile() {
         try {
             BufferedWriter bf = new BufferedWriter(new FileWriter(file, false));
@@ -99,10 +130,21 @@ public class RequestDeregisterDB extends Database {
         }
     }
 
+    /**
+     * Add a new request to the list of all Deregister Requests.
+     * 
+     * @param requestDeregister New deregister request to be added to list.
+     */
     public void addRequest(RequestDeregister requestDeregister) {
         requestDeregisterList.add(requestDeregister);
     }
 
+    /**
+     * Checks whether target Student can be found in list of Deregister Requests.
+     * 
+     * @param supervisor Target student.
+     * @return Boolean variable to indicate whether student can be found in list.
+     */
     public Boolean findStudent(User student) {
         for (RequestDeregister req : requestDeregisterList) {
             if (req.getStudent() == student) {
@@ -113,10 +155,10 @@ public class RequestDeregisterDB extends Database {
     }
 
     /**
-     * Function for FYP Coordinator to view all the Deregister Requests
+     * Function for FYP Coordinator to view all the Deregister Requests.
      * 
-     * @param fypCoordinator
-     * @return the print statements of all the deregister requests in FYPMS
+     * @param fypCoordinator Target FYP coordinator.
+     * @return the print statements of all the deregister requests in FYPMS.
      */
     public Boolean printAllHistory(FYPCoordinator fypCoordinator) {
         System.out.println(
@@ -144,6 +186,11 @@ public class RequestDeregisterDB extends Database {
         return true;
     }
 
+    /**
+     * Prints all Deregister Requests made by specified Student
+     * 
+     * @param student Specified student.
+     */
     public void printStudentHistory(Student Student) {
         System.out.println(
                 "+----------------------------------------------------------------------------------+");
@@ -168,7 +215,9 @@ public class RequestDeregisterDB extends Database {
     }
 
     /**
-     * Allow FYP Coordinator to see Students' Deregister Requests
+     * Function for FYP Coordinator to view all the Deregister Requests
+     * 
+     * @return the print statements of all the transfer requests in FYPMS
      */
     public int viewAllDeregisterRequestFYPCoord() {
         System.out.println("Loading all pending requests to deregister a project...");
@@ -196,10 +245,10 @@ public class RequestDeregisterDB extends Database {
     }
 
     /**
-     * Method to find the index of the target deregister request based on input of user
+     * Method to find the index of the target request based on input of user.
      * 
-     * @param requestChoice
-     * @return
+     * @param requestChoice User's input based on which Request they want to manage.
+     * @return Index of target request in the list of all Deregister Requests.
      */
     public int findDeregisterRequestIndex(int requestChoice) {
         int counter = 1;
@@ -218,8 +267,9 @@ public class RequestDeregisterDB extends Database {
     /**
      * Allow FYP coordinator to see the specific details of the Deregister Request
      * 
-     * @param requestChoice
-     * @return
+     * @param requestChoice FYP coordinator's input based on which Request they want
+     *                      to manage.
+     * @return Target Request chosen by UFYP coordinatorser.
      */
     public RequestDeregister viewDeregisterRequestDetailedFYPCoord(int requestChoice) {
         int targetRequestIndex = findDeregisterRequestIndex(requestChoice);
@@ -245,10 +295,10 @@ public class RequestDeregisterDB extends Database {
     }
 
     /**
-     * For FYP Coordinator to approve Deregister
+     * Process the approved Deregister Request by updating relevant entities
      * 
-     * @param approvedRequest
-     * @return
+     * @param approvedRequest Request that is approved by FYP coordinator.
+     * @return a Boolean to inform us if the function is working as intended.
      */
     public Boolean approveDeregisterRequestFYPCoord(RequestDeregister approvedRequest) {
         if (approvedRequest == null) {
@@ -271,11 +321,11 @@ public class RequestDeregisterDB extends Database {
         // Update Supervisor supervising list and number of projects
         deregisteredSupervisor.removeSupervisingProjectList(deregisteredProject);
         deregisteredSupervisor.editNumProjects(-1);
-        
+
         // Update Request Status so this.user cannot see it again
         // int indexCompletedRequest = requestDeregisterList.indexOf(approvedRequest);
         approvedRequest.setRequestStatus(RequestStatus.APPROVED);
-        
+
         System.out.println("Student " + deregisteredStudent.getUserName()
                 + " has been successfully deregistered from Project " + deregisteredProject.getProjectID());
 

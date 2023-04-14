@@ -4,66 +4,19 @@ import java.util.Scanner;
 
 import Boundary.ProjectReportMenu;
 
-public class FYPCoordinator extends Supervisor implements ProjectReportMenu{
+public class FYPCoordinator extends Supervisor implements ProjectReportMenu {
     /**
-     * Constructor for FYP Coordinator
+     * Constructor
+     * Creates a FYP Coordinator object with the given userID, legal name, and email
+     * address.
      * 
-     * @param userID
-     * @param name
-     * @param userEmail
+     * @param userID    FYP Coordinator's UserID
+     * @param name      FYP Coordinator's Name
+     * @param userEmail FYP Coordinator's Email
      */
     public FYPCoordinator(String userID, String name, String userEmail) {
         super(userID, name, userEmail);
     }
-
-    // Setters and Getters
-    // public String getFYPCoordID() {
-    //     return this.userID;
-    // }
-
-    // public Boolean setFYPCoordID(String newUserId) {
-    //     if (newUserId.isEmpty()) {
-    //         return false;
-    //     }
-    //     this.userID = newUserId;
-    //     return true;
-    // }
-
-    // public String getFYPCoordName() {
-    //     return this.userName;
-    // }
-
-    // public Boolean setFYPCoordName(String newName) {
-    //     if (newName.isEmpty()) {
-    //         return false;
-    //     }
-    //     this.userName = newName;
-    //     return true;
-    // }
-
-    // public String getFYPCoordEmail() {
-    //     return this.userEmail;
-    // }
-
-    // public Boolean setFYPCoordEmail(String newEmail) {
-        // if (newEmail.isEmpty()) {
-        //     return false;
-        // }
-    //     this.userEmail = newEmail;
-    //     return true;
-    // }
-
-    // public String getFYPCoordPassword() {
-    //     return this.password;
-    // }
-
-    // public Boolean setFYPCoordPassword(String newPassword) {
-    //     if (newPassword.isEmpty()) {
-    //         return false;
-    //     }
-    //     this.password = newPassword;
-    //     return true;
-    // }
 
     /**
      * Overrides the Supervisor Menu to print FYP Coordinator's Menu
@@ -85,9 +38,8 @@ public class FYPCoordinator extends Supervisor implements ProjectReportMenu{
         System.out.println("| 7.  Request for Allocating a Project to a Student     |");
         System.out.println("| 8.  Request for Changing Supervisor of Project        |");
         System.out.println("| 9.  Request for Deregister a Student from Project     |");
-        System.out.println("| 10. Request the Transfer of a Student                 |");
-        System.out.println("| 11. View Request History & Status                     |");
-        System.out.println("| 12. Set New Password                                  |");
+        System.out.println("| 10. View Request History & Status                     |");
+        System.out.println("| 11. Set New Password                                  |");
         System.out.println("|-------------------------------------------------------|");
         System.out.println("|             Enter 0 to log out from FYPMS             |");
         System.out.println("+-------------------------------------------------------+");
