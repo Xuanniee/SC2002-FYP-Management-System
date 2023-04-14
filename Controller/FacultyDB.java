@@ -155,11 +155,9 @@ public class FacultyDB {
                 targetIndex = i;
             }
         }
-
         if (targetIndex == -1) {
             return null;
         }
-
         return supervisors.get(targetIndex);
     }
 
