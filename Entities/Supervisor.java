@@ -85,8 +85,8 @@ public class Supervisor extends User {
     }
 
     /**
-     * Updates the Replacement Supervisor with the Project. Number of Projects is
-     * unaffected
+     * Updates the Replacement Supervisor with the Project.
+     * 
      * 
      * @param oldProject
      * @param replacementProject
