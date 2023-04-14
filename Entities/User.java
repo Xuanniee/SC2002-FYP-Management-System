@@ -77,8 +77,6 @@ public class User {
             // If User is Found
             if (supervisorList.get(i).getUserID().equalsIgnoreCase(userID)
                     && supervisorList.get(i).getPassword().equalsIgnoreCase(password)) {
-                System.out.println(supervisorList.get(i).getUserID());
-                System.out.println(supervisorList.get(i).getPassword());
                 this.userType = UserType.FACULTY;
             }
         }
@@ -99,7 +97,7 @@ public class User {
             // If Faculty, Check if FYP Coord
             for (int i = 0; i < fypCoordinatorsList.size(); i += 1) {
                 if (fypCoordinatorsList.get(i).getUserID().equalsIgnoreCase(userID)
-                && fypCoordinatorsList.get(i).getPassword().equalsIgnoreCase(password)) {
+                        && fypCoordinatorsList.get(i).getPassword().equalsIgnoreCase(password)) {
                     this.userType = UserType.FYPCOORDINATOR;
                 }
             }
@@ -120,8 +118,8 @@ public class User {
     }
 
     public void printProfile() {
-        System.out.println("Name: " + getUserName());
-        System.out.println("UserID: " + getUserID());
-        System.out.println("Email: " + getUserEmail());
+        System.out.println("Name   : " + getUserName());
+        System.out.println("UserID : " + getUserID());
+        System.out.println("Email  : " + getUserEmail());
     }
 }
