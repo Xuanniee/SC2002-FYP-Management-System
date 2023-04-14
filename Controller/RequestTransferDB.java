@@ -239,6 +239,7 @@ public class RequestTransferDB extends Database {
 
         // Replace Project Supervisor
         approvedProject.setSupervisor(replacementSupervisor);
+        
         // Update Supervisors {Both Old and New}
         replacementSupervisor.setSupervisingProjectList(approvedProject);
         currentSupervisor.removeSupervisingProjectList(approvedProject);
