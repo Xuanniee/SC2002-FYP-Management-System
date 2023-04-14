@@ -123,13 +123,13 @@ public class User {
         return this.userType;
     }
 
-    /**
-     * Displays all the options of the system. Should not be Abstract as User must not be an Abstract Class for instantiation
-     */
-    public int printMenuOptions(Scanner scObject) {
-        System.out.println("Should never be printed.");
-        return 0;
-    }
+    // /**
+    //  * Displays all the options of the system. Should not be Abstract as User must not be an Abstract Class for instantiation
+    //  */
+    // public int printMenuOptions(Scanner scObject) {
+    //     System.out.println("Should never be printed.");
+    //     return 0;
+    // }
 
     /* For testing purposes */
     public void viewDetails() {

@@ -1,31 +1,80 @@
 package Controller;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 import Entities.FYPCoordinator;
 
-public class FYPcoordDB {
+public class FYPcoordDB extends Database {
+
+    private String filePath = String.join("", super.directory, "FYP coordinator.txt");
+
+    private File file;
+
     private ArrayList<FYPCoordinator> fypCoordinators = new ArrayList<FYPCoordinator>();
 
-    // Reading and Saving Details of FYP Coordinator
     public FYPcoordDB() {
-        String fileName = "./Data/FYP coordinator.txt";
-        String line;
-        Boolean isFirstLine = true;
-        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
-            while ((line = br.readLine()) != null) {
-                if (isFirstLine) {
-                    isFirstLine = false;
-                    continue; // skip the first line
-                }
-                String[] values = line.split("\t"); // split the line by tabs
+        this.file = new File(filePath);
+        this.fypCoordinators = new ArrayList<FYPCoordinator>();
+        this.readFile();
+    }
 
-                int indexUserId = values[1].indexOf("@");
-                fypCoordinators.add(new FYPCoordinator(values[1].substring(0, indexUserId), values[0], values[1]));
+    public FYPcoordDB(String filePath) {
+        this.file = new File(filePath);
+        this.fypCoordinators = new ArrayList<FYPCoordinator>();
+        this.readFile();
+    }
+
+    /**
+     * Reads FYPCoordinator data from FYP coordinator.txt
+     */
+    public void readFile() {
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+
+            String coordinatorLine = br.readLine();
+            coordinatorLine = br.readLine();
+            String coordinatorName, coordinatorEmail, coordinatorID;
+            String[] coordinatorData, temp;
+
+            while (coordinatorLine != null) {
+                coordinatorData = coordinatorLine.split(super.delimiter);
+                coordinatorName = coordinatorData[0];
+                coordinatorEmail = coordinatorData[1];
+
+                temp = coordinatorData[1].split(super.emailDelimiter);
+                coordinatorID = temp[0];
+
+                fypCoordinators.add(new FYPCoordinator(coordinatorID, coordinatorName, coordinatorEmail));
+
+                coordinatorLine = br.readLine();
             }
+            br.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Writes updated FYPCoordinator data to FYP Coordinator.txt
+     */
+    public void updateFile() {
+        try {
+            BufferedWriter bf = new BufferedWriter(new FileWriter(file, false));
+            PrintWriter pw = new PrintWriter(bf);
+            for (FYPCoordinator currentCoordinator : fypCoordinators) {
+                String coordinatorName = currentCoordinator.getUserName();
+                String coordinatorEmail = currentCoordinator.getUserEmail();
+
+                pw.println(coordinatorName + delimiter + coordinatorEmail);
+            }
+            pw.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

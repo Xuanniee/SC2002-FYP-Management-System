@@ -3,7 +3,9 @@ package Entities;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Supervisor extends User {
+import Boundary.Menu;
+
+public class Supervisor extends User implements Menu{
     private ArrayList<Project> supervisingProjectList = new ArrayList<Project>();
     //private ArrayList<Project> listOfCreatedProjects = new ArrayList<Project>();
     private int numProjects = 0;
@@ -107,18 +109,6 @@ public class Supervisor extends User {
         return true;
     }
 
-    public String getSupervisorID() {
-        return this.userID;
-    }
-
-    public String getSupervisorPassword() {
-        return this.password;
-    }
-
-    public String getSupervisorName() {
-        return this.userName;
-    }
-
     public int getNumProj(){
         return this.numProjects;
     }
@@ -128,9 +118,8 @@ public class Supervisor extends User {
     }
 
     /**
-     * Overrides the User Menu to print the Supervisor Menu
+     * Implements the User Menu to print the Supervisor Menu
      */
-    @Override
     public int printMenuOptions(Scanner scObject) {
         // Supervisor Menu
         int choice;

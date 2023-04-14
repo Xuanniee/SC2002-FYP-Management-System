@@ -2,7 +2,9 @@ package Entities;
 
 import java.util.Scanner;
 
-public class FYPCoordinator extends Supervisor {
+import Boundary.ProjectReportMenu;
+
+public class FYPCoordinator extends Supervisor implements ProjectReportMenu{
     /**
      * Constructor for FYP Coordinator
      * 
@@ -64,7 +66,7 @@ public class FYPCoordinator extends Supervisor {
     // }
 
     /**
-     * Overrides the User Method to print FYP Coordinator's Menu
+     * Overrides the Supervisor Menu to print FYP Coordinator's Menu
      */
     @Override
     public int printMenuOptions(Scanner scObject) {

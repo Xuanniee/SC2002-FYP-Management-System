@@ -2,9 +2,10 @@ package Entities;
 
 import java.util.Scanner;
 
+import Boundary.Menu;
 import enums.*;
 
-public class Student extends User {
+public class Student extends User implements Menu{
 
     private static final UserType userType = UserType.STUDENT;
     private Project project;
@@ -73,9 +74,8 @@ public class Student extends User {
     }
 
     /**
-     * Overrides the User Menu to print out the Student's Menu
+     * Implements the User Menu to print out the Student's Menu
      */
-    @Override
     public int printMenuOptions(Scanner scObject) {
         int choice;
 
