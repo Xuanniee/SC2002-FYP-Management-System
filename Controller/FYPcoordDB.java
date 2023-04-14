@@ -25,10 +25,6 @@ public class FYPcoordDB {
 
                 int indexUserId = values[1].indexOf("@");
                 fypCoordinators.add(new FYPCoordinator(values[1].substring(0, indexUserId), values[0], values[1]));
-                for (String value : values) {
-                    System.out.print(value + "\t");
-                }
-                System.out.println();
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -38,7 +34,7 @@ public class FYPcoordDB {
     public FYPCoordinator findFypCoordinator(String userID) {
         FYPCoordinator targetFypCoordinator = fypCoordinators.get(0);
         for (FYPCoordinator fypCoordinator : fypCoordinators) {
-            if (fypCoordinator.getFYPCoordID().equalsIgnoreCase(userID)) {
+            if (fypCoordinator.getUserID().equalsIgnoreCase(userID)) {
                 targetFypCoordinator = fypCoordinator;
             }
         }

@@ -1,5 +1,6 @@
 package Controller;
 
+import java.io.Console;
 import java.util.Scanner;
 
 import Entities.Supervisor;
@@ -13,17 +14,21 @@ public class SupervisorManager {
     private ProjectDB projectDB;
     private RequestChangeTitleDB requestChangeTitleDB;
     private RequestManager requestManager;
-    Scanner scanner = new Scanner(System.in);
+    private Scanner scanner;
+    private Console terminaConsole;
+
 
     // Constructor
     public SupervisorManager(Supervisor supervisor, FacultyDB facultyDB, ProjectDB projectDB,
-            RequestManager requestManager,
-            RequestChangeTitleDB requestChangeTitleDB) {
+            RequestManager requestManager, RequestChangeTitleDB requestChangeTitleDB,
+            Scanner scanner, Console terminalConsole) {
         this.managedSupervisor = supervisor;
         this.facultyDB = facultyDB;
         this.projectDB = projectDB;
         this.requestChangeTitleDB = requestChangeTitleDB;
         this.requestManager = requestManager;
+        this.scanner = scanner;
+        this.terminaConsole = terminalConsole;
     }
 
     /*
@@ -43,12 +48,18 @@ public class SupervisorManager {
 
         // Call the Menu for the respective users
         switch (userInput) {
+            case 0:
+                System.out.println("Logging out...");
+                break;
+
             case 1:
                 facultyDB.createProject(projectDB, managedSupervisor);
                 break;
+
             case 2:
-                facultyDB.viewOwnProject(projectDB.retrieveSupervisorProjects(managedSupervisor.getSupervisorID()));
+                facultyDB.viewOwnProject(projectDB.retrieveSupervisorProjects(managedSupervisor.getUserID()));
                 break;
+
             case 3:
                 facultyDB.modifyTitle(projectDB, managedSupervisor);
                 break;
@@ -105,42 +116,17 @@ public class SupervisorManager {
                 requestManager.changeSupervisorRequest(managedSupervisor);
                 break;
 
-            case 0:
-                System.out.println("Logging out...");
+            case 7:
+                // Change Password
+                this.managedSupervisor.changeUserPassword(managedSupervisor, scanner, terminaConsole);
                 break;
+
             default:
                 System.out.println("Please enter a valid choice");
                 break;
         }
 
         // System.out.println("Thank you for using FYPMS. You have been logged out.");
-    }
-
-    public int displayFacultyMenu() {
-        int choice;
-
-        System.out.println(""); // print empty line
-        System.out.println("+-------------------------------------------------------+");
-        System.out.println("|                   Faculty Portal                      |");
-        System.out.println("|-------------------------------------------------------|");
-        System.out.println("| 1. Create a Project                                   |");
-        System.out.println("| 2. View own Project(s)                                |");
-        System.out.println("| 3. Modify the title of your Project(s)                |");
-        System.out.println("| 4. View pending requests                              |");
-        System.out.println("| 5. View request history & status                      |");
-        System.out.println("| 6. Request the transfer of a student                  |");
-        System.out.println("|-------------------------------------------------------|");
-        System.out.println("|              Enter 0 to Log out of FYPMS              |");
-        System.out.println("+-------------------------------------------------------+");
-        System.out.println(""); // print empty line
-
-        System.out.print("Please enter your choice: ");
-
-        choice = scanner.nextInt();
-        // Remove \n from Buffer
-        scanner.nextLine();
-
-        return choice;
     }
 
 }

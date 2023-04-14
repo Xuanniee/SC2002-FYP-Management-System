@@ -192,13 +192,33 @@ public class RequestTransferDB extends Database {
     }
 
     /**
+     * Method to find the index of the target request based on input of user
+     * 
+     * @param requestChoice
+     * @return
+     */
+    public int findRegisterRequestIndex(int requestChoice) {
+        int counter = 1;
+        for (int i = 0; i < requestTransferList.size(); i += 1) {
+            RequestTransfer currentRequest = requestTransferList.get(i);
+            if (currentRequest.getRequestStatus() == RequestStatus.PENDING) {
+                if (counter == requestChoice) {
+                    return i;
+                }
+                counter += 1;
+            }
+        }
+        return -1;
+    }
+
+    /**
      * Allow FYP coordinator to see the specific details of the Transfer Request
      * 
      * @param requestChoice
      * @return
      */
     public RequestTransfer viewTransferRequestDetailedFYPCoord(int requestChoice) {
-        int targetRequestIndex = requestChoice - 1;
+        int targetRequestIndex = findRegisterRequestIndex(requestChoice);
         RequestTransfer targetRequest = requestTransferList.get(targetRequestIndex);
         System.out.println("Loading selected request...");
         System.out.println();
@@ -250,8 +270,8 @@ public class RequestTransferDB extends Database {
         // requestTransferList.remove(indexCompletedRequest);
         approvedRequest.setRequestStatus(RequestStatus.APPROVED);
         System.out.println("Project " + approvedProject.getProjectID()
-                + "'s supervisor has been successfully changed from " + currentSupervisor.getSupervisorName() +
-                " to " + replacementSupervisor.getSupervisorName());
+                + "'s supervisor has been successfully changed from " + currentSupervisor.getUserName() +
+                " to " + replacementSupervisor.getUserName());
 
         return true;
     }

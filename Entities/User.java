@@ -1,5 +1,6 @@
 package Entities;
 
+import java.io.Console;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -33,32 +34,48 @@ public class User {
         return this.userID;
     }
 
-    public void setUserID(String userID) {
+    public Boolean setUserID(String userID) {
+        if (userID.isEmpty()) {
+            return false;
+        }
         this.userID = userID;
+        return true;
     }
 
     public String getPassword() {
         return this.password;
     }
 
-    public void setPassword(String password) {
+    public Boolean setPassword(String password) {
+        if (password.isEmpty()) {
+            return false;
+        }
         this.password = password;
+        return true;
     }
 
     public String getUserName() {
         return this.userName;
     }
 
-    public void setUserName(String userName) {
+    public Boolean setUserName(String userName) {
+        if (userName.isEmpty()) {
+            return false;
+        }
         this.userID = userName;
+        return true;
     }
 
     public String getUserEmail() {
         return this.userEmail;
     }
 
-    public void setUserEmail(String userEmail) {
+    public Boolean setUserEmail(String userEmail) {
+        if (userEmail.isEmpty()) {
+            return false;
+        }
         this.userEmail = userEmail;
+        return true;
     }
 
     public UserType getUserType() {
@@ -109,8 +126,9 @@ public class User {
     /**
      * Displays all the options of the system. Should not be Abstract as User must not be an Abstract Class for instantiation
      */
-    public void printMenuOptions() {
+    public int printMenuOptions(Scanner scObject) {
         System.out.println("Should never be printed.");
+        return 0;
     }
 
     /* For testing purposes */
@@ -124,40 +142,61 @@ public class User {
         System.out.println("Email  : " + getUserEmail());
     }
 
-    // public Boolean changeUserPassword(User loggedUser, Scanner scObject) {
-    //     int validationAttempts = 3;
-    //     do {
-    //         System.out.println(""); // print empty line
-    //         System.out.println("+----------------------------------------------------------+");
-    //         System.out.println("|                   Password Change Portal                 |");
-    //         System.out.println("|----------------------------------------------------------|");
-    //         System.out.println("|  Please re-enter your password to verify your identity.  |");
-    //         System.out.println("|----------------------------------------------------------|");
-    //         System.out.println("|              Enter 0 to go back to Main Menu             |");
-    //         System.out.println("+----------------------------------------------------------+");
-    //         System.out.println(""); // print empty line
+    public Boolean changeUserPassword(User loggedUser, Scanner scObject, Console terminalConsole) {
+        int validationAttempts = 3;
+        do {
+            System.out.println(""); // print empty line
+            System.out.println("+----------------------------------------------------------+");
+            System.out.println("|                   Password Change Portal                 |");
+            System.out.println("|----------------------------------------------------------|");
+            System.out.println("|  Please re-enter your password to verify your identity.  |");
+            System.out.println("|----------------------------------------------------------|");
+            System.out.println("|              Enter 0 to go back to Main Menu             |");
+            System.out.println("+----------------------------------------------------------+");
+            System.out.println(""); // print empty line
 
-    //         System.out.println("Enter your Password: ");
-    //         String userPassword = scObject.nextLine();
+            char[] maskedPassword = terminalConsole.readPassword("Enter your Password: ");
+            String userPassword = new String(maskedPassword);
 
-    //         // Check if Password is correct (Case Sensitive)
-    //         if (loggedUser.getPassword().equals(userPassword)) {
-    //             System.out.println("Enter your New Password   : ");
-    //             String newPassword1 = scObject.nextLine();
+            // Check if User wants to cancel Password Change
+            if (userPassword.equals("0")) {
+                System.out.println("Cancelling the Password Change Request.");
+                System.out.println("Returning to previous menu...");
+                return false;
+            }
 
-    //             System.out.println("Re-Enter your New Password: ");
-    //             String newPassword2 = scObject.nextLine();
+            // Check if Password is correct (Case Sensitive)
+            if (loggedUser.getPassword().equals(userPassword)) {
+                maskedPassword = terminalConsole.readPassword("Enter your New Password   : ");
+                String newPassword1 = new String(maskedPassword);
 
-    //             if (newPassword1.equals(newPassword2)) {
+                maskedPassword = terminalConsole.readPassword("Re-Enter your New Password: ");
+                String newPassword2 = new String(maskedPassword);
 
-    //             }
+                if (newPassword1.equals(newPassword2)) {
+                    // Change the Password
+                    loggedUser.setPassword(newPassword1);
+                    System.out.println("Your password has been changed successfully.");
+                    break;
+                }
+                else {
+                    System.out.println("Your passwords do not match. Please try again.");
+                    continue;
+                }
+            }
+            else {
+                // User did not validate their password
+                validationAttempts -= 1;
+                System.out.println("You currently have " + validationAttempts + " more tries to validate your identity.");
+            }
+        } while(validationAttempts != 0);
 
+        if (validationAttempts == 0) {
+            // User could not validate himself
+            System.out.println("You are not allowed to change your password as you have not validated your identity.");
+            return false;
+        }
 
-    //         }
-    //     } while();
-
-
-
-
-    // }
+        return true;
+    }
 }

@@ -1,5 +1,6 @@
 package Controller;
 
+import java.io.Console;
 import java.util.Scanner;
 
 import Entities.*;
@@ -10,18 +11,20 @@ public class StudentManager {
     private ProjectDB projectDB;
     private FYPcoordDB fyPcoordDB;
     private RequestManager requestManager;
-
-    Scanner scanner = new Scanner(System.in);
+    private Scanner scanner;
+    private Console terminaConsole;
 
     private Student currentStudent;
 
     public StudentManager(Student student, StudentDB studentDB, ProjectDB projectDB, RequestManager requestManager,
-            FYPcoordDB fyPcoordDB) {
+            FYPcoordDB fyPcoordDB, Scanner scanner, Console terminalConsole) {
         this.currentStudent = student;
         this.studentDB = studentDB;
         this.projectDB = projectDB;
         this.fyPcoordDB = fyPcoordDB;
         this.requestManager = requestManager;
+        this.scanner = scanner;
+        this.terminaConsole = terminalConsole;
     }
 
     public void processStudentChoice(int choice) {
@@ -29,6 +32,10 @@ public class StudentManager {
         System.out.println("");
 
         switch (choice) {
+            case 0:
+                System.out.println("Logging out...");
+                break;
+
             case 1:
                 System.out.println("Viewing Student Profile...");
                 studentDB.viewStudentProfile(currentStudent);
@@ -102,8 +109,9 @@ public class StudentManager {
                 requestManager.getRequestHistory(currentStudent);
                 break;
 
-            case 0:
-                System.out.println("Logging out...");
+            case 8:
+                // Change password
+                this.currentStudent.changeUserPassword(currentStudent, scanner, terminaConsole);
                 break;
 
             default:
@@ -112,31 +120,4 @@ public class StudentManager {
         }
 
     }
-
-    public int displayStudentMenu() {
-        int choice;
-
-        System.out.println(""); // print empty line
-        System.out.println("+-------------------------------------------------------+");
-        System.out.println("|                   Student Portal                      |");
-        System.out.println("|-------------------------------------------------------|");
-        System.out.println("| 1. View Profile                                       |");
-        System.out.println("| 2. View All Projects                                  |");
-        System.out.println("| 3. View Registered Project                            |");
-        System.out.println("| 4. Request to Register for a Project                  |");
-        System.out.println("| 5. Request to Change Title of Project                 |");
-        System.out.println("| 6. Request to Deregister from Project                 |");
-        System.out.println("| 7. View Request History                               |");
-        System.out.println("|-------------------------------------------------------|");
-        System.out.println("|              Enter 0 to Log out of FYPMS              |");
-        System.out.println("+-------------------------------------------------------+");
-        System.out.println(""); // print empty line
-
-        System.out.print("Please enter your choice: ");
-
-        choice = scanner.nextInt();
-
-        return choice;
-    }
-
 }

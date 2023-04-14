@@ -114,7 +114,6 @@ public class RequestChangeTitleDB extends Database {
             return false;
         }
         requestChangeTitleList.add(requestChangeTitle);
-        System.out.println("THIS IS MY SIZE" + requestChangeTitleList.size());
         return true;
     }
 
@@ -143,8 +142,8 @@ public class RequestChangeTitleDB extends Database {
         for (int i = 0; i < requestChangeTitleList.size(); i += 1) {
             RequestChangeTitle currentRequest = requestChangeTitleList.get(i);
             if (currentRequest.getRequestStatus() == RequestStatus.PENDING
-                    && requestChangeTitleList.get(i).getSupervisor().getSupervisorID()
-                            .equalsIgnoreCase(currentSupervisor.getSupervisorID())) {
+                    && requestChangeTitleList.get(i).getSupervisor().getUserID()
+                            .equalsIgnoreCase(currentSupervisor.getUserID())) {
                 System.out.println(counter + ". Project ID " + currentRequest.getProjectID() + "'s change of title"
                         + " requested by " + requestChangeTitleList.get(i).getStudent().getUserName());
                 counter += 1;

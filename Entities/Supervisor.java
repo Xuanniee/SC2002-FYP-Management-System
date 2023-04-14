@@ -1,6 +1,7 @@
 package Entities;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Supervisor extends User {
     private ArrayList<Project> supervisingProjectList = new ArrayList<Project>();
@@ -124,6 +125,40 @@ public class Supervisor extends User {
 
     public void editNumProjects(int change) {
         this.numProjects += change;
+    }
+
+    /**
+     * Overrides the User Menu to print the Supervisor Menu
+     */
+    @Override
+    public int printMenuOptions(Scanner scObject) {
+        // Supervisor Menu
+        int choice;
+
+        System.out.println(""); // print empty line
+        System.out.println("+-------------------------------------------------------+");
+        System.out.println("|                   Faculty Portal                      |");
+        System.out.println("|-------------------------------------------------------|");
+        System.out.println("| 1. Create a Project                                   |");
+        System.out.println("| 2. View own Project(s)                                |");
+        System.out.println("| 3. Modify the title of your Project(s)                |");
+        System.out.println("| 4. View pending requests                              |");
+        System.out.println("| 5. View Request History & Status                      |");
+        System.out.println("| 6. Request the Transfer of a Student                  |");
+        System.out.println("| 7. Set New Password                                   |");
+        System.out.println("|-------------------------------------------------------|");
+        System.out.println("|              Enter 0 to Log out of FYPMS              |");
+        System.out.println("+-------------------------------------------------------+");
+        System.out.println(""); // print empty line
+
+        System.out.print("Please enter your choice: ");
+
+        choice = scObject.nextInt();
+        // Remove \n from Buffer
+        scObject.nextLine();
+
+        return choice;
+
     }
 
     /*public Boolean checkIfFull() {

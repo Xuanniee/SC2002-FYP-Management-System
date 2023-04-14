@@ -317,7 +317,10 @@ public class ProjectDB extends Database {
 
     }
 
-    // TODO Project Report Generation
+    /**
+     * Project Report Generation Function
+     * @param scObject
+     */
     public void projectStatusFilteredMenu(Scanner scObject) {
         int statusMenuChoice;
         int choice;

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import Entities.FYPCoordinator;
 import Entities.Project;
-import Entities.ProjectAllocation;
 import Entities.Student;
 import Entities.Supervisor;
 import Entities.RequestRegister;
@@ -279,7 +278,7 @@ public class RequestRegisterDB extends Database {
                     System.out.printf("Registering for Project(ID/Title): %s / %s", req.getProject().getProjectID(),
                             req.getProject().getProjectTitle());
                     System.out.println("");
-                    System.out.println("Requestee: " + req.getSupervisor().getSupervisorName());
+                    System.out.println("Requestee: " + req.getSupervisor().getUserName());
                     System.out.println("Request Status: " + req.getRequestStatus().name());
                     System.out.println("");
                 }

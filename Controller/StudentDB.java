@@ -72,14 +72,8 @@ public class StudentDB extends Database {
             for (Student student : students) {
                 String studentName = student.getUserName();
                 String studentEmail = student.getUserEmail();
-
-                // If project is assigned to student, then print project information
-                if (student.getIsAssigned()) {
-                    String projectTitle = student.getAssignedProject().getProjectTitle();
-                    pw.println(studentName + " | " + studentEmail + " | " + projectTitle);
-                } else {
-                    pw.println(studentName + " | " + studentEmail);
-                }
+                
+                pw.println(studentName + delimiter + studentEmail);
             }
             pw.close();
         } catch (IOException e) {

@@ -1,3 +1,4 @@
+import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.io.Console;
 
@@ -34,14 +35,26 @@ public class MainApp {
         String username;
         UserType attemptUserType;
         int numLoginAttempts = 3;
-        int mainMenuInput;
+        int mainMenuInput = 1;
         do {
-            printWelcome();
-            System.out.print("Your choice is: ");
-            mainMenuInput = scanner.nextInt();
-            // Remove Enter
-            scanner.nextLine();
-            System.out.println("");
+            boolean isValidInput = false;
+            while (!isValidInput) {
+                try {
+                    printWelcome();
+                    System.out.print("Your choice is: ");
+                    mainMenuInput = scanner.nextInt();
+                    // Remove \n
+                    scanner.nextLine();
+                    System.out.println("");
+                    isValidInput = true;
+                } catch (InputMismatchException e) {
+                    System.out.println("Invalid Input. Please choose only from the options provided.");
+                    // Remove the invalid input from buffer
+                    scanner.next();
+                }
+            }
+            
+            
 
             if (mainMenuInput == 2) {
                 System.out.println("Exiting FYPMS...");
@@ -81,10 +94,10 @@ public class MainApp {
                     case STUDENT:
                         Student loggedStudent = student_list.findStudent(username);
                         StudentManager studentMgr = new StudentManager(loggedStudent, student_list, project_list,
-                                requestManager, FYPcoord_list);
+                                requestManager, FYPcoord_list, scanner, terminalConsole);
                         int choice;
                         do {
-                            choice = studentMgr.displayStudentMenu();
+                            choice = loggedStudent.printMenuOptions(scanner);
                             studentMgr.processStudentChoice(choice);
                         } while (choice != 0);
                         break;
@@ -92,22 +105,22 @@ public class MainApp {
                     case FACULTY:
                         Supervisor loggedSupervisor = faculty_list.findSupervisor(username);
                         SupervisorManager supervisorManager = new SupervisorManager(loggedSupervisor, faculty_list,
-                                project_list, requestManager, requestChangeTitleDB);
+                                project_list, requestManager, requestChangeTitleDB, scanner, terminalConsole);
                         int supChoice;
                         do {
-                            supChoice = supervisorManager.displayFacultyMenu();
+                            supChoice = loggedSupervisor.printMenuOptions(scanner);
                             supervisorManager.processSupervisorChoice(supChoice);
                         } while (supChoice != 0);
                         break;
 
                     case FYPCOORDINATOR:
                         FYPCoordinator fypCoordinator = FYPcoord_list.findFypCoordinator(username);
-                        FYPCoordinatorManager fypManager = new FYPCoordinatorManager(fypCoordinator, project_list,
-                                requestRegisterDB, requestTransferDB, requestDeregisterDB,
-                                requestManager);
+                        FYPCoordinatorManager fypManager = new FYPCoordinatorManager(fypCoordinator, project_list, faculty_list,
+                                requestRegisterDB, requestTransferDB, requestDeregisterDB, requestManager, 
+                                scanner, terminalConsole);
                         int fypChoice;
                         do {
-                            fypChoice = fypManager.displayFypCoordinatorMenu();
+                            fypChoice = fypCoordinator.printMenuOptions(scanner);
                             fypManager.processFypCoordinatorChoice(fypChoice);
                         } while (fypChoice != 0);
 

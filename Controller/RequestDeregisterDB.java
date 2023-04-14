@@ -154,8 +154,9 @@ public class RequestDeregisterDB extends Database {
         if (findStudent(Student)) {
             for (RequestDeregister req : requestDeregisterList) {
                 if (req.getStudent() == Student) {
-                    System.out.printf("Project to Deregister from (ID/Title): %s/%s", req.getProject().getProjectID(),
+                    System.out.printf("Project to Deregister from (ID/Title): %s / %s", req.getProject().getProjectID(),
                             req.getProject().getProjectTitle());
+                    System.out.println();
                     System.out.println("Request Status: " + req.getRequestStatus().name());
                     System.out.println("");
                 }
@@ -275,7 +276,7 @@ public class RequestDeregisterDB extends Database {
         // int indexCompletedRequest = requestDeregisterList.indexOf(approvedRequest);
         approvedRequest.setRequestStatus(RequestStatus.APPROVED);
         
-        System.out.println("Student " + deregisteredStudent.getStudentName()
+        System.out.println("Student " + deregisteredStudent.getUserName()
                 + " has been successfully deregistered from Project " + deregisteredProject.getProjectID());
 
         return true;
