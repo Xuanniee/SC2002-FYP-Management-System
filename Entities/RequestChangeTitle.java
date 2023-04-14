@@ -37,7 +37,7 @@ public class RequestChangeTitle extends Request {
     /**
      * Method to approve or reject the request
      */
-    @Override
+    /*@Override
     public void approveRequest(Boolean approve) {
         if (approve) {
             this.setRequestStatus(RequestStatus.APPROVED);
@@ -45,7 +45,7 @@ public class RequestChangeTitle extends Request {
         } else {
             this.setRequestStatus(RequestStatus.REJECTED);
         }
-    }
+    }*/
 
     public Student getStudent() {
         return this.student;

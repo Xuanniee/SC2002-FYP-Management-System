@@ -109,6 +109,8 @@ public class RequestRegisterDB extends Database {
 
     public void addRequest(RequestRegister requestRegister) {
         requestRegisterList.add(requestRegister);
+        // Update Supervisor number of supervising project
+        requestRegister.getSupervisor().editNumProjects(1);
     }
 
     public int viewAllRegisterRequestFYPCoord() {
@@ -157,8 +159,6 @@ public class RequestRegisterDB extends Database {
     }
 
     public RequestRegister viewRegisterRequestDetailedFYPCoord(int requestChoice) {
-        // int targetRequestIndex = requestChoice - 1;
-
         int targetRequestIndex = findRegisterRequestIndex(requestChoice);
         RequestRegister targetRequest = requestRegisterList.get(targetRequestIndex);
         // RequestRegister targetRequest = requestRegisterList.get(targetRequestIndex);
@@ -198,9 +198,12 @@ public class RequestRegisterDB extends Database {
         approvedStudent.setAssignedProject(approvedProject);
         // Update Supervisor Project List
         supervisingSupervisor.getSupervisingProjectList().add(approvedProject);
+
         // Update the Allocation DB
-        projectAllocationDB.addAllocation(new ProjectAllocation(approvedStudent.getUserID(),
-                Integer.toString(approvedProject.getProjectID()), supervisingSupervisor.getUserID()));
+        // projectAllocationDB.addAllocation(new
+        // ProjectAllocation(approvedStudent.getUserID(),
+        // Integer.toString(approvedProject.getProjectID()),
+        // supervisingSupervisor.getUserID()));
 
         // Update Request Status so this.user cannot see it again
         // requestRegisterList.remove(requestRegisterList.indexOf(approvedRequest));

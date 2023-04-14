@@ -37,14 +37,14 @@ public class RequestTransfer extends Request {
         this.repSupervisor = repSupervisor;
     }
 
-    @Override
+    /*@Override
     public void approveRequest(Boolean approve) {
         this.setRequestStatus(RequestStatus.APPROVED);
         this.project.setSupervisor(this.repSupervisor);
         this.repSupervisor.editNumProjects(1);
         this.currentSupervisor.editNumProjects(-1);
         // Code to make changes for faculty sides
-    }
+    }*/
 
     public Supervisor getCurSupervisor() {
         return this.currentSupervisor;

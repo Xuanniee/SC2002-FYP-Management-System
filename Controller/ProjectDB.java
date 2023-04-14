@@ -174,7 +174,7 @@ public class ProjectDB extends Database {
         ArrayList<Project> supervisorProjectList = new ArrayList<Project>();
 
         for (int i = 0; i < projectList.size(); i += 1) {
-            if (projectList.get(i).getSupervisor().getUserName().equalsIgnoreCase(supervisorID)) {
+            if (projectList.get(i).getSupervisor().getUserID().equalsIgnoreCase(supervisorID)) {
                 supervisorProjectList.add(projectList.get(i));
             }
         }
@@ -201,7 +201,7 @@ public class ProjectDB extends Database {
      * 
      * @param student
      */
-    public void viewAvailableProjects(Student student) {
+    public void viewAvailableProjects() {
         System.out.println(
                 "+----------------------------------------------------------------------------------+");
         System.out.println(
@@ -209,7 +209,7 @@ public class ProjectDB extends Database {
         System.out.println(
                 "+----------------------------------------------------------------------------------+");
         for (Project project : projectList) {
-            if (project.getProjectStatus() == ProjectStatus.AVAILABLE) {
+            if (project.getProjectStatus() == ProjectStatus.AVAILABLE && project.getSupervisor().getNumProj() < 2) {
                 project.printProjectDetails();
             }
         }

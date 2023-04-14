@@ -57,11 +57,9 @@ public class FacultyDB {
         project_list.addProject(newlyCreatedProject);
 
         // Add to Supervisor's List of Created Projects
-        loggedSupervisor.addToCreatedProjectList(newlyCreatedProject);
+        //loggedSupervisor.addToCreatedProjectList(newlyCreatedProject);
 
         System.out.println("Project Initialised.");
-
-        scObject.close();
     }
 
     /**
