@@ -123,9 +123,19 @@ public class SupervisorManager implements Menu {
                         continue;
                     }
 
+                    while(selectedTitleChangeRequest < 0 || selectedTitleChangeRequest > requestChangeTitleDB.getNumPenReq()){
+                        System.out.println("You have selected an invalid input, indicate a valid request: ");
+                        selectedTitleChangeRequest = scanner.nextInt();
+                    }
+
                     RequestChangeTitle targetRequest = requestChangeTitleDB
                             .viewTitleChangeRequestDetailedSupervisor(selectedTitleChangeRequest);
                     approvalResult = scanner.nextInt();
+
+                    while(approvalResult != 1 && approvalResult != 0){
+                        System.out.println("You have selected an invalid input, indicate a valid one: ");
+                        approvalResult = scanner.nextInt();
+                    }
 
                     Project updateProject = targetRequest.getProject();
                     if (approvalResult == 1) {
@@ -135,7 +145,10 @@ public class SupervisorManager implements Menu {
                         // Reject Request
                         updateProject.setAwaitingTitleChangeRequest(false);
                         targetRequest.setRequestStatus(RequestStatus.REJECTED);
+                        requestChangeTitleDB.setNumPenReq(-1);
                     }
+                    // Update title change status of project
+                    updateProject.setAwaitingTitleChangeRequest(false);
                     System.out.println("Returning to previous menu...");
 
                 } while (selectedTitleChangeRequest != 0);
@@ -149,8 +162,10 @@ public class SupervisorManager implements Menu {
 
             case 6:
                 // Transfer Supervisor
-                this.managedSupervisor.viewSupervisingProjectList();
-                requestManager.changeSupervisorRequest(managedSupervisor);
+                Boolean test = this.managedSupervisor.viewSupervisingProjectList();
+                if(test){
+                    requestManager.changeSupervisorRequest(managedSupervisor);
+                }
                 break;
 
             case 7:
@@ -194,9 +209,9 @@ public class SupervisorManager implements Menu {
         // Check if there are any new pending requests for the Supervisor
         if (requestChangeTitleDB.anyPendingChangeTitleRequestsForUser(managedSupervisor)) {
             System.out.println("Message: New Change Title Requests from students!");
+            System.out.println(""); // print empty line
         }
 
-        System.out.println(""); // print empty line
         System.out.print("Please enter your choice: ");
 
         choice = scObject.nextInt();

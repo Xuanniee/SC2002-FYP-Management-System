@@ -44,12 +44,6 @@ public class FYPcoordDB extends Database {
         this.readFile();
     }
 
-    // public FYPcoordDB(String filePath) {
-    // this.file = new File(filePath);
-    // this.fypCoordinators = new ArrayList<FYPCoordinator>();
-    // this.readFile();
-    // }
-
     /**
      * Reads FYPCoordinator data from the text file.
      */
@@ -59,18 +53,19 @@ public class FYPcoordDB extends Database {
 
             String coordinatorLine = br.readLine();
             coordinatorLine = br.readLine();
-            String coordinatorName, coordinatorEmail, coordinatorID;
+            String coordinatorName, coordinatorEmail, coordinatorID, coordinatorPassword;
             String[] coordinatorData, temp;
 
             while (coordinatorLine != null) {
                 coordinatorData = coordinatorLine.split(super.delimiter);
                 coordinatorName = coordinatorData[0];
                 coordinatorEmail = coordinatorData[1];
+                coordinatorPassword = coordinatorData[2];
 
                 temp = coordinatorData[1].split(super.emailDelimiter);
                 coordinatorID = temp[0];
 
-                fypCoordinators.add(new FYPCoordinator(coordinatorID, coordinatorName, coordinatorEmail));
+                fypCoordinators.add(new FYPCoordinator(coordinatorID, coordinatorName, coordinatorEmail, coordinatorPassword));
 
                 coordinatorLine = br.readLine();
             }
@@ -87,11 +82,14 @@ public class FYPcoordDB extends Database {
         try {
             BufferedWriter bf = new BufferedWriter(new FileWriter(file, false));
             PrintWriter pw = new PrintWriter(bf);
+            // Write Headers
+            pw.println("Name" + "\t" + "Email" + "\t" + "Password");
             for (FYPCoordinator currentCoordinator : fypCoordinators) {
                 String coordinatorName = currentCoordinator.getUserName();
                 String coordinatorEmail = currentCoordinator.getUserEmail();
+                String coordinatorPassword = currentCoordinator.getPassword();
 
-                pw.println(coordinatorName + delimiter + coordinatorEmail);
+                pw.println(coordinatorName + delimiter + coordinatorEmail + delimiter + coordinatorPassword);
             }
             pw.close();
         } catch (IOException e) {

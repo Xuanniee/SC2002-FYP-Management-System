@@ -57,6 +57,11 @@ public class RequestRegisterDB extends Database {
      */
     private FacultyDB facultyDB;
 
+     /**
+     * Represents the number of pending requests currently in FYPMS
+     */
+    private int numPendReq = 0;
+
     /**
      * Constructor
      * Creates the Register Request Database when the system is first initialised.
@@ -116,7 +121,7 @@ public class RequestRegisterDB extends Database {
             PrintWriter pw = new PrintWriter(bf);
 
             pw.println(
-                    "Student (Requestor)" + "\t" + "Coordinator (Requestee)" + "\t" + "Project ID" + "Request Status");
+                    "Student (Requestor)" + "\t" + "Coordinator (Requestee)" + "\t" + "Project ID" + "\t" +"Request Status");
 
             for (RequestRegister rq : requestRegisterList) {
                 String studentID = rq.getStudent().getUserID();
@@ -139,6 +144,7 @@ public class RequestRegisterDB extends Database {
      */
     public void addRequest(RequestRegister requestRegister) {
         requestRegisterList.add(requestRegister);
+        numPendReq += 1;
         // Update Supervisor number of supervising project
         // System.out.println("Before Adding: ");
         requestRegister.getSupervisor().editNumProjects(1);
@@ -152,13 +158,11 @@ public class RequestRegisterDB extends Database {
     }
 
     /**
-     * Check if user (supervisor or FYP coordinator) has any pending requests to
-     * register
+     * Check if FYP coordinator has any pending requests to register
      * 
-     * @param fypCoord
      * @return a Boolean to indicate whether there are any pending requests for user
      */
-    public Boolean anyPendingRegisterRequestsForUser(User fypCoord) {
+    public Boolean anyPendingRegisterRequestsForUser() {
         for (int i = 0; i < requestRegisterList.size(); i += 1) {
             if (requestRegisterList.get(i).getRequestStatus() == RequestStatus.PENDING) {
                 return true;
@@ -174,7 +178,13 @@ public class RequestRegisterDB extends Database {
      * @return an integer representing whether there is no requests at all.
      */
     public int viewAllRegisterRequestFYPCoord() {
-        System.out.println("Loading all pending requests to register for a project...");
+        System.out.println("");
+        System.out.println(
+                "+------------------------------------------------------------------------------------------------------------+");
+        System.out.println(
+                "|                       List of all Pending Requests from Students to register for Project                   |");
+        System.out.println(
+                "+------------------------------------------------------------------------------------------------------------+");
         int counter = 1;
 
         for (int i = 0; i < requestRegisterList.size(); i += 1) {
@@ -192,8 +202,7 @@ public class RequestRegisterDB extends Database {
             System.out.println("Pending Register Requests: 0");
             return 1;
         }
-
-        System.out.println();
+        
         System.out.println(); // Prints Empty Line
         return 0;
     }
@@ -232,19 +241,20 @@ public class RequestRegisterDB extends Database {
         System.out.println("Loading selected request...");
         System.out.println();
         System.out.println(
-                "+------------------------------------------------------------------------------------------------+");
+                "+------------------------------------------------------------------------------------------------------------+");
         System.out.println(
-                "|                                    Register Request Approval                                   |");
+                "|                                         Register Request Approval                                          |");
         System.out.println(
-                "+------------------------------------------------------------------------------------------------+");
+                "+------------------------------------------------------------------------------------------------------------+");
         targetRequest.getProject().printProjectDetails();
         System.out.println("Project Status        : " + targetRequest.getProject().getProjectStatus());
         System.out.println("Student who made request: " + targetRequest.getStudent().getUserName());
         System.out.println(
-                "+-------------------------------------------------------------------------------------------------+");
-        System.out.println("");
+                "+------------------------------------------------------------------------------------------------------------+");
         System.out.println(
-                "Select 1 to approve the request, and 0 to reject the request and return to the previous menu.");
+                "|      Select 1 to approve the request, and 0 to reject the request and return to the previous menu.         |");
+        System.out.println(
+                "+------------------------------------------------------------------------------------------------------------+");
         System.out.println();
 
         return targetRequest;
@@ -286,6 +296,8 @@ public class RequestRegisterDB extends Database {
         System.out.println("Project " + approvedProject.getProjectTitle() + " has been successfully allocated to "
                 + approvedStudent.getUserName());
         System.out.println("");
+
+        numPendReq -= 1;
 
         return true;
     }
@@ -339,7 +351,7 @@ public class RequestRegisterDB extends Database {
         int counter = 1;
         for (int i = 0; i < requestRegisterList.size(); i += 1) {
             RequestRegister currentRequest = requestRegisterList.get(i);
-            System.out.println(counter + ". | Requester: " + currentRequest.getStudent().getUserName()
+            System.out.println(counter + " | Requester: " + currentRequest.getStudent().getUserName()
                     + " | Requestee: " + currentRequest.getSupervisor().getUserName() +
                     " | Status: " + currentRequest.getRequestStatus().toString());
 
@@ -378,9 +390,25 @@ public class RequestRegisterDB extends Database {
                 }
             }
         } else {
-            System.out.println("No requests to Register");
+            System.out.println("You have not submitted any requests to register for a project.");
             System.out.println("");
         }
+    }
+
+    /**
+     * Set the number of pending requests in the FYPMS
+     * 
+     * @param num
+     */
+    public void setNumPenReq(int num){
+        numPendReq += num;
+    }
+
+    /**
+     * Get the number of pending requests in the FYPMS
+     */
+    public int getNumPenReq(){
+        return numPendReq;
     }
 
 }

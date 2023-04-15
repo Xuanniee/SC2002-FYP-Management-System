@@ -51,6 +51,11 @@ public class RequestTransferDB extends Database {
      */
     private FacultyDB facultyDB;
 
+     /**
+     * Represents the number of pending requests currently in FYPMS
+     */
+    private int numPendReq = 0;
+
     /**
      * Constructor
      * Creates a Database of all Transfer Requests in FYPMS when the application is
@@ -131,6 +136,7 @@ public class RequestTransferDB extends Database {
      */
     public void addRequest(RequestTransfer requestTransfer) {
         requestTransferList.add(requestTransfer);
+        numPendReq += 1;
     }
 
     /**
@@ -142,6 +148,20 @@ public class RequestTransferDB extends Database {
     public Boolean findSupervisor(User supervisor) {
         for (RequestTransfer req : requestTransferList) {
             if (req.getCurSupervisor() == supervisor) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Check if FYP coordinator has any pending requests to change title
+     * 
+     * @return  Boolean to indicate whether there are any pending requests for user
+     */
+    public Boolean anyPendingTransferRequestsForUser() {
+        for (int i = 0; i < requestTransferList.size(); i += 1) {
+            if (requestTransferList.get(i).getRequestStatus() == RequestStatus.PENDING) {
                 return true;
             }
         }
@@ -195,7 +215,7 @@ public class RequestTransferDB extends Database {
         int counter = 1;
         for (int i = 0; i < requestTransferList.size(); i += 1) {
             RequestTransfer currentRequest = requestTransferList.get(i);
-            System.out.println(counter + ". | Requester: " + currentRequest.getCurSupervisor().getUserName()
+            System.out.println(counter + " | Requester: " + currentRequest.getCurSupervisor().getUserName()
                     + " | Requestee: " + fypCoordinator.getUserName() +
                     " | Status: " + currentRequest.getRequestStatus().toString());
 
@@ -216,7 +236,13 @@ public class RequestTransferDB extends Database {
      * @return integer indicating whether there are any pending Transfer Requests.
      */
     public int viewAllTransferRequestFYPCoord() {
-        System.out.println("Loading all pending requests to change supervisors for a project...");
+        System.out.println("");
+        System.out.println(
+                "+------------------------------------------------------------------------------------------------------------+");
+        System.out.println(
+                "|                         List of all Pending Requests to Change Supervisor of Project                       |");
+        System.out.println(
+                "+------------------------------------------------------------------------------------------------------------+");
         int counter = 1;
         for (int i = 0; i < requestTransferList.size(); i += 1) {
             RequestTransfer currentRequest = requestTransferList.get(i);
@@ -234,7 +260,7 @@ public class RequestTransferDB extends Database {
             System.out.println("Enter 0 to return to the previous menu.");
             return 1;
         }
-        System.out.println();
+        
         System.out.println(); // Prints Empty Line
 
         return 0;
@@ -277,15 +303,17 @@ public class RequestTransferDB extends Database {
         System.out.println(
                 "|                                         Transfer Request Approval                                          |");
         System.out.println(
-                "|------------------------------------------------------------------------------------------------------------|");
+                "+------------------------------------------------------------------------------------------------------------+");
         targetRequest.getProject().printProjectDetails();
         System.out.println("Project Status               : " + targetRequest.getProject().getProjectStatus());
         System.out.println("Previous Supervisor (Requester): " + targetRequest.getCurSupervisor().getUserName());
         System.out.println("Replacement Supervisor         : " + targetRequest.getRepSupervisor().getUserName());
         System.out.println(
-                "|------------------------------------------------------------------------------------------------------------|");
+                "+------------------------------------------------------------------------------------------------------------+");
         System.out.println(
-                "Select 1 to approve the request, and 0 to reject the request and return to the previous menu.");
+                "|      Select 1 to approve the request, and 0 to reject the request and return to the previous menu.         |");
+        System.out.println(
+                "+------------------------------------------------------------------------------------------------------------+");
         System.out.println();
 
         return targetRequest;
@@ -307,20 +335,25 @@ public class RequestTransferDB extends Database {
         Supervisor replacementSupervisor = approvedRequest.getRepSupervisor();
         Supervisor currentSupervisor = approvedRequest.getCurSupervisor();
 
-        // Replace Project Supervisor
+        // Update details of approved project
         approvedProject.setSupervisor(replacementSupervisor);
+        approvedProject.setAwaitingTransferRequest(false);
 
         // Update details of current Supervisor
         currentSupervisor.removeSupervisingProjectList(approvedProject);
+        if (currentSupervisor.getNumProj() < 2) {
+            projectDB.setSupervisorProjectsToNewStatus(currentSupervisor, ProjectStatus.AVAILABLE);
+        }
 
         // Update details of replacement Supervisor
         // When replacement supervisor is given new project, he/she may have hit
         // capacity and remaining projects will be set to UNAVAILABLE.
-        replacementSupervisor.setSupervisingProjectList(approvedProject);
+        replacementSupervisor.addSupervisingProject(approvedProject);
         if (replacementSupervisor.getNumProj() >= 2) {
             projectDB.setSupervisorProjectsToNewStatus(replacementSupervisor, ProjectStatus.UNAVAILABLE);
         }
 
+        numPendReq -= 1;
         // Update Request Status so this.user cannot see it again
         // int indexCompletedRequest = requestTransferList.indexOf(approvedRequest);
         // requestTransferList.remove(indexCompletedRequest);
@@ -331,5 +364,21 @@ public class RequestTransferDB extends Database {
                 " to " + replacementSupervisor.getUserName());
 
         return true;
+    }
+
+    /**
+     * Set the number of pending requests in the FYPMS
+     * 
+     * @param num
+     */
+    public void setNumPenReq(int num){
+        numPendReq += num;
+    }
+
+    /**
+     * Get the number of pending requests in the FYPMS
+     */
+    public int getNumPenReq(){
+        return numPendReq;
     }
 }

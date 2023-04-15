@@ -19,8 +19,8 @@ public class FYPCoordinator extends Supervisor implements ProjectReportMenu {
      * @param name      FYP Coordinator's Name
      * @param userEmail FYP Coordinator's Email
      */
-    public FYPCoordinator(String userID, String name, String userEmail) {
-        super(userID, name, userEmail);
+    public FYPCoordinator(String userID, String name, String userEmail, String userPassword) {
+        super(userID, name, userEmail, userPassword);
     }
 
     /**

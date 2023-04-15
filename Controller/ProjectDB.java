@@ -263,6 +263,7 @@ public class ProjectDB extends Database {
                 project.printProjectDetails();
             }
         }
+        System.out.println("+---------------------------------------END----------------------------------------+");
     }
 
     /**

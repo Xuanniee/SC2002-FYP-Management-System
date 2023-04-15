@@ -8,6 +8,10 @@ import Controller.*;
 
 public class MainApp {
     public static void main(String[] args) {
+        
+        Scanner scanner = new Scanner(System.in);
+        Console terminalConsole = System.console();
+        
         /* Initialise Database */
         StudentDB student_list = new StudentDB();
         FacultyDB faculty_list = new FacultyDB();
@@ -19,10 +23,7 @@ public class MainApp {
         RequestChangeTitleDB requestChangeTitleDB = new RequestChangeTitleDB(project_list, student_list, faculty_list);
         RequestManager requestManager = new RequestManager(project_list, faculty_list, requestChangeTitleDB,
                 requestRegisterDB,
-                requestDeregisterDB, requestTransferDB);
-
-        Scanner scanner = new Scanner(System.in);
-        Console terminalConsole = System.console();
+                requestDeregisterDB, requestTransferDB, scanner);
 
         // Check to ensure Console is available
         if (terminalConsole == null) {
@@ -97,11 +98,11 @@ public class MainApp {
                         Student loggedStudent = student_list.findStudent(username);
                         StudentManager studentMgr = new StudentManager(loggedStudent, student_list, project_list,
                                 requestManager, FYPcoord_list, scanner, terminalConsole);
-                        int choice;
+                        int stuChoice;
                         do {
-                            choice = studentMgr.printMenuOptions(scanner);
-                            studentMgr.processStudentChoice(choice);
-                        } while (choice != 0);
+                            stuChoice = studentMgr.printMenuOptions(scanner);
+                            studentMgr.processStudentChoice(stuChoice);
+                        } while (stuChoice != 0);
                         break;
 
                     case FACULTY:
@@ -138,6 +139,16 @@ public class MainApp {
         } while (true);
 
         scanner.close();
+
+        // Update all the Databases by writing back to the text file.
+        faculty_list.updateFile();
+        student_list.updateFile();
+        FYPcoord_list.updateFile();
+        project_list.updateFile();
+        requestChangeTitleDB.updateFile();
+        requestDeregisterDB.updateFile();
+        requestRegisterDB.updateFile();
+        requestTransferDB.updateFile();
     }
 
     /**

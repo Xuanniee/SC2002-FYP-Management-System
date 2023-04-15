@@ -55,6 +55,11 @@ public class RequestChangeTitleDB extends Database {
      */
     private FacultyDB facultyDB;
 
+     /**
+     * Represents the number of pending requests currently in FYPMS
+     */
+    private int numPendReq = 0;
+
     /**
      * Constructor
      * Creates a Database Object storing all the Title Change Requests.
@@ -117,7 +122,7 @@ public class RequestChangeTitleDB extends Database {
             PrintWriter pw = new PrintWriter(bf);
 
             pw.println("Student (Requestor)" + "\t" + "Supervisor (Requestee)" + "\t" + "Project ID" + "\t"
-                    + "Previous Title" + "\t" + "New Title" + "Request Status");
+                    + "Previous Title" + "\t" + "New Title" + "\t" + "Request Status");
 
             for (RequestChangeTitle rq : requestChangeTitleList) {
                 String studentID = rq.getStudent().getUserID();
@@ -148,6 +153,7 @@ public class RequestChangeTitleDB extends Database {
             return false;
         }
         requestChangeTitleList.add(requestChangeTitle);
+        numPendReq += 1;
         return true;
     }
 
@@ -192,7 +198,12 @@ public class RequestChangeTitleDB extends Database {
     public int viewAllTitleChangeRequestSupervisor(Supervisor currentSupervisor) {
         int counter = 1;
         System.out.println("");
-        System.out.println("Loading all pending change title requests...");
+        System.out.println(
+                "+------------------------------------------------------------------------------------------------------------+");
+        System.out.println(
+                "|                     List of all Pending Requests from Students to Change Title of Project                  |");
+        System.out.println(
+                "+------------------------------------------------------------------------------------------------------------+");
         for (int i = 0; i < requestChangeTitleList.size(); i += 1) {
             RequestChangeTitle currentRequest = requestChangeTitleList.get(i);
             if (currentRequest.getRequestStatus() == RequestStatus.PENDING
@@ -211,7 +222,6 @@ public class RequestChangeTitleDB extends Database {
             return 1;
         }
 
-        System.out.println();
         System.out.println(); // Prints Empty Line
         return 0;
     }
@@ -253,15 +263,18 @@ public class RequestChangeTitleDB extends Database {
         System.out.println(
                 "|                                       Title Change Request Approval                                        |");
         System.out.println(
-                "|------------------------------------------------------------------------------------------------------------|");
+                "+------------------------------------------------------------------------------------------------------------+");
         targetRequest.getProject().printProjectDetails();
         System.out.println("Requestee (Student)     : " + targetRequest.getStudent().getUserName());
         System.out.println("Old Title               : " + targetRequest.getPrevTitle());
         System.out.println("Suggested New Title     : " + targetRequest.getNewTitle());
         System.out.println(
-                "|------------------------------------------------------------------------------------------------------------|");
+                "+------------------------------------------------------------------------------------------------------------+");
         System.out.println(
-                "Select 1 to approve the request, and 0 to reject the request and return to the previous menu.");
+                "|      Select 1 to approve the request, and 0 to reject the request and return to the previous menu.         |");
+        System.out.println(
+                "+------------------------------------------------------------------------------------------------------------+");
+        System.out.println();
         System.out.println();
 
         return targetRequest;
@@ -289,8 +302,8 @@ public class RequestChangeTitleDB extends Database {
         System.out.println(
                 "Project " + approvedRequest.getPrevTitle() + " has been successfully renamed to " + newProjectTitle);
 
-        // Remove request from list after approval
-        // requestChangeTitleList.remove(approvedRequest);
+        // Reduce number of pending request by 1
+        numPendReq -= 1;
 
         return true;
     }
@@ -354,7 +367,7 @@ public class RequestChangeTitleDB extends Database {
         int counter = 1;
         for (int i = 0; i < requestChangeTitleList.size(); i += 1) {
             RequestChangeTitle currentRequest = requestChangeTitleList.get(i);
-            System.out.println(counter + ". | Requester: " + currentRequest.getStudent().getUserName()
+            System.out.println(counter + " | Requester: " + currentRequest.getStudent().getUserName()
                     + " | Requestee: " + currentRequest.getSupervisor().getUserName() +
                     " | Status: " + currentRequest.getRequestStatus().toString());
 
@@ -393,9 +406,24 @@ public class RequestChangeTitleDB extends Database {
                 }
             }
         } else {
-            System.out.println("No requests to Change Title");
+            System.out.println("You have not submitted any requests to change title.");
             System.out.println("");
         }
     }
 
+    /**
+     * Set the number of pending requests in the FYPMS
+     * 
+     * @param num
+     */
+    public void setNumPenReq(int num){
+        numPendReq += num;
+    }
+
+    /**
+     * Get the number of pending requests in the FYPMS
+     */
+    public int getNumPenReq(){
+        return numPendReq;
+    }
 }
