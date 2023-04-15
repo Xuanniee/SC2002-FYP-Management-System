@@ -146,7 +146,7 @@ public class RequestRegisterDB extends Database {
         requestRegisterList.add(requestRegister);
         numPendReq += 1;
         // Update Supervisor number of supervising project
-        // System.out.println("Before Adding: ");
+        
         requestRegister.getSupervisor().editNumProjects(1);
 
         // When student request to register for a project, the supervisor may hit
