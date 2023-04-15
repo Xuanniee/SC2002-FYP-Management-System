@@ -296,6 +296,23 @@ public class RequestChangeTitleDB extends Database {
     }
 
     /**
+     * Check if user (supervisor or FYP coordinator) has any pending requests to
+     * change title
+     * 
+     * @param user
+     * @return
+     */
+    public Boolean anyPendingChangeTitleRequestsForUser(User user) {
+        for (int i = 0; i < requestChangeTitleList.size(); i += 1) {
+            if (requestChangeTitleList.get(i).getSupervisor().equals(user) &&
+                    requestChangeTitleList.get(i).getRequestStatus() == RequestStatus.PENDING) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * For Supervisor to view Pending Title Change Requests only
      * 
      * @param currentSupervisor
