@@ -31,6 +31,7 @@ public class MainApp {
         }
 
         String username;
+        String password;
         UserType attemptUserType;
         int numLoginAttempts = 3;
         int mainMenuInput = 1;
@@ -65,12 +66,14 @@ public class MainApp {
                     System.out.print("Enter your Username: ");
                     username = scanner.nextLine();
 
-                    char passwordArray[] = terminalConsole.readPassword("Enter your Password: ");
-                    String maskedPassword = new String(passwordArray);
+                    System.out.print("Enter your Password: ");
+                    password = scanner.nextLine();
+                    //char passwordArray[] = terminalConsole.readPassword("Enter your Password: ");
+                    //String maskedPassword = new String(passwordArray);
 
                     // Create attempted User
-                    User attemptUser = new User(username, maskedPassword);
-                    attemptUserType = attemptUser.authenticateUser(username, maskedPassword,
+                    User attemptUser = new User(username, password);
+                    attemptUserType = attemptUser.authenticateUser(username, password,
                             faculty_list.getSupervisorList(),
                             student_list.getStudentList(), FYPcoord_list.getFypCoordinatorsList());
 
