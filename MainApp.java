@@ -21,9 +21,8 @@ public class MainApp {
         RequestRegisterDB requestRegisterDB = new RequestRegisterDB(project_list, student_list, faculty_list);
         RequestDeregisterDB requestDeregisterDB = new RequestDeregisterDB(project_list, student_list, FYPcoord_list);
         RequestChangeTitleDB requestChangeTitleDB = new RequestChangeTitleDB(project_list, student_list, faculty_list);
-        RequestManager requestManager = new RequestManager(project_list, faculty_list, requestChangeTitleDB,
-                requestRegisterDB,
-                requestDeregisterDB, requestTransferDB, scanner);
+        RequestManager requestManager = new RequestManager(project_list, faculty_list, FYPcoord_list, requestChangeTitleDB,
+                requestRegisterDB, requestDeregisterDB, requestTransferDB, scanner);
 
         // Check to ensure Console is available
         if (terminalConsole == null) {
