@@ -15,6 +15,7 @@ import Entities.Student;
 import Entities.Supervisor;
 import Entities.FYPCoordinator;
 import Entities.User;
+import enums.ProjectStatus;
 import enums.RequestStatus;
 
 /**
@@ -215,6 +216,22 @@ public class RequestDeregisterDB extends Database {
     }
 
     /**
+     * Check if user (supervisor or FYP coordinator) has any pending requests to
+     * deregister
+     * 
+     * @param fypCoord
+     * @return a Boolean to indicate whether there are any pending requests for user
+     */
+    public Boolean anyPendingDeregisterRequestsForUser(User fypCoord) {
+        for (int i = 0; i < requestDeregisterList.size(); i += 1) {
+            if (requestDeregisterList.get(i).getRequestStatus() == RequestStatus.PENDING) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Function for FYP Coordinator to view all the Deregister Requests
      * 
      * @return the print statements of all the transfer requests in FYPMS
@@ -319,8 +336,14 @@ public class RequestDeregisterDB extends Database {
         deregisteredProject.deregisterStudent();
 
         // Update Supervisor supervising list and number of projects
+        // When student deregisters from a project, the supervisor may fall below
+        // capacity, hence his remaining projects have to be set to AVAILABLE.
         deregisteredSupervisor.removeSupervisingProjectList(deregisteredProject);
-        deregisteredSupervisor.editNumProjects(-1);
+
+        if (deregisteredSupervisor.getNumProj() < 2) {
+            System.out.println("lessthan2");
+            projectDB.setSupervisorProjectsToNewStatus(deregisteredSupervisor, ProjectStatus.AVAILABLE);
+        }
 
         // Update Request Status so this.user cannot see it again
         // int indexCompletedRequest = requestDeregisterList.indexOf(approvedRequest);

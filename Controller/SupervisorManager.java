@@ -3,6 +3,7 @@ package Controller;
 import java.io.Console;
 import java.util.Scanner;
 
+import Boundary.Menu;
 import Entities.Supervisor;
 import enums.RequestStatus;
 import Entities.Project;
@@ -17,7 +18,7 @@ import Entities.RequestChangeTitle;
  * @version 1.0
  * @since 2023-04-14
  */
-public class SupervisorManager {
+public class SupervisorManager implements Menu {
 
     /**
      * Represents the Supervisor using the FYPMS currently.
@@ -113,6 +114,8 @@ public class SupervisorManager {
                     System.out.println("Please indicate which Request you would like to look at: ");
                     System.out.println("Alternatively, Enter 0 to return to the previous menu.");
                     // Get Index of Title Change Request to look at in detail
+                    System.out.println("");
+                    System.out.print("Your choice is: ");
                     selectedTitleChangeRequest = scanner.nextInt();
 
                     if (selectedTitleChangeRequest == 0) {
@@ -161,6 +164,47 @@ public class SupervisorManager {
         }
 
         // System.out.println("Thank you for using FYPMS. You have been logged out.");
+    }
+
+    /**
+     * Implements the User Menu to print the Supervisor Menu
+     * 
+     * @return integer that represents User's choice.
+     */
+    public int printMenuOptions(Scanner scObject) {
+        // Supervisor Menu
+        int choice;
+
+        System.out.println(""); // print empty line
+        System.out.println("+-------------------------------------------------------+");
+        System.out.println("|                   Faculty Portal                      |");
+        System.out.println("|-------------------------------------------------------|");
+        System.out.println("| 1. Create a Project                                   |");
+        System.out.println("| 2. View own Project(s)                                |");
+        System.out.println("| 3. Modify the title of your Project(s)                |");
+        System.out.println("| 4. View Pending Title Change Requests                 |");
+        System.out.println("| 5. View Request History & Status                      |");
+        System.out.println("| 6. Request the Transfer of a Student                  |");
+        System.out.println("| 7. Set New Password                                   |");
+        System.out.println("|-------------------------------------------------------|");
+        System.out.println("|              Enter 0 to Log out of FYPMS              |");
+        System.out.println("+-------------------------------------------------------+");
+        System.out.println(""); // print empty line
+
+        // Check if there are any new pending requests for the Supervisor
+        if (requestChangeTitleDB.anyPendingChangeTitleRequestsForUser(managedSupervisor)) {
+            System.out.println("Message: New Change Title Requests from students!");
+        }
+
+        System.out.println(""); // print empty line
+        System.out.print("Please enter your choice: ");
+
+        choice = scObject.nextInt();
+        // Remove \n from Buffer
+        scObject.nextLine();
+
+        return choice;
+
     }
 
 }
