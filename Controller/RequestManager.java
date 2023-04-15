@@ -22,6 +22,8 @@ public class RequestManager {
      * Represents the Database containing all Faculty Users in FYPMS
      */
     private FacultyDB facultyDB;
+    
+    private FYPcoordDB fyPcoordDB;
 
     /**
      * Represents the Database containing all Change Title Requests
@@ -59,10 +61,24 @@ public class RequestManager {
      * @param requestDeregisterDB  Database containing all de-register requests
      * @param requestTransferDB    Database containing all transfer requests
      */
-    public RequestManager(ProjectDB projectDB, FacultyDB facultyDB, RequestChangeTitleDB requestChangeTitleDB,
+
+     /**
+      * Constructor
+      * Creates a Request Manager Object with references to multiple databases.
+      * @param projectDB            Database containing all projects
+      * @param facultyDB            Database containing all faculty members
+      * @param fyPcoordDB           Database containing FYP Coordinator    
+      * @param requestChangeTitleDB Database containing all title change requests
+      * @param requestRegisterDB    Database containing all register requests
+      * @param requestDeregisterDB  Database containing all de-register requests
+      * @param requestTransferDB    Database containing all transfer requests
+      * @param scObject
+      */
+    public RequestManager(ProjectDB projectDB, FacultyDB facultyDB, FYPcoordDB fyPcoordDB,RequestChangeTitleDB requestChangeTitleDB,
             RequestRegisterDB requestRegisterDB, RequestDeregisterDB requestDeregisterDB, RequestTransferDB requestTransferDB, Scanner scObject) {
         this.projectDB = projectDB;
         this.facultyDB = facultyDB;
+        this.fyPcoordDB = fyPcoordDB;
         this.requestRegisterDB = requestRegisterDB;
         this.requestDeregisterDB = requestDeregisterDB;
         this.requestChangeTitleDB = requestChangeTitleDB;
@@ -154,11 +170,17 @@ public class RequestManager {
         String replacementSupervisorID = scObject.nextLine();
         // Retrieve the Replacement Supervisor
         Supervisor replacementSupervisor = facultyDB.findSupervisor(replacementSupervisorID);
+        if(replacementSupervisor.getUserID().equalsIgnoreCase(fyPcoordDB.getFypCoordinatorsList().get(0).getUserID())){
+            replacementSupervisor = fyPcoordDB.getFypCoordinatorsList().get(0);
+        }
 
         while(replacementSupervisor == null){
             System.out.println("Invalid UserID, please select again: ");
             replacementSupervisorID = scObject.nextLine();
             replacementSupervisor = facultyDB.findSupervisor(replacementSupervisorID);
+            if(replacementSupervisor.getUserID().equalsIgnoreCase(fyPcoordDB.getFypCoordinatorsList().get(0).getUserID())){
+            replacementSupervisor = fyPcoordDB.getFypCoordinatorsList().get(0);
+            }
         }
 
         requestTransferDB.addRequest(new RequestTransfer(targetProject, requesterSupervisor, replacementSupervisor));

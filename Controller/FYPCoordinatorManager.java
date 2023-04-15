@@ -317,7 +317,6 @@ public class FYPCoordinatorManager implements Menu {
 
                     // Add hint message in scenario where the replacement supervisor has already
                     // reached his/her cap
-                    
                     if (targetTransferRequest.getRepSupervisor().getNumProj() >= 2) {
                         System.out.printf("Warning: Replacement Supervisor already has %d allocated projects.\n",
                                 targetTransferRequest.getRepSupervisor().getNumProj());
@@ -360,16 +359,23 @@ public class FYPCoordinatorManager implements Menu {
                     if (noDeregisterRequest == 1) {
                         break;
                     }
-                    System.out.println("Please indicate which Request you would like to look at: ");
-                    System.out.println("Alternatively, Enter 0 to return to the previous menu.");
-                    selectedDeregisterRequest = scanner.nextInt();
+                    
+                    do {
+                        System.out.println("Please indicate which Request you would like to look at: ");
+                        System.out.println("Alternatively, Enter 0 to return to the previous menu.");
+                        while (!scanner.hasNextInt()) {
+                            System.out.println("Invalid input.");
+                            scanner.next();
+                        }
+                        selectedDeregisterRequest = scanner.nextInt();
+                    } while (selectedDeregisterRequest > requestDeregisterDB.getNumPenReq() || selectedDeregisterRequest < 1);
 
                     if (selectedDeregisterRequest == 0) {
                         // After Request has been approved or rejected, to return to main menu.
                         continue;
                     }
 
-                    while(selectedDeregisterRequest < 0 && selectedDeregisterRequest > requestDeregisterDB.getNumPenReq()){
+                    while(selectedDeregisterRequest < 0 || selectedDeregisterRequest > requestDeregisterDB.getNumPenReq()){
                         System.out.println("You have selected an invalid input, indicate a valid request: ");
                         selectedDeregisterRequest = scanner.nextInt();
                     }
