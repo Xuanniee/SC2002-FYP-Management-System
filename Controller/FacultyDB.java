@@ -106,8 +106,8 @@ public class FacultyDB extends Database {
         String projectTitle;
 
         System.out.println(" ------------------ Project Creation ------------------ ");
-        System.out.print("Input the Project Title: ");
-
+        System.out.println("Input the Project Title: ");
+        
         projectTitle = scObject.nextLine();
 
         // Increment the Project ID

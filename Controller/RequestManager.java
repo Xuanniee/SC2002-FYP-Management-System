@@ -71,7 +71,7 @@ public class RequestManager {
      * Method for Student to create request to register for a Project
      */
     public void studentRegister(Student student) {
-        System.out.print("Please enter Project ID of the project you want to register for: ");
+        System.out.println("Please enter Project ID of the project you want to register for: ");
         int projID = sc.nextInt();
         Project targetProject = projectDB.findProject(projID);
         targetProject.setProjectStatus(ProjectStatus.RESERVED);
