@@ -5,15 +5,55 @@ import java.util.Scanner;
 import Entities.*;
 import enums.ProjectStatus;
 
+/**
+ * Represents a Request Manager Object that manages the logic of requests.
+ * 
+ * @author Lab A34 Assignment Team 1
+ * @version 1.0
+ * @since 2023-04-14
+ */
 public class RequestManager {
+    /**
+     * Represents the Database containing all Projects in FYPMS
+     */
     private ProjectDB projectDB;
+
+    /**
+     * Represents the Database containing all Faculty Users in FYPMS
+     */
     private FacultyDB facultyDB;
+
+    /**
+     * Represents the Database containing all Change Title Requests
+     */
     private RequestChangeTitleDB requestChangeTitleDB;
+
+    /**
+     * Represents the Database containing all Register Requests
+     */
     private RequestRegisterDB requestRegisterDB;
+
+    /**
+     * Represents the Database containing all De-Register Requests
+     */
     private RequestDeregisterDB requestDeregisterDB;
+
+    /**
+     * Represents the Database containing all Transfer Requests
+     */
     private RequestTransferDB requestTransferDB;
 
-    // Constructor
+    /**
+     * Constructor
+     * Creates a Request Manager Object with references to multiple databases.
+     * 
+     * @param projectDB            Database containing all projects
+     * @param facultyDB            Database containing all faculty members
+     * @param requestChangeTitleDB Database containing all title change requests
+     * @param requestRegisterDB    Database containing all register requests
+     * @param requestDeregisterDB  Database containing all de-register requests
+     * @param requestTransferDB    Database containing all transfer requests
+     */
     public RequestManager(ProjectDB projectDB, FacultyDB facultyDB, RequestChangeTitleDB requestChangeTitleDB,
             RequestRegisterDB requestRegisterDB,RequestDeregisterDB requestDeregisterDB, 
             RequestTransferDB requestTransferDB) {
@@ -44,7 +84,7 @@ public class RequestManager {
      * Method for Student to create request to register for a Project
      */
     public void studentRegister(Student student) {
-        System.out.print("Please enter Project ID of the project you want to register for: ");
+        System.out.println("Please enter Project ID of the project you want to register for: ");
         int projID = sc.nextInt();
         Project targetProject = projectDB.findProject(projID);
         targetProject.setProjectStatus(ProjectStatus.RESERVED);
@@ -129,7 +169,7 @@ public class RequestManager {
     /**
      * View History for Students
      * 
-     * @param user
+     * @param student Target Student
      */
     public void getRequestHistory(Student student) {
         requestChangeTitleDB.printStudentHistory(student);
@@ -155,7 +195,7 @@ public class RequestManager {
     /**
      * For FYP Coordinator to view all Requests from ALL Users
      * 
-     * @param fypCoordinator
+     * @param fypCoordinator Current FYP Coordiator
      */
     public Boolean getAllRequestHistory(FYPCoordinator fypCoordinator) {
         if (fypCoordinator == null) {
@@ -185,8 +225,8 @@ public class RequestManager {
     /**
      * Viewing Pending Title Change Requests for Supervisor
      * 
-     * @param currentSupervisor
-     * @return
+     * @param currentSupervisor Current Supervisor of Project
+     * @return a Boolean to inform us if the function is working as intended.
      */
     public Boolean getPendingRequestsTitleChange(Supervisor currentSupervisor) {
         if (currentSupervisor == null) {
@@ -201,6 +241,8 @@ public class RequestManager {
     /**
      * Viewing all incoming and outgoing requests for Supervisor regardless of
      * RequestStatus
+     * 
+     * @param currentSupervisor Target Supervisor
      */
     public void getRequestHistoryAndStatus(Supervisor currentSupervisor) {
         if (currentSupervisor == null) {

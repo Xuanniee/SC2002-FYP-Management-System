@@ -1,3 +1,4 @@
+import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.io.Console;
 
@@ -11,11 +12,9 @@ public class MainApp {
         StudentDB student_list = new StudentDB();
         FacultyDB faculty_list = new FacultyDB();
         FYPcoordDB FYPcoord_list = new FYPcoordDB();
-        ProjectDB project_list = new ProjectDB(faculty_list);
-        ProjectAllocationDB allocation_list = new ProjectAllocationDB();
+        ProjectDB project_list = new ProjectDB(faculty_list, student_list);
         RequestTransferDB requestTransferDB = new RequestTransferDB(project_list, faculty_list);
-        RequestRegisterDB requestRegisterDB = new RequestRegisterDB(project_list, student_list, faculty_list,
-                allocation_list);
+        RequestRegisterDB requestRegisterDB = new RequestRegisterDB(project_list, student_list, faculty_list);
         RequestDeregisterDB requestDeregisterDB = new RequestDeregisterDB(project_list, student_list, FYPcoord_list);
         RequestChangeTitleDB requestChangeTitleDB = new RequestChangeTitleDB(project_list, student_list, faculty_list);
         RequestManager requestManager = new RequestManager(project_list, faculty_list, requestChangeTitleDB,
@@ -32,15 +31,25 @@ public class MainApp {
 
         String username;
         UserType attemptUserType;
-        int numLoginAttempts = 3;
-        int mainMenuInput;
+        int numLoginAttempts = 4;
+        int mainMenuInput = 1;
         do {
-            printWelcome();
-            System.out.print("Your choice is: ");
-            mainMenuInput = scanner.nextInt();
-            // Remove Enter
-            scanner.nextLine();
-            System.out.println("");
+            boolean isValidInput = false;
+            while (!isValidInput) {
+                try {
+                    printWelcome();
+                    System.out.print("Your choice is: ");
+                    mainMenuInput = scanner.nextInt();
+                    // Remove \n
+                    scanner.nextLine();
+                    System.out.println("");
+                    isValidInput = true;
+                } catch (InputMismatchException e) {
+                    System.out.println("Invalid Input. Please choose only from the options provided.");
+                    // Remove the invalid input from buffer
+                    scanner.next();
+                }
+            }
 
             if (mainMenuInput == 2) {
                 System.out.println("Exiting FYPMS...");
@@ -50,7 +59,7 @@ public class MainApp {
                     System.out.println("+-----------------------------------------------------------------------+");
                     System.out.println("|                            Login Interface                            |");
                     System.out.println("+-----------------------------------------------------------------------+");
-                    System.out.print("Enter your username: ");
+                    System.out.print("Enter your Username: ");
                     username = scanner.nextLine();
 
                     char passwordArray[] = terminalConsole.readPassword("Enter your Password: ");
@@ -67,23 +76,26 @@ public class MainApp {
                         System.exit(1);
                     } else if (attemptUserType == UserType.UNKNOWN) {
                         System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+                        numLoginAttempts -= 1;
                         System.out.println(
                                 "Your Login Credentials are errorneous. You have " + numLoginAttempts
                                         + " attempts left.");
-                        numLoginAttempts -= 1;
                     }
 
                 } while (attemptUserType == UserType.UNKNOWN);
+
+                // Once Login once, number of attempts will reset
+                numLoginAttempts = 4;
 
                 // Find the Corresponding User
                 switch (attemptUserType) {
                     case STUDENT:
                         Student loggedStudent = student_list.findStudent(username);
                         StudentManager studentMgr = new StudentManager(loggedStudent, student_list, project_list,
-                                requestManager, FYPcoord_list);
+                                requestManager, FYPcoord_list, scanner, terminalConsole);
                         int choice;
                         do {
-                            choice = studentMgr.displayStudentMenu();
+                            choice = studentMgr.printMenuOptions(scanner);
                             studentMgr.processStudentChoice(choice);
                         } while (choice != 0);
                         break;
@@ -91,10 +103,10 @@ public class MainApp {
                     case FACULTY:
                         Supervisor loggedSupervisor = faculty_list.findSupervisor(username);
                         SupervisorManager supervisorManager = new SupervisorManager(loggedSupervisor, faculty_list,
-                                project_list, requestManager, requestChangeTitleDB);
+                                project_list, requestManager, requestChangeTitleDB, scanner, terminalConsole);
                         int supChoice;
                         do {
-                            supChoice = supervisorManager.displayFacultyMenu();
+                            supChoice = supervisorManager.printMenuOptions(scanner);
                             supervisorManager.processSupervisorChoice(supChoice);
                         } while (supChoice != 0);
                         break;
@@ -102,11 +114,12 @@ public class MainApp {
                     case FYPCOORDINATOR:
                         FYPCoordinator fypCoordinator = FYPcoord_list.findFypCoordinator(username);
                         FYPCoordinatorManager fypManager = new FYPCoordinatorManager(fypCoordinator, project_list,
-                                requestRegisterDB, requestTransferDB, requestDeregisterDB,
-                                requestManager);
+                                faculty_list,
+                                requestRegisterDB, requestTransferDB, requestDeregisterDB, requestChangeTitleDB,
+                                requestManager, scanner, terminalConsole);
                         int fypChoice;
                         do {
-                            fypChoice = fypManager.displayFypCoordinatorMenu();
+                            fypChoice = fypManager.printMenuOptions(scanner);
                             fypManager.processFypCoordinatorChoice(fypChoice);
                         } while (fypChoice != 0);
 

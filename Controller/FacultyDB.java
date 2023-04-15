@@ -1,52 +1,113 @@
 package Controller;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 import Entities.*;
 
-public class FacultyDB {
+/**
+ * Represents a Database of faculties in FYP Management System.
+ * 
+ * @author Lab A34 Assignment Team 1
+ * @version 1.0
+ * @since 2023-04-14
+ */
+public class FacultyDB extends Database {
+    /**
+     * Represents the file path of the Database of Faculty Users in FYPMS.
+     */
+    private String filePath = String.join("", super.directory, "faculty_list.txt");
 
+    /**
+     * Represents the database file of all the Faculty Users in FYPMS.
+     */
+    private File file;
+
+    /**
+     * Array List of Faculty Users in FYPMS.
+     */
     private ArrayList<Supervisor> supervisors = new ArrayList<Supervisor>();
 
-    // When this class object is created, automatically read from text file and
-    // store into arraylist of supervisor objects
+    /**
+     * Constructor
+     * Creates a Database storing all the Faculties in FYPMS when the Application is
+     * first initialised.
+     */
     public FacultyDB() {
-        String fileName = "./Data/faculty_list.txt";
-        String line;
-        boolean isFirstLine = true;
-        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
-            while ((line = br.readLine()) != null) {
-                if (isFirstLine) {
-                    isFirstLine = false;
-                    continue; // skip the first line
-                }
-                String[] values = line.split("\t"); // split the line by tabs
-                int index = values[1].indexOf('@');
-                // System.out.println(index);
-                supervisors.add(new Supervisor(values[1].substring(0, index), values[0], values[1]));
+        this.file = new File(filePath);
+        this.supervisors = new ArrayList<Supervisor>();
+        this.readFile();
+    }
+
+    /**
+     * Reads supervisor data from faculty_list.txt
+     */
+    public void readFile() {
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+
+            String facultyLine = br.readLine();
+            facultyLine = br.readLine();
+            String supervisorName, supervisorEmail, supervisorID;
+            String[] facultyData, temp;
+
+            while (facultyLine != null) {
+                facultyData = facultyLine.split(super.delimiter);
+                supervisorName = facultyData[0];
+                supervisorEmail = facultyData[1];
+
+                temp = facultyData[1].split(super.emailDelimiter);
+                supervisorID = temp[0];
+
+                supervisors.add(new Supervisor(supervisorID, supervisorName, supervisorEmail));
+
+                facultyLine = br.readLine();
             }
+            br.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    /* For testing purposes */
-    public void viewDB() {
-        for (int i = 0; i < supervisors.size(); i++) {
-            supervisors.get(i).viewDetails();
+    /**
+     * Writes updated supervisor data to supervisor_list.txt
+     */
+    public void updateFile() {
+        try {
+            BufferedWriter bf = new BufferedWriter(new FileWriter(file, false));
+            PrintWriter pw = new PrintWriter(bf);
+            for (Supervisor currentSupervisor : supervisors) {
+                String supervisorName = currentSupervisor.getUserName();
+                String supervisorEmail = currentSupervisor.getUserEmail();
+
+                pw.println(supervisorName + delimiter + supervisorEmail);
+            }
+            pw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
-    public void createProject(ProjectDB project_list, Supervisor loggedSupervisor) {
+    /**
+     * Function for Supervisors to create new project.
+     * 
+     * @param project_list     Array list of all projects in FYPMS.
+     * @param loggedSupervisor Supervisor currently using FYPMS.
+     * @param scObject         Scanner used to process Supervisor's inputs.
+     */
+    public void createProject(ProjectDB project_list, Supervisor loggedSupervisor, Scanner scObject) {
         String projectTitle;
-        Scanner scObject = new Scanner(System.in);
-        System.out.println("#############     Project Creation     #############");
+
+        System.out.println(" ------------------ Project Creation ------------------ ");
         System.out.println("Input the Project Title: ");
-        // scObject.nextLine();
+
         projectTitle = scObject.nextLine();
 
         // Increment the Project ID
@@ -56,45 +117,66 @@ public class FacultyDB {
         Project newlyCreatedProject = new Project(project_list.getProjectCount(), loggedSupervisor, projectTitle);
         project_list.addProject(newlyCreatedProject);
 
-        // Add to Supervisor's List of Created Projects
-        //loggedSupervisor.addToCreatedProjectList(newlyCreatedProject);
-
-        System.out.println("Project Initialised.");
+        System.out.println(" ----------------- Project Initialised ----------------- ");
+        newlyCreatedProject.printProjectDetails();
     }
 
     /**
-     * Viewing all projects created by Supervisor (including projects he/she is
-     * supervising)
+     * Function for Supervisors to view their own projects.
+     * 
+     * @param createdProjectList List of projects created by Supervisor.
+     * @return a Boolean to inform us if the function is working as intended.
      */
-    public void viewOwnProject(ArrayList<Project> createdProjectList) {
+    public Boolean viewOwnProject(ArrayList<Project> createdProjectList) {
         if (createdProjectList.size() == 0) {
+            // No Projects
             System.out.println("You have not yet created any projects.");
+            System.out.println("Enter the word 'Quit' to return to the previous menu.");
+            return false;
         }
+
         int counter = 1;
-        System.out.println("############# List of Created Projects #############");
+        System.out.println(" ----------------- List of Created Projects ----------------- ");
         for (int i = 0; i < createdProjectList.size(); i += 1) {
             int projectId = createdProjectList.get(i).getProjectID();
             String projectName = createdProjectList.get(i).getProjectTitle();
-            System.out.println(counter + " | Project ID: " + projectId + " | Project Title: " + projectName);
+            String projectStatus = createdProjectList.get(i).getProjectStatus().toString();
+            System.out.println(counter + " | Project ID: " + projectId + " | Project Title: " + projectName
+                    + " | Project Status: " + projectStatus);
             counter += 1;
         }
-        System.out.println("----------------------------------------------------");
+        System.out.println("------------------------------------------------------------- ");
+        return true;
     };
 
-    public void modifyTitle(ProjectDB projectDB, Supervisor managedSupervisor) {
+    /**
+     * Allow Supervisor to modify title of their own projects.
+     * 
+     * @param projectDB         Database of projects in FYPMS.
+     * @param managedSupervisor Supervisor currently using FYPMS.
+     * @param scObject          Scanner used to process Supervisor's inputs.
+     */
+    public void modifyTitle(ProjectDB projectDB, Supervisor managedSupervisor, Scanner scObject) {
         // Retrieve the list of projects created by this particular supervisor
-        ArrayList<Project> supervisorProjectList = projectDB
-                .retrieveSupervisorProjects(managedSupervisor.getSupervisorName());
-        // Print out list of projects created by this particular supervisor
-        viewOwnProject(supervisorProjectList);
+        ArrayList<Project> supervisorProjectList = projectDB.retrieveSupervisorProjects(managedSupervisor.getUserID());
 
-        Scanner scObject = new Scanner(System.in);
         int targetProjectID;
         int userInput;
         int projectIndex;
 
         do {
-            viewOwnProject(supervisorProjectList);
+            // Print out list of projects created by this particular supervisor
+            Boolean createdProject = viewOwnProject(supervisorProjectList);
+
+            if (createdProject == false) {
+                // No Projects Created Yet
+                String quitInput = scObject.nextLine();
+                if (quitInput.equalsIgnoreCase("Quit")) {
+                    System.out.println("Returning to the previous menu...");
+                    return;
+                }
+            }
+
             System.out.println("Provide the Project ID:");
             targetProjectID = scObject.nextInt();
 
@@ -127,10 +209,15 @@ public class FacultyDB {
                 System.out.println("Invalid Input. Please key in 1 or 2.");
             }
         } while (true);
-
-        scObject.close();
     }
 
+    /**
+     * Checks whether project exists using projectID.
+     * 
+     * @param supervisorProjectList List of projects supervised by Supervisor.
+     * @param unknownProjectId      Project ID to be verified.
+     * @return a Boolean to indicate whether the project exists.
+     */
     public Boolean validateProjectID(ArrayList<Project> supervisorProjectList, int unknownProjectId) {
         for (int i = 0; i < supervisorProjectList.size(); i += 1) {
             if (supervisorProjectList.get(i).getProjectID() == unknownProjectId) {
@@ -143,8 +230,8 @@ public class FacultyDB {
     /**
      * Returns the Target Supervisor so long as they are present
      * 
-     * @param userID
-     * @return
+     * @param userID of Target Supervisor.
+     * @return Target Supervisor.
      */
     public Supervisor findSupervisor(String userID) {
         int targetIndex = -1;
@@ -160,7 +247,9 @@ public class FacultyDB {
     }
 
     /**
-     * Get Supervisor List
+     * Retrieves Supervisor List.
+     * 
+     * @return Array list of Supervisors.
      */
     public ArrayList<Supervisor> getSupervisorList() {
         return supervisors;

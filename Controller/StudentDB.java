@@ -12,28 +12,42 @@ import java.util.ArrayList;
 import Entities.Student;
 import Entities.Project;
 
+/**
+ * Represents a Database of all students in the FYP Management System.
+ * 
+ * @author Lab A34 Assignment Team 1
+ * @version 1.0
+ * @since 2023-04-14
+ */
 public class StudentDB extends Database {
-
+    /**
+     * Represents the file path of the Database of Student Users in FYPMS.
+     */
     private String filePath = String.join("", super.directory, "student_list.txt");
 
+    /**
+     * Represents the database file of all the Student Users
+     */
     private File file;
 
+    /**
+     * Array List of Student Users in FYPMS.
+     */
     public ArrayList<Student> students;
 
+    /**
+     * Constructor
+     * Creates a Database storing all the Students in FYPMS when the Application is
+     * first initialised.
+     */
     public StudentDB() {
         this.file = new File(filePath);
         this.students = new ArrayList<Student>();
         this.readFile();
     }
 
-    public StudentDB(String filePath) {
-        this.file = new File(filePath);
-        this.students = new ArrayList<Student>();
-        this.readFile();
-    }
-
     /**
-     * Reads student data from student_list.txt
+     * Reads in Student Information from provided file.
      */
     public void readFile() {
         try {
@@ -73,13 +87,7 @@ public class StudentDB extends Database {
                 String studentName = student.getUserName();
                 String studentEmail = student.getUserEmail();
 
-                // If project is assigned to student, then print project information
-                if (student.getIsAssigned()) {
-                    String projectTitle = student.getAssignedProject().getProjectTitle();
-                    pw.println(studentName + " | " + studentEmail + " | " + projectTitle);
-                } else {
-                    pw.println(studentName + " | " + studentEmail);
-                }
+                pw.println(studentName + delimiter + studentEmail);
             }
             pw.close();
         } catch (IOException e) {
@@ -87,6 +95,12 @@ public class StudentDB extends Database {
         }
     }
 
+    /**
+     * Searches and Retrieves a particular Student by the provided UserID
+     * 
+     * @param userID Student's UserID
+     * @return Searched Student
+     */
     public Student findStudent(String userID) {
         // Student targetStudent;
         for (Student student : students) {
@@ -97,15 +111,31 @@ public class StudentDB extends Database {
         return null;
     }
 
+    /**
+     * Prints the Profile particulars of a given Student.
+     * 
+     * @param currentStudent Target Student
+     */
     public void viewStudentProfile(Student currentStudent) {
         Student targetStudent = findStudent(currentStudent.getUserID());
         targetStudent.printProfile();
     }
 
+    /**
+     * Retrieves the ArrayList of all the Student Users in FYPMS.
+     * 
+     * @return Arraylist of Student Users
+     */
     public ArrayList<Student> getStudentList() {
         return students;
     }
 
+    /**
+     * Prints the Project Details of the Allocated Project to a particular Student
+     * User.
+     * 
+     * @param currentStudent Target Student
+     */
     public void viewRegisteredProject(Student currentStudent) {
         for (Student student : students) {
             if (student.getUserID() == currentStudent.getUserID()) {
