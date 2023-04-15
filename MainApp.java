@@ -18,7 +18,12 @@ public class MainApp {
         RequestDeregisterDB requestDeregisterDB = new RequestDeregisterDB(project_list, student_list, FYPcoord_list);
         RequestChangeTitleDB requestChangeTitleDB = new RequestChangeTitleDB(project_list, student_list, faculty_list);
         RequestManager requestManager = new RequestManager(project_list, faculty_list, requestChangeTitleDB,
+<<<<<<< Updated upstream
                 requestRegisterDB,requestDeregisterDB, requestTransferDB);
+=======
+                requestRegisterDB,
+                requestDeregisterDB, requestTransferDB);
+>>>>>>> Stashed changes
 
         Scanner scanner = new Scanner(System.in);
         Console terminalConsole = System.console();

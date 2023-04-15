@@ -55,8 +55,13 @@ public class RequestManager {
      * @param requestTransferDB    Database containing all transfer requests
      */
     public RequestManager(ProjectDB projectDB, FacultyDB facultyDB, RequestChangeTitleDB requestChangeTitleDB,
+<<<<<<< Updated upstream
             RequestRegisterDB requestRegisterDB,RequestDeregisterDB requestDeregisterDB, 
             RequestTransferDB requestTransferDB) {
+=======
+            RequestRegisterDB requestRegisterDB,
+            RequestDeregisterDB requestDeregisterDB, RequestTransferDB requestTransferDB) {
+>>>>>>> Stashed changes
         this.projectDB = projectDB;
         this.facultyDB = facultyDB;
         this.requestRegisterDB = requestRegisterDB;
@@ -65,6 +70,7 @@ public class RequestManager {
         this.requestTransferDB = requestTransferDB;
     }
 
+<<<<<<< Updated upstream
 
     Scanner sc = new Scanner(System.in);
 
@@ -81,6 +87,11 @@ public class RequestManager {
 
 
     /**
+=======
+    Scanner sc = new Scanner(System.in);
+
+    /**
+>>>>>>> Stashed changes
      * Method for Student to create request to register for a Project
      */
     public void studentRegister(Student student) {
@@ -130,6 +141,7 @@ public class RequestManager {
     }
 
     /**
+<<<<<<< Updated upstream
      * Method for Supervisor to change password
      */
     public void changePassword(Supervisor supervisor) {
@@ -140,6 +152,8 @@ public class RequestManager {
     }
 
     /**
+=======
+>>>>>>> Stashed changes
      * Method for Supervisor to create request to Transfer a project to another
      * Supervisor
      */
@@ -178,6 +192,7 @@ public class RequestManager {
     }
 
     /**
+<<<<<<< Updated upstream
      * Method for FYP Coordinator to change password
      */
     public void changePassword(FYPCoordinator fypCoordinator) {
@@ -193,6 +208,8 @@ public class RequestManager {
     }
 
     /**
+=======
+>>>>>>> Stashed changes
      * For FYP Coordinator to view all Requests from ALL Users
      * 
      * @param fypCoordinator Current FYP Coordiator

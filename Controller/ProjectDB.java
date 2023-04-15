@@ -64,6 +64,10 @@ public class ProjectDB extends Database {
      */
     public ProjectDB(FacultyDB facultyDB, StudentDB studentDB) {
         this.facultyDB = facultyDB;
+<<<<<<< Updated upstream
+=======
+        this.studentDB = studentDB;
+>>>>>>> Stashed changes
         this.file = new File(filePath);
         this.projectList = new ArrayList<Project>();
         this.readFile();
@@ -350,28 +354,43 @@ public class ProjectDB extends Database {
     public void printProjectReport(ProjectStatus projectStatus) {
         System.out.println("+-----------------------------------------------------------------------+");
         System.out.println("|                          Project Report Details                       |");
+<<<<<<< Updated upstream
         System.out.println("|-----------------------------------------------------------------------|");
         System.out.println("List of " + projectStatus + " Projects:                                   ");
+=======
+        System.out.println("+-----------------------------------------------------------------------+");
+        System.out.println("  List of " + projectStatus + " Projects:                                 ");
+>>>>>>> Stashed changes
         int counter = 1;
 
         for (int i = 0; i < projectList.size(); i += 1) {
             Project currentProject = projectList.get(i);
             if (currentProject.getProjectStatus() == projectStatus) {
+<<<<<<< Updated upstream
                 System.out.println("Project " + counter);
                 currentProject.printProjectDetails();
                 System.out.println();
 
+=======
+                // System.out.println("Project " + counter);
+                currentProject.printProjectDetails();
+>>>>>>> Stashed changes
                 counter += 1;
             }
         }
 
         if (counter == 1) {
+<<<<<<< Updated upstream
             System.out.println("There is currently no projects that are of status " + projectStatus.toString());
         }
         System.out.println("|-----------------------------------------------------------------------|");
         System.out.println("|                    Enter 0 to go back to Previous Menu                |");
         System.out.println("+-----------------------------------------------------------------------+");
         System.out.println(""); // print empty line
+=======
+            System.out.println("  There is currently no projects that are of status " + projectStatus.toString());
+        }
+>>>>>>> Stashed changes
 
     }
 
@@ -382,6 +401,7 @@ public class ProjectDB extends Database {
      */
     public void projectStatusFilteredMenu(Scanner scObject) {
         int statusMenuChoice;
+<<<<<<< Updated upstream
         Boolean invalidOption = true;
 
         do {
@@ -440,6 +460,76 @@ public class ProjectDB extends Database {
                     System.out.println("Invalid Input. Please choose only from the list of options provided.");
             }
         } while (invalidOption == true);
+=======
+        int choice;
+        Boolean invalidOption = true;
+        do {
+            do {
+                System.out.println(""); // print empty line
+                System.out.println("+-----------------------------------------------------------------------+");
+                System.out.println("|                           Project Report Portal                       |");
+                System.out.println("|-----------------------------------------------------------------------|");
+                System.out.println("| Please provide the Project Status you would like to filter by?        |");
+                System.out.println("| 1. Allocated                                                          |");
+                System.out.println("| 2. Available                                                          |");
+                System.out.println("| 3. Reserved                                                           |");
+                System.out.println("| 4. Unavailable                                                        |");
+                System.out.println("|-----------------------------------------------------------------------|");
+                System.out.println("|                    Enter 0 to go back to Previous Menu                |");
+                System.out.println("+-----------------------------------------------------------------------+");
+                System.out.println(""); // print empty line
+
+                System.out.print("Please enter your choice: ");
+
+                // Parse the Int within the String
+                statusMenuChoice = scObject.nextInt();
+                // Gets rid of \n
+                scObject.nextLine();
+
+                switch (statusMenuChoice) {
+                    case 0:
+                        // Return to the Previous Menu
+                        invalidOption = false;
+                        break;
+
+                    case 1:
+                        // Allocated Projects
+                        printProjectReport(ProjectStatus.ALLOCATED);
+                        invalidOption = false;
+                        break;
+
+                    case 2:
+                        // Available Projects
+                        printProjectReport(ProjectStatus.AVAILABLE);
+                        invalidOption = false;
+                        break;
+
+                    case 3:
+                        // Reserved Projects
+                        printProjectReport(ProjectStatus.RESERVED);
+                        invalidOption = false;
+                        break;
+
+                    case 4:
+                        // Unavailable Projects
+                        printProjectReport(ProjectStatus.UNAVAILABLE);
+                        invalidOption = false;
+                        break;
+
+                    default:
+                        System.out.println("Invalid Input. Please choose only from the list of options provided.");
+                }
+            } while (invalidOption == true);
+
+            System.out.println("+-----------------------------------------------------------------------+");
+            System.out.println("|              Enter 0 to return to Main Menu.                          |");
+            System.out.println("|              Enter 1 to choose another Project Status.                |");
+            System.out.println("+-----------------------------------------------------------------------+");
+            System.out.print("Your choice is: ");
+            choice = scObject.nextInt();
+
+        } while (choice == 1);
+>>>>>>> Stashed changes
 
     }
 
@@ -449,6 +539,7 @@ public class ProjectDB extends Database {
      * @param scObject Scanner
      */
     public void projectSupervisorFilteredMenu(Scanner scObject) {
+<<<<<<< Updated upstream
         System.out.println(""); // print empty line
         System.out.println("+-----------------------------------------------------------------------+");
         System.out.println("|                           Project Report Portal                       |");
@@ -476,6 +567,38 @@ public class ProjectDB extends Database {
                 System.out.println("Project Number " + counter + ": ");
                 currentProject.printProjectDetails();
                 System.out.println();
+=======
+        int choice;
+
+        do {
+            System.out.println(""); // print empty line
+            System.out.println("+-----------------------------------------------------------------------+");
+            System.out.println("|                           Project Report Portal                       |");
+            System.out.println("|-----------------------------------------------------------------------|");
+            System.out.println("| Please provide the Supervisor ID you would like to filter by?         |");
+            System.out.println("|                                                                       |");
+            System.out.println("|-----------------------------------------------------------------------|");
+            System.out.println("|                    Enter 0 to go back to Previous Menu                |");
+            System.out.println("+-----------------------------------------------------------------------+");
+            System.out.println(""); // print empty line
+
+            scObject.nextLine();
+            String targetSupervisorID;
+            do {
+                System.out.print("Your choice of Supervisor is: ");
+                targetSupervisorID = scObject.nextLine();
+
+                // Check if the desired supervisor exists
+                Supervisor targetSupervisor = facultyDB.findSupervisor(targetSupervisorID);
+                if (targetSupervisor == null) {
+                    System.out.println(
+                            "   There is no such supervisor. Please check whether you have entered the UserID correctly.");
+                    System.out.println("");
+                } else {
+                    break;
+                }
+            } while (true);
+>>>>>>> Stashed changes
 
             System.out.println("+-----------------------------------------------------------------------+");
             System.out.println("|                          Project Report Details                       |");
@@ -494,6 +617,7 @@ public class ProjectDB extends Database {
                     counter += 1;
                 }
             }
+<<<<<<< Updated upstream
         }
 
         if (counter == 1) {
@@ -503,6 +627,20 @@ public class ProjectDB extends Database {
         System.out.println("|                    Enter 0 to go back to Previous Menu                |");
         System.out.println("+-----------------------------------------------------------------------+");
         System.out.println(""); // print empty line
+=======
+
+            if (counter == 1) {
+                System.out.println("    This supervisor is not supervising any project(s).");
+            }
+            System.out.println("+-----------------------------------------------------------------------+");
+            System.out.println("|              Enter 0 to return to Main Menu.                          |");
+            System.out.println("|              Enter 1 to view another Supervisor's Projects.           |");
+            System.out.println("+-----------------------------------------------------------------------+");
+
+            System.out.print("Your choice is: ");
+            choice = scObject.nextInt();
+        } while (choice == 1);
+>>>>>>> Stashed changes
     }
 
     /**
@@ -511,6 +649,7 @@ public class ProjectDB extends Database {
      * @param scObject Scanner
      */
     public void projectStudentFilteredMenu(Scanner scObject) {
+<<<<<<< Updated upstream
 
         System.out.println(""); // print empty line
         System.out.println("+-----------------------------------------------------------------------+");
@@ -539,6 +678,39 @@ public class ProjectDB extends Database {
                 System.out.println("Project Number " + counter + ": ");
                 currentProject.printProjectDetails();
                 System.out.println();
+=======
+        int choice;
+
+        do {
+            System.out.println(""); // print empty line
+            System.out.println("+-----------------------------------------------------------------------+");
+            System.out.println("|                           Project Report Portal                       |");
+            System.out.println("|-----------------------------------------------------------------------|");
+            System.out.println("| Please provide the Student ID you would like to filter by?            |");
+            System.out.println("|                                                                       |");
+            System.out.println("|-----------------------------------------------------------------------|");
+            System.out.println("|                    Enter 0 to go back to Previous Menu                |");
+            System.out.println("+-----------------------------------------------------------------------+");
+            System.out.println(""); // print empty line
+
+            scObject.nextLine();
+
+            String targetStudentID;
+            do {
+                System.out.print("Your choice of Student is: ");
+                targetStudentID = scObject.nextLine();
+
+                // Check if the desired supervisor exists
+                Student targetStudent = studentDB.findStudent(targetStudentID);
+                if (targetStudent == null) {
+                    System.out.println(
+                            "   There is no such student. Please check whether you have entered the UserID correctly.");
+                    System.out.println("");
+                } else {
+                    break;
+                }
+            } while (true);
+>>>>>>> Stashed changes
 
             System.out.println("+-----------------------------------------------------------------------+");
             System.out.println("|                          Project Report Details                       |");
@@ -558,6 +730,7 @@ public class ProjectDB extends Database {
                     }
                 }
             }
+<<<<<<< Updated upstream
         }
 
         if (counter == 1) {
@@ -568,6 +741,21 @@ public class ProjectDB extends Database {
         System.out.println("|                    Enter 0 to go back to Previous Menu                |");
         System.out.println("+-----------------------------------------------------------------------+");
         System.out.println(""); // print empty line
+=======
+            if (counter == 1) {
+                // Student does not have allocated project currently
+                System.out.println("  Student " + targetStudentID + " does not have an allocated project.");
+            }
+            System.out.println("+-----------------------------------------------------------------------+");
+            System.out.println("|              Enter 0 to return to Main Menu.                          |");
+            System.out.println("|              Enter 1 to view another Student's Projects.              |");
+            System.out.println("+-----------------------------------------------------------------------+");
+            System.out.println(""); // print empty line
+
+            System.out.print("Your choice is: ");
+            choice = scObject.nextInt();
+        } while (choice == 1);
+>>>>>>> Stashed changes
     }
 
     /**

@@ -39,7 +39,11 @@ public class Student extends User {
     public Student(String userID, String userName, String userEmail) {
         super(userID, userName, userEmail);
         this.project = null;
+<<<<<<< Updated upstream
         this.password = "Password";
+=======
+        this.password = "password";
+>>>>>>> Stashed changes
     }
 
     /**

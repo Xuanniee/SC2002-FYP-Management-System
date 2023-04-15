@@ -5,7 +5,10 @@ import java.util.Scanner;
 
 import Boundary.Menu;
 import Entities.FYPCoordinator;
+<<<<<<< Updated upstream
 import Entities.Supervisor;
+=======
+>>>>>>> Stashed changes
 import Entities.Student;
 import Entities.Project;
 import Entities.RequestChangeTitle;
