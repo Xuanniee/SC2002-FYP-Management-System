@@ -255,6 +255,7 @@ public class User {
      */
     public Boolean changeUserPassword(User loggedUser, Scanner scObject, Console terminalConsole) {
         int validationAttempts = 3;
+        scObject.nextLine();
         do {
             System.out.println(""); // print empty line
             System.out.println("+----------------------------------------------------------+");
@@ -266,8 +267,10 @@ public class User {
             System.out.println("+----------------------------------------------------------+");
             System.out.println(""); // print empty line
 
-            char[] maskedPassword = terminalConsole.readPassword("Enter your Password: ");
-            String userPassword = new String(maskedPassword);
+            System.out.print("Enter your Password: ");
+            String userPassword = scObject.nextLine();
+            //char[] maskedPassword = terminalConsole.readPassword("Enter your Password: ");
+            //String userPassword = new String(maskedPassword);
 
             // Check if User wants to cancel Password Change
             if (userPassword.equals("0")) {
@@ -278,11 +281,13 @@ public class User {
 
             // Check if Password is correct (Case Sensitive)
             if (loggedUser.getPassword().equals(userPassword)) {
-                maskedPassword = terminalConsole.readPassword("Enter your New Password   : ");
-                String newPassword1 = new String(maskedPassword);
+                System.out.print("Enter your New Password: ");
+                //maskedPassword = terminalConsole.readPassword("Enter your New Password   : ");
+                String newPassword1 = scObject.nextLine();
 
-                maskedPassword = terminalConsole.readPassword("Re-Enter your New Password: ");
-                String newPassword2 = new String(maskedPassword);
+                System.out.print("Re-Enter your New Password: ");
+                //maskedPassword = terminalConsole.readPassword("Re-Enter your New Password: ");
+                String newPassword2 = scObject.nextLine();
 
                 if (newPassword1.equals(newPassword2)) {
                     // Change the Password
