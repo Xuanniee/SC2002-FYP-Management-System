@@ -14,6 +14,7 @@ import Entities.RequestTransfer;
 import Entities.Supervisor;
 import Entities.FYPCoordinator;
 import Entities.User;
+import enums.ProjectStatus;
 import enums.RequestStatus;
 
 /**
@@ -309,15 +310,22 @@ public class RequestTransferDB extends Database {
         // Replace Project Supervisor
         approvedProject.setSupervisor(replacementSupervisor);
 
-        // Update Supervisors {Both Old and New}
-        replacementSupervisor.setSupervisingProjectList(approvedProject);
+        // Update details of current Supervisor
         currentSupervisor.removeSupervisingProjectList(approvedProject);
-        currentSupervisor.editNumProjects(-1);
+
+        // Update details of replacement Supervisor
+        // When replacement supervisor is given new project, he/she may have hit
+        // capacity and remaining projects will be set to UNAVAILABLE.
+        replacementSupervisor.setSupervisingProjectList(approvedProject);
+        if (replacementSupervisor.getNumProj() >= 2) {
+            projectDB.setSupervisorProjectsToNewStatus(replacementSupervisor, ProjectStatus.UNAVAILABLE);
+        }
 
         // Update Request Status so this.user cannot see it again
         // int indexCompletedRequest = requestTransferList.indexOf(approvedRequest);
         // requestTransferList.remove(indexCompletedRequest);
         approvedRequest.setRequestStatus(RequestStatus.APPROVED);
+
         System.out.println("Project " + approvedProject.getProjectID()
                 + "'s supervisor has been successfully changed from " + currentSupervisor.getUserName() +
                 " to " + replacementSupervisor.getUserName());
