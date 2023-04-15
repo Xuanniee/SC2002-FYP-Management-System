@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import Entities.*;
+import enums.ProjectStatus;
 
 /**
  * Represents a Database of faculties in FYP Management System.
@@ -55,18 +56,19 @@ public class FacultyDB extends Database {
 
             String facultyLine = br.readLine();
             facultyLine = br.readLine();
-            String supervisorName, supervisorEmail, supervisorID;
+            String supervisorName, supervisorEmail, supervisorID, supervisorPassword;
             String[] facultyData, temp;
 
             while (facultyLine != null) {
                 facultyData = facultyLine.split(super.delimiter);
                 supervisorName = facultyData[0];
                 supervisorEmail = facultyData[1];
+                supervisorPassword = facultyData[2];
 
                 temp = facultyData[1].split(super.emailDelimiter);
                 supervisorID = temp[0];
 
-                supervisors.add(new Supervisor(supervisorID, supervisorName, supervisorEmail));
+                supervisors.add(new Supervisor(supervisorID, supervisorName, supervisorEmail, supervisorPassword));
 
                 facultyLine = br.readLine();
             }
@@ -83,11 +85,15 @@ public class FacultyDB extends Database {
         try {
             BufferedWriter bf = new BufferedWriter(new FileWriter(file, false));
             PrintWriter pw = new PrintWriter(bf);
+
+            // Write Headers
+            pw.println("Name" + "\t" + "Email" + "\t" + "Password");
             for (Supervisor currentSupervisor : supervisors) {
                 String supervisorName = currentSupervisor.getUserName();
                 String supervisorEmail = currentSupervisor.getUserEmail();
+                String supervisorPassword = currentSupervisor.getPassword();
 
-                pw.println(supervisorName + delimiter + supervisorEmail);
+                pw.println(supervisorName + delimiter + supervisorEmail + delimiter + supervisorPassword);
             }
             pw.close();
         } catch (IOException e) {
@@ -105,20 +111,42 @@ public class FacultyDB extends Database {
     public void createProject(ProjectDB project_list, Supervisor loggedSupervisor, Scanner scObject) {
         String projectTitle;
 
-        System.out.println(" ------------------ Project Creation ------------------ ");
-        System.out.println("Input the Project Title: ");
+        System.out.println(
+                "+----------------------------------------------------------------------------------------+");
+        System.out.println(
+                "|                                     Project Creation                                   |");
+        System.out.println(
+                "+----------------------------------------------------------------------------------------+");
+        System.out.print("  Input the Project Title [Enter 'QUIT' to return to previous menu]: ");
 
         projectTitle = scObject.nextLine();
 
+        // If user does not want to create project anymore
+        if (projectTitle.equalsIgnoreCase("QUIT")) {
+            System.out.println("");
+            System.out.println("Returning to the previous menu...");
+            return;
+        }
+        // Create new Project
+        Project newlyCreatedProject = new Project(project_list.getProjectCount(), loggedSupervisor, projectTitle);
+        
         // Increment the Project ID
         project_list.updateProjectCount();
 
-        // Create new Project
-        Project newlyCreatedProject = new Project(project_list.getProjectCount(), loggedSupervisor, projectTitle);
-        project_list.addProject(newlyCreatedProject);
+        // Add newly created project to Supervisor's list of projects
+        //loggedSupervisor.addSupervisingProject(newlyCreatedProject);
+        if (loggedSupervisor.getNumProj() >= 2) {
+            newlyCreatedProject.setProjectStatus(ProjectStatus.UNAVAILABLE);
+        }
 
-        System.out.println(" ----------------- Project Initialised ----------------- ");
+        // Add newly created project to database of projects
+        project_list.addProject(newlyCreatedProject);
+        
+        System.out.println(
+                "+----------------------------------- Project Initialised --------------------------------+");
         newlyCreatedProject.printProjectDetails();
+        System.out.println(
+                "+------------------------------------------ END ------------------------------------------+");
     }
 
     /**
@@ -131,12 +159,16 @@ public class FacultyDB extends Database {
         if (createdProjectList.size() == 0) {
             // No Projects
             System.out.println("You have not yet created any projects.");
-            System.out.println("Enter the word 'Quit' to return to the previous menu.");
             return false;
         }
 
         int counter = 1;
-        System.out.println(" ----------------- List of Created Projects ----------------- ");
+        System.out.println(
+                "+----------------------------------------------------------------------------------------+");
+        System.out.println(
+                "|                                List of Created Projects                                |");
+        System.out.println(
+                "+----------------------------------------------------------------------------------------+");
         for (int i = 0; i < createdProjectList.size(); i += 1) {
             int projectId = createdProjectList.get(i).getProjectID();
             String projectName = createdProjectList.get(i).getProjectTitle();
@@ -145,7 +177,8 @@ public class FacultyDB extends Database {
                     + " | Project Status: " + projectStatus);
             counter += 1;
         }
-        System.out.println("------------------------------------------------------------- ");
+        System.out.println(
+                "+------------------------------------------ END ------------------------------------------+");
         return true;
     };
 
@@ -170,10 +203,16 @@ public class FacultyDB extends Database {
 
             if (createdProject == false) {
                 // No Projects Created Yet
+                System.out.println("Enter the word 'QUIT' to return to the previous menu.");
                 String quitInput = scObject.nextLine();
                 if (quitInput.equalsIgnoreCase("Quit")) {
                     System.out.println("Returning to the previous menu...");
                     return;
+                }
+                else {
+                    // Error Catching if Quit is not provided
+                    System.out.println("Invalid input provided. Please try again.");
+                    continue;
                 }
             }
 
@@ -183,7 +222,7 @@ public class FacultyDB extends Database {
             // Validate Project ID
             if (!validateProjectID(supervisorProjectList, targetProjectID)) {
                 // Project ID does not exist
-                System.out.println("Invalid!! Please provide a valid Project ID.");
+                System.out.println("Invalid! Please provide a valid Project ID.");
                 userInput = 3;
                 continue;
             }

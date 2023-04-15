@@ -200,8 +200,8 @@ public class FYPCoordinatorManager implements Menu {
                     if (noTitleChangeRequest == 1) {
                         break;
                     }
-                    System.out.println("Please indicate which Request you would like to look at: ");
-                    System.out.println("Alternatively, Enter 0 to return to the previous menu.");
+                    System.out.println("> Please indicate which Request you would like to look at: ");
+                    System.out.println("> Alternatively, enter 0 to return to the previous menu.");
                     // Get Index of Title Change Request to look at in detail
                     selectedTitleChangeRequest = scanner.nextInt();
 
@@ -241,29 +241,39 @@ public class FYPCoordinatorManager implements Menu {
                     if (noAllocateRequest == 1) {
                         break;
                     }
-                    System.out.println("Please indicate which Request you would like to look at: ");
-                    System.out.println("Alternatively, Enter 0 to return to the previous menu.");
+                    System.out.println("> Please indicate which Request you would like to look at: ");
+                    System.out.println("> Alternatively, Enter 0 to return to the previous menu.");
                     selectedRequest = scanner.nextInt();
-
+                    
                     if (selectedRequest == 0) {
                         // After Request has been approved or rejected, to return to main menu.
                         continue;
+                    } 
+
+                    while(selectedRequest < 0 || selectedRequest > requestRegisterDB.getNumPenReq()){
+                        System.out.println("You have selected an invalid input, indicate a valid request: ");
+                        selectedRequest = scanner.nextInt();
                     }
 
                     RequestRegister targetRequest = requestRegisterDB
                             .viewRegisterRequestDetailedFYPCoord(selectedRequest);
                     approvalResult = scanner.nextInt();
-
+                    while(approvalResult != 1 && approvalResult != 0){
+                        System.out.println("You have selected an invalid input, indicate a valid one: ");
+                        approvalResult = scanner.nextInt();
+                    }
                     Student updateStudent = targetRequest.getStudent();
-                    if (approvalResult == 1) {
+                    if (approvalResult == 1) { // Approve Request
                         requestRegisterDB.approveRegisterRequestFYPCoord(targetRequest);
                         targetRequest.setRequestStatus(RequestStatus.APPROVED);
-                    } else {
+
+                    } else { 
                         // Reject Request
                         updateStudent.setHasAppliedForProject(false);
                         targetRequest.setRequestStatus(RequestStatus.REJECTED);
                         // Update Project Status back to Available so that other students can view it
                         targetRequest.getProject().setProjectStatus(ProjectStatus.AVAILABLE);
+                        
                         // Update numProjects supervised by Supervisor because 1 was added when request
                         // was made
                         targetRequest.getSupervisor().editNumProjects(-1);
@@ -271,6 +281,8 @@ public class FYPCoordinatorManager implements Menu {
                             projectDB.setSupervisorProjectsToNewStatus(targetRequest.getSupervisor(),
                                     ProjectStatus.AVAILABLE);
                         }
+                        //Reduce number of pending request
+                        requestRegisterDB.setNumPenReq(-1);
                     }
                     System.out.println("Returning to previous menu...");
 
@@ -290,8 +302,8 @@ public class FYPCoordinatorManager implements Menu {
                     if (noTransferRequest == 1) {
                         break;
                     }
-                    System.out.println("Please indicate which Request you would like to look at: ");
-                    System.out.println("Alternatively, Enter 0 to return to the previous menu.");
+                    System.out.println("> Please indicate which Request you would like to look at: ");
+                    System.out.println("> Alternatively, Enter 0 to return to the previous menu.");
                     selectedSupervisorRequest = scanner.nextInt();
 
                     if (selectedSupervisorRequest == 0) {
@@ -299,11 +311,17 @@ public class FYPCoordinatorManager implements Menu {
                         continue;
                     }
 
+                    while(selectedSupervisorRequest < 0 && selectedSupervisorRequest > requestTransferDB.getNumPenReq()){
+                        System.out.println("You have selected an invalid input, indicate a valid request: ");
+                        selectedSupervisorRequest = scanner.nextInt();
+                    }
+
                     RequestTransfer targetTransferRequest = requestTransferDB
                             .viewTransferRequestDetailedFYPCoord(selectedSupervisorRequest);
 
                     // Add hint message in scenario where the replacement supervisor has already
                     // reached his/her cap
+                    
                     if (targetTransferRequest.getRepSupervisor().getNumProj() >= 2) {
                         System.out.printf("Warning: Replacement Supervisor already has %d allocated projects.\n",
                                 targetTransferRequest.getRepSupervisor().getNumProj());
@@ -311,6 +329,11 @@ public class FYPCoordinatorManager implements Menu {
 
                     System.out.print("Your choice is: ");
                     approvalTransferResult = scanner.nextInt();
+
+                    while(approvalTransferResult != 1 && approvalTransferResult != 0){
+                        System.out.println("You have selected an invalid input, indicate a valid one: ");
+                        approvalResult = scanner.nextInt();
+                    }
 
                     Project projectBeingTransferred = targetTransferRequest.getProject();
                     if (approvalTransferResult == 1) {
@@ -320,6 +343,7 @@ public class FYPCoordinatorManager implements Menu {
                         // Reject Request
                         projectBeingTransferred.setAwaitingTransferRequest(false);
                         targetTransferRequest.setRequestStatus(RequestStatus.REJECTED);
+                        requestTransferDB.setNumPenReq(-1);
                     }
 
                     System.out.println("Returning to previous menu...");
@@ -348,9 +372,20 @@ public class FYPCoordinatorManager implements Menu {
                         // After Request has been approved or rejected, to return to main menu.
                         continue;
                     }
+
+                    while(selectedDeregisterRequest < 0 && selectedDeregisterRequest > requestDeregisterDB.getNumPenReq()){
+                        System.out.println("You have selected an invalid input, indicate a valid request: ");
+                        selectedDeregisterRequest = scanner.nextInt();
+                    }
+
                     RequestDeregister targetDeregisterRequest = requestDeregisterDB
                             .viewDeregisterRequestDetailedFYPCoord(selectedDeregisterRequest);
                     approvalDeregisterRequest = scanner.nextInt();
+
+                    while(approvalDeregisterRequest != 1 && approvalDeregisterRequest != 0){
+                        System.out.println("You have selected an invalid input, indicate a valid one: ");
+                        approvalDeregisterRequest = scanner.nextInt();
+                    }
 
                     if (approvalDeregisterRequest == 1) {
                         requestDeregisterDB.approveDeregisterRequestFYPCoord(targetDeregisterRequest);
@@ -358,6 +393,7 @@ public class FYPCoordinatorManager implements Menu {
                     } else {
                         // Reject Request; Update the Status of the Request
                         targetDeregisterRequest.setRequestStatus(RequestStatus.REJECTED);
+                        requestDeregisterDB.setNumPenReq(-1);
                     }
                     System.out.println("Returning to previous menu...");
 
@@ -412,17 +448,22 @@ public class FYPCoordinatorManager implements Menu {
         System.out.println(""); // print empty line
 
         // Check if there are any new pending requests for the Supervisor
-        if (requestRegisterDB.anyPendingRegisterRequestsForUser(currentFypCoordinator)) {
-            System.out.println("Message: New Register Requests from students!");
+        if (requestRegisterDB.anyPendingRegisterRequestsForUser()) {
+            System.out.println("Message: New Register Requests from student(s)!");
+            System.out.println(""); // print empty line
         }
         if (requestChangeTitleDB.anyPendingChangeTitleRequestsForUser(currentFypCoordinator)) {
-            System.out.println("Message: New Change Title Requests from students!");
+            System.out.println("Message: New Change Title Requests from student(s)!");
+            System.out.println(""); // print empty line
         }
-        if (requestDeregisterDB.anyPendingDeregisterRequestsForUser(currentFypCoordinator)) {
-            System.out.println("Message: New Deregister Requests from students!");
+        if (requestTransferDB.anyPendingTransferRequestsForUser()) {
+            System.out.println("Message: New Transfer Requests from Supervisor(s)!");
+            System.out.println(""); // print empty line
         }
-
-        System.out.println(""); // print empty line
+        if (requestDeregisterDB.anyPendingDeregisterRequestsForUser()) {
+            System.out.println("Message: New Deregister Requests from student(s)!");
+            System.out.println(""); // print empty line
+        }
 
         System.out.print("Please enter your choice: ");
 

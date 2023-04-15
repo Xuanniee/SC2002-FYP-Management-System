@@ -29,8 +29,9 @@ public class Supervisor extends User {
      * @param userName  User's legal name
      * @param userEmail User's email address
      */
-    public Supervisor(String userID, String userName, String userEmail) {
+    public Supervisor(String userID, String userName, String userEmail, String userPassword) {
         super(userID, userName, userEmail);
+        this.password = userPassword;
     }
 
     /**
@@ -102,10 +103,8 @@ public class Supervisor extends User {
             return false;
         }
 
-        // Get index of Object to be removed
-        int indexRemovedProject = supervisingProjectList.indexOf(oldProject);
         // Remove the Project and Update the list
-        supervisingProjectList.remove(indexRemovedProject);
+        supervisingProjectList.remove(oldProject);
         editNumProjects(-1);
 
         return true;

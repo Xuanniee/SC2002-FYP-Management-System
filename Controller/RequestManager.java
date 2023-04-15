@@ -44,6 +44,11 @@ public class RequestManager {
     private RequestTransferDB requestTransferDB;
 
     /**
+     * Instance of scanner used to process user's inputs
+     */
+    private Scanner scObject;
+
+    /**
      * Constructor
      * Creates a Request Manager Object with references to multiple databases.
      * 
@@ -55,48 +60,26 @@ public class RequestManager {
      * @param requestTransferDB    Database containing all transfer requests
      */
     public RequestManager(ProjectDB projectDB, FacultyDB facultyDB, RequestChangeTitleDB requestChangeTitleDB,
-<<<<<<< Updated upstream
-            RequestRegisterDB requestRegisterDB,RequestDeregisterDB requestDeregisterDB, 
-            RequestTransferDB requestTransferDB) {
-=======
-            RequestRegisterDB requestRegisterDB,
-            RequestDeregisterDB requestDeregisterDB, RequestTransferDB requestTransferDB) {
->>>>>>> Stashed changes
+            RequestRegisterDB requestRegisterDB, RequestDeregisterDB requestDeregisterDB, RequestTransferDB requestTransferDB, Scanner scObject) {
         this.projectDB = projectDB;
         this.facultyDB = facultyDB;
         this.requestRegisterDB = requestRegisterDB;
         this.requestDeregisterDB = requestDeregisterDB;
         this.requestChangeTitleDB = requestChangeTitleDB;
         this.requestTransferDB = requestTransferDB;
+        this.scObject = scObject;
     }
 
-<<<<<<< Updated upstream
-
-    Scanner sc = new Scanner(System.in);
-
     /**
-     * Method for students to change password
-     */
-    public void changePassword(Student student) {
-        System.out.print("Please enter your new password: ");
-        String newpassword = sc.nextLine();
-        student.setPassword(newpassword);
-        System.out.println("Your password has been saved successfully.");
-    }
-
-
-
-    /**
-=======
-    Scanner sc = new Scanner(System.in);
-
-    /**
->>>>>>> Stashed changes
      * Method for Student to create request to register for a Project
      */
     public void studentRegister(Student student) {
         System.out.println("Please enter Project ID of the project you want to register for: ");
-        int projID = sc.nextInt();
+        int projID = scObject.nextInt();
+        while(projID < 0 || projID >= projectDB.getProjectCount()){
+            System.out.print("Invalid input, please enter the valid Project ID: ");
+            projID = scObject.nextInt();
+        }
         Project targetProject = projectDB.findProject(projID);
         targetProject.setProjectStatus(ProjectStatus.RESERVED);
 
@@ -113,10 +96,9 @@ public class RequestManager {
      * project
      */
     public void changeTitle(Student student, Project project) {
-        System.out.print("Please enter new title: ");
-        // Remove \n
-        sc.nextLine();
-        String newTitle = sc.nextLine();
+        System.out.println("Please enter new title: ");
+
+        String newTitle = scObject.nextLine();
         RequestChangeTitle requestChangeTitle = new RequestChangeTitle(student, newTitle);
         requestChangeTitleDB.addRequest(requestChangeTitle);
         // Update status
@@ -129,7 +111,7 @@ public class RequestManager {
      */
     public void studentDeregister(Student student, FYPCoordinator fypCoordinator) {
         System.out.print("Please confirm the Project ID of the project you want to deregister from: ");
-        int projID = sc.nextInt();
+        int projID = scObject.nextInt();
         Project currentProject = student.getAssignedProject();
         if (currentProject.getProjectID() == projID) {
             RequestDeregister requestDeregister = new RequestDeregister(student, currentProject, fypCoordinator);
@@ -141,19 +123,6 @@ public class RequestManager {
     }
 
     /**
-<<<<<<< Updated upstream
-     * Method for Supervisor to change password
-     */
-    public void changePassword(Supervisor supervisor) {
-        System.out.print("Please enter your new password: ");
-        String newpassword = sc.nextLine();
-        supervisor.setPassword(newpassword);
-        System.out.println("Password has been saved successfully.");
-    }
-
-    /**
-=======
->>>>>>> Stashed changes
      * Method for Supervisor to create request to Transfer a project to another
      * Supervisor
      */
@@ -162,17 +131,36 @@ public class RequestManager {
             System.out.println("No Supervisor.");
             return false;
         }
-        System.out.println("Provide the Project ID of the Project you no longer wish to supervise   : ");
-        int projectBeingChanged = sc.nextInt();
+        System.out.println("Provide the Project ID of the Project you no longer wish to supervise: ");
+        int projectBeingChanged = scObject.nextInt();
         // Remove \n since nextInt does not clear it from the buffer
-        sc.nextLine();
+        scObject.nextLine();
         // Retrieve the Project
         Project targetProject = requesterSupervisor.getParticularSupervisingProject(projectBeingChanged);
 
-        System.out.println("Provide the UserID of the Replacement Supervisor                       : ");
-        String replacementSupervisorID = sc.nextLine();
+        while(targetProject == null){
+            System.out.println("Invalid project ID, please select again: ");
+            projectBeingChanged = scObject.nextInt();
+            scObject.nextLine();
+            targetProject = requesterSupervisor.getParticularSupervisingProject(projectBeingChanged);
+        }
+        
+        if(targetProject.getAwaitingTransferRequest() == true){
+            System.out.println("Transfer request for this project has already been sent, please wait for approval.");
+            return true;
+        }
+
+        System.out.println("Provide the UserID of the Replacement Supervisor: ");
+        String replacementSupervisorID = scObject.nextLine();
         // Retrieve the Replacement Supervisor
         Supervisor replacementSupervisor = facultyDB.findSupervisor(replacementSupervisorID);
+
+        while(replacementSupervisor == null){
+            System.out.println("Invalid UserID, please select again: ");
+            replacementSupervisorID = scObject.nextLine();
+            replacementSupervisor = facultyDB.findSupervisor(replacementSupervisorID);
+        }
+
         requestTransferDB.addRequest(new RequestTransfer(targetProject, requesterSupervisor, replacementSupervisor));
         targetProject.setAwaitingTransferRequest(true);
 
@@ -189,27 +177,11 @@ public class RequestManager {
         requestChangeTitleDB.printStudentHistory(student);
         requestDeregisterDB.printStudentHistory(student);
         requestRegisterDB.printStudentHistory(student);
+        System.out.println(
+                "+---------------------------------------- END -------------------------------------+");
     }
 
     /**
-<<<<<<< Updated upstream
-     * Method for FYP Coordinator to change password
-     */
-    public void changePassword(FYPCoordinator fypCoordinator) {
-        System.out.print("Please enter your new password: ");
-        String newpassword = sc.nextLine();
-        fypCoordinator.setPassword(newpassword);
-
-        // Also, FYPCoord is a supervisor as well
-        Supervisor fypSupervisor = facultyDB.findSupervisor(fypCoordinator.getFYPCoordID());
-        fypSupervisor.setPassword(newpassword);      
-
-        System.out.println("Password has been saved successfully.");
-    }
-
-    /**
-=======
->>>>>>> Stashed changes
      * For FYP Coordinator to view all Requests from ALL Users
      * 
      * @param fypCoordinator Current FYP Coordiator
@@ -268,13 +240,23 @@ public class RequestManager {
         }
 
         // History & Status of Incoming Requests
-        System.out.println("###################  Incoming Title Change Requests  ###################");
+        System.out.println(
+                "+----------------------------------------------------------------------------------+");
+        System.out.println(
+                "|            List of All Incoming Requests to Change Title of Project              |");
+        System.out.println(
+                "+----------------------------------------------------------------------------------+");
         requestChangeTitleDB.viewPendingTitleChangeRequests(currentSupervisor);
 
-        System.out.println("###################    Outgoing Transfer Requests    ###################");
+        System.out.println(
+                "+----------------------------------------------------------------------------------+");
+        System.out.println(
+                "|                List of All Outgoing Requests to Transfer Project                 |");
+        System.out.println(
+                "+----------------------------------------------------------------------------------+");
         requestTransferDB.viewTransferRequestsForSupervisor(currentSupervisor);
 
-        System.out.println("###########################    END    ###########################");
+        System.out.println("+---------------------------------------- END -------------------------------------+");
     }
 
 }
