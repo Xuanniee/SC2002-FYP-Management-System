@@ -6,9 +6,11 @@ import java.util.Scanner;
 import Entities.FYPCoordinator;
 import Entities.Student;
 import Entities.Project;
+import Entities.RequestChangeTitle;
 import Entities.RequestDeregister;
 import Entities.RequestRegister;
 import Entities.RequestTransfer;
+import enums.ProjectStatus;
 import enums.RequestStatus;
 
 /**
@@ -55,11 +57,16 @@ public class FYPCoordinatorManager {
      * Represents the Database of Transfer Requests in the FYP Management System.
      */
     private RequestTransferDB requestTransferDB;
-    
+
     /**
      * Represents the Database of Deregister Requests in the FYP Management System.
      */
     private RequestDeregisterDB requestDeregisterDB;
+
+    /**
+     * Represents the Database of Deregister Requests in the FYP Management System.
+     */
+    private RequestChangeTitleDB requestChangeTitleDB;
 
     /**
      * Represents the Request Manager that processes various Requests.
@@ -74,8 +81,8 @@ public class FYPCoordinatorManager {
      * @param currentFypCoordinator Selected FYP Coordinator
      */
     public FYPCoordinatorManager(FYPCoordinator currentFypCoordinator, ProjectDB projectDB,
-            FacultyDB facultyDB, RequestRegisterDB requestRegisterDB,
-            RequestTransferDB requestTransferDB, RequestDeregisterDB requestDeregisterDB,
+            FacultyDB facultyDB, RequestRegisterDB requestRegisterDB, RequestTransferDB requestTransferDB,
+            RequestDeregisterDB requestDeregisterDB, RequestChangeTitleDB requestChangeTitleDB,
             RequestManager requestManager, Scanner scanner, Console terminaConsole) {
         this.currentFypCoordinator = currentFypCoordinator;
         this.projectDB = projectDB;
@@ -83,6 +90,7 @@ public class FYPCoordinatorManager {
         this.requestRegisterDB = requestRegisterDB;
         this.requestTransferDB = requestTransferDB;
         this.requestDeregisterDB = requestDeregisterDB;
+        this.requestChangeTitleDB = requestChangeTitleDB;
         this.requestManager = requestManager;
         this.scanner = scanner;
         this.terminaConsole = terminaConsole;
@@ -175,6 +183,47 @@ public class FYPCoordinatorManager {
                 break;
 
             case 7:
+                // View Title Change Requests
+                int selectedTitleChangeRequest;
+                int approvalTitleChangeResult;
+                int noTitleChangeRequest;
+                do {
+                    // View Title Change Requests
+                    noTitleChangeRequest = requestChangeTitleDB.viewAllTitleChangeRequestSupervisor(currentFypCoordinator);
+                    // Input Validation to return to previous Menu if there are no Requests
+                    if (noTitleChangeRequest == 1) {
+                        break;
+                    }
+                    System.out.println("Please indicate which Request you would like to look at: ");
+                    System.out.println("Alternatively, Enter 0 to return to the previous menu.");
+                    // Get Index of Title Change Request to look at in detail
+                    selectedTitleChangeRequest = scanner.nextInt();
+
+                    if (selectedTitleChangeRequest == 0) {
+                        // After Request has been approved or rejected, to return to main menu.
+                        continue;
+                    }
+
+                    RequestChangeTitle targetRequest = requestChangeTitleDB
+                            .viewTitleChangeRequestDetailedSupervisor(selectedTitleChangeRequest);
+                    approvalTitleChangeResult = scanner.nextInt();
+
+                    Project updateProject = targetRequest.getProject();
+                    if (approvalTitleChangeResult == 1) {
+                        requestChangeTitleDB.approveTitleChangeRequest(targetRequest);
+                        targetRequest.setRequestStatus(RequestStatus.APPROVED);
+                    } else {
+                        // Reject Request
+                        updateProject.setAwaitingTitleChangeRequest(false);
+                        targetRequest.setRequestStatus(RequestStatus.REJECTED);
+                    }
+                    System.out.println("Returning to previous menu...");
+
+                } while (selectedTitleChangeRequest != 0);
+                System.out.println("Returning to main menu...");
+                break;
+
+            case 8:
                 // Allocate Project
                 int selectedRequest;
                 int approvalResult;
@@ -207,6 +256,8 @@ public class FYPCoordinatorManager {
                         // Reject Request
                         updateStudent.setHasAppliedForProject(false);
                         targetRequest.setRequestStatus(RequestStatus.REJECTED);
+                        // Update Project Status back to Available so that other students can view it
+                        targetRequest.getProject().setProjectStatus(ProjectStatus.AVAILABLE);
                     }
                     System.out.println("Returning to previous menu...");
 
@@ -214,7 +265,7 @@ public class FYPCoordinatorManager {
                 System.out.println("Returning to main menu...");
                 break;
 
-            case 8:
+            case 9:
                 // Changing Supervisor
                 int selectedSupervisorRequest;
                 int approvalTransferResult;
@@ -264,7 +315,7 @@ public class FYPCoordinatorManager {
                 System.out.println("Returning to main menu...");
                 break;
 
-            case 9:
+            case 10:
                 // Deregister Student
                 int selectedDeregisterRequest;
                 int approvalDeregisterRequest;
@@ -292,24 +343,23 @@ public class FYPCoordinatorManager {
                         requestDeregisterDB.approveDeregisterRequestFYPCoord(targetDeregisterRequest);
                         targetDeregisterRequest.setRequestStatus(RequestStatus.APPROVED);
                     }
-                    // else {
-                    // // Reject Request
-                    // projectBeingTransferred.setAwaitingTransferRequest(false);
-                    // targetTransferRequest.setRequestStatus(RequestStatus.REJECTED);
-                    // }
+                    else {
+                        // Reject Request; Update the Status of the Request
+                        targetDeregisterRequest.setRequestStatus(RequestStatus.REJECTED);
+                    }
                     System.out.println("Returning to previous menu...");
 
                 } while (selectedDeregisterRequest != 0);
                 System.out.println("Returning to main menu...");
                 break;
 
-            case 10:
+            case 11:
                 // View History & Status
                 System.out.println("Viewing History...");
                 requestManager.getAllRequestHistory(currentFypCoordinator);
                 break;
 
-            case 11:
+            case 12:
                 // Change Password
                 this.currentFypCoordinator.changeUserPassword(currentFypCoordinator, scanner, terminaConsole);
                 break;

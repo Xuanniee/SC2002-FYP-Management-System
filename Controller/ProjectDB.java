@@ -173,7 +173,13 @@ public class ProjectDB extends Database {
      * @return
      */
     public Project findProject(int projectID) {
-        Project targetProject = projectList.get(projectID);
+        Project targetProject = null;
+        for (int i = 0; i < projectList.size(); i += 1) {
+            Project currentProject = projectList.get(i);
+            if (currentProject.getProjectID() == projectID) {
+                targetProject = currentProject;
+            }
+        }
         return targetProject;
     }
 
@@ -191,7 +197,7 @@ public class ProjectDB extends Database {
         }
 
         // Retrieve the Project whose title is to be changed
-        Project targetProject = projectList.get(projectID);
+        Project targetProject = findProject(projectID);
         targetProject.setProjectTitle(newProjectTitle);
 
         return true;
@@ -488,7 +494,7 @@ public class ProjectDB extends Database {
             int counter = 1;
             for (int i = 0; i < projectList.size(); i += 1) {
                 Project currentProject = projectList.get(i);
-                if (currentProject.getSupervisor().getUserID() == targetSupervisorID) {
+                if (currentProject.getSupervisor().getUserID().equalsIgnoreCase(targetSupervisorID)) {
                     System.out.println("Project Number " + counter + ": ");
                     currentProject.printProjectDetails();
                     System.out.println();
@@ -558,7 +564,7 @@ public class ProjectDB extends Database {
             for (int i = 0; i < projectList.size(); i += 1) {
                 Project currentProject = projectList.get(i);
                 if (currentProject.getStudent() != null) {
-                    if (currentProject.getStudent().getUserID() == targetStudentID) {
+                    if (currentProject.getStudent().getUserID().equalsIgnoreCase(targetStudentID)) {
                         currentProject.printProjectDetails();
                         System.out.println();
                         counter += 1;

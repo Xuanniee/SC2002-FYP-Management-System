@@ -24,7 +24,6 @@ public abstract class Database {
      * Represents the delimiter used to obtain User ID from User's email.
      */
     protected String emailDelimiter = "@";
-    
 
     /**
      * Abstract method to be implemented by child classes to read the specified

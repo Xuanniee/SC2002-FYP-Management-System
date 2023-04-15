@@ -32,7 +32,7 @@ public class MainApp {
 
         String username;
         UserType attemptUserType;
-        int numLoginAttempts = 3;
+        int numLoginAttempts = 4;
         int mainMenuInput = 1;
         do {
             boolean isValidInput = false;
@@ -79,13 +79,16 @@ public class MainApp {
                         System.exit(1);
                     } else if (attemptUserType == UserType.UNKNOWN) {
                         System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+                        numLoginAttempts -= 1;
                         System.out.println(
                                 "Your Login Credentials are errorneous. You have " + numLoginAttempts
                                         + " attempts left.");
-                        numLoginAttempts -= 1;
                     }
 
                 } while (attemptUserType == UserType.UNKNOWN);
+
+                // Once Login once, number of attempts will reset
+                numLoginAttempts = 4;
 
                 // Find the Corresponding User
                 switch (attemptUserType) {
@@ -114,8 +117,8 @@ public class MainApp {
                     case FYPCOORDINATOR:
                         FYPCoordinator fypCoordinator = FYPcoord_list.findFypCoordinator(username);
                         FYPCoordinatorManager fypManager = new FYPCoordinatorManager(fypCoordinator, project_list, faculty_list,
-                                requestRegisterDB, requestTransferDB, requestDeregisterDB, requestManager, 
-                                scanner, terminalConsole);
+                                requestRegisterDB, requestTransferDB, requestDeregisterDB, requestChangeTitleDB, 
+                                requestManager, scanner, terminalConsole);
                         int fypChoice;
                         do {
                             fypChoice = fypCoordinator.printMenuOptions(scanner);

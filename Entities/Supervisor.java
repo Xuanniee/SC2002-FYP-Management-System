@@ -156,7 +156,7 @@ public class Supervisor extends User implements Menu{
         System.out.println("| 1. Create a Project                                   |");
         System.out.println("| 2. View own Project(s)                                |");
         System.out.println("| 3. Modify the title of your Project(s)                |");
-        System.out.println("| 4. View pending requests                              |");
+        System.out.println("| 4. View Pending Title Change Requests                 |");
         System.out.println("| 5. View Request History & Status                      |");
         System.out.println("| 6. Request the Transfer of a Student                  |");
         System.out.println("| 7. Set New Password                                   |");
