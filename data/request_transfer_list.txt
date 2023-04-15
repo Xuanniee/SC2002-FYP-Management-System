@@ -1,1 +1,1 @@
-Supervisor (Requestor)    Project ID    Replacement Professor    Request Status
+Supervisor (Requestor)	Project ID	Replacement Supervisor	Request Status

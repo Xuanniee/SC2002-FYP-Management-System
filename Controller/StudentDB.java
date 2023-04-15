@@ -55,18 +55,19 @@ public class StudentDB extends Database {
 
             String studentLine = br.readLine();
             studentLine = br.readLine();
-            String studentName, studentEmail, studentID;
+            String studentName, studentEmail, studentID, studentPassword;
             String[] studentData, temp;
 
             while (studentLine != null) {
                 studentData = studentLine.split(super.delimiter);
                 studentName = studentData[0];
                 studentEmail = studentData[1];
+                studentPassword = studentData[2];
 
                 temp = studentData[1].split(super.emailDelimiter);
                 studentID = temp[0];
 
-                students.add(new Student(studentID, studentName, studentEmail));
+                students.add(new Student(studentID, studentName, studentEmail, studentPassword));
 
                 studentLine = br.readLine();
             }
@@ -83,11 +84,14 @@ public class StudentDB extends Database {
         try {
             BufferedWriter bf = new BufferedWriter(new FileWriter(file, false));
             PrintWriter pw = new PrintWriter(bf);
+            // Write Headers
+            pw.println("Name" + "\t" + "Email" + "\t" + "Password");
             for (Student student : students) {
                 String studentName = student.getUserName();
                 String studentEmail = student.getUserEmail();
+                String studentPassword = student.getPassword();
 
-                pw.println(studentName + delimiter + studentEmail);
+                pw.println(studentName + delimiter + studentEmail + delimiter + studentPassword);
             }
             pw.close();
         } catch (IOException e) {

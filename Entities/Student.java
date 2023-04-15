@@ -36,10 +36,10 @@ public class Student extends User {
      * @param userName  User's legal name
      * @param userEmail User's email address
      */
-    public Student(String userID, String userName, String userEmail) {
+    public Student(String userID, String userName, String userEmail, String userPassword) {
         super(userID, userName, userEmail);
         this.project = null;
-        this.password = "password";
+        this.password = userPassword;
     }
 
     /**

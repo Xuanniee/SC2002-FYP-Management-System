@@ -246,7 +246,7 @@ public class User {
      */
     public Boolean changeUserPassword(User loggedUser, Scanner scObject, Console terminalConsole) {
         int validationAttempts = 3;
-        scObject.nextLine();
+        
         do {
             System.out.println(""); // print empty line
             System.out.println("+----------------------------------------------------------+");

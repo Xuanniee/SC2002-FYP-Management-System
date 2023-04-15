@@ -110,7 +110,11 @@ public class StudentManager implements Menu {
 
             case 3:
                 System.out.println("Viewing Registered Project...");
-                if (!currentStudent.getIsAssigned()) {
+                if (currentStudent.getIsDeregistered()) {
+                    System.out.println(
+                            "You are not registered for any projects because you have already deregistered from FYP.");
+                }
+                else if (!currentStudent.getIsAssigned()) {
                     System.out.println("You have not registered for any projects.");
                 } else {
                     studentDB.viewRegisteredProject(currentStudent);
@@ -120,7 +124,11 @@ public class StudentManager implements Menu {
             case 4:
                 System.out.println("Request to Register for a Project...");
                 // Student is only allowed to make 1 Register Request at any point in time
-                if (currentStudent.getHasAppliedForProject()) {
+                if (currentStudent.getIsDeregistered()) {
+                    System.out.println(
+                            "You are not allowed to register for any projects because you have already deregistered from FYP.");
+                }
+                else if (currentStudent.getHasAppliedForProject()) {
                     System.out.println("You have already applied for another project. " +
                             "Please wait for the results of the request before making another.");
                     return;
@@ -132,16 +140,18 @@ public class StudentManager implements Menu {
 
             case 5:
                 System.out.println("Request to Change Title of Registered Project...");
-                if (!currentStudent.getIsAssigned()) {
+                if (currentStudent.getIsDeregistered()) {
+                    System.out.println(
+                            "You have already deregistered from FYP.");
+                }
+                else if (!currentStudent.getIsAssigned()) {
                     System.out.println("You do not have a registered project yet.");
-                    break;
-                } else if (currentStudent.getAssignedProject().getAwaitingTitleChangeRequest()) {
+                } 
+                else if (currentStudent.getAssignedProject().getAwaitingTitleChangeRequest()) {
                     System.out.println("You have already requested for a Title Change. " +
                             "Please wait for the results of the request before making another.");
-                } else if (currentStudent.getIsDeregistered()) {
-                    System.out.println(
-                            "You are not allowed to view any projects because you have already deregistered from FYP.");
-                } else {
+                } 
+                else {
                     System.out.println("Your registered project: ");
                     currentStudent.getAssignedProject().printProjectDetails();
                     requestManager.changeTitle(currentStudent, currentStudent.getAssignedProject());
@@ -150,7 +160,11 @@ public class StudentManager implements Menu {
 
             case 6:
                 System.out.println("Request to Deregister from Registered Project...");
-                if (!currentStudent.getIsAssigned()) {
+                if (currentStudent.getIsDeregistered()) {
+                    System.out.println(
+                            "You have already deregistered from FYP.");
+                }
+                else if (!currentStudent.getIsAssigned()) {
                     System.out.println("You do not have a registered project yet.");
                     break;
                 } else {
@@ -204,6 +218,8 @@ public class StudentManager implements Menu {
         System.out.print("Please enter your choice: ");
 
         choice = scObject.nextInt();
+        // Remove \n from Buffer
+        scObject.nextLine();
 
         return choice;
     }

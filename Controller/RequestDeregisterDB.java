@@ -56,6 +56,11 @@ public class RequestDeregisterDB extends Database {
      */
     private FYPcoordDB fypCoordDB;
 
+     /**
+     * Represents the number of pending requests currently in FYPMS
+     */
+    private int numPendReq = 0;
+
     /**
      * Creates a Database of Deregister Requests in FYPMS when the application is
      * first initialised.
@@ -114,8 +119,7 @@ public class RequestDeregisterDB extends Database {
             BufferedWriter bf = new BufferedWriter(new FileWriter(file, false));
             PrintWriter pw = new PrintWriter(bf);
 
-            pw.println(
-                    "Student (Requestor)" + "\t" + "Coordinator (Requestee)" + "\t" + "Project ID" + "Request Status");
+            pw.println("Student (Requestor)" + "\t" + "Coordinator (Requestee)" + "\t" + "Project ID" + "\t" + "Request Status");
 
             for (RequestDeregister rq : requestDeregisterList) {
                 String studentID = rq.getStudent().getUserID();
@@ -138,6 +142,7 @@ public class RequestDeregisterDB extends Database {
      */
     public void addRequest(RequestDeregister requestDeregister) {
         requestDeregisterList.add(requestDeregister);
+        numPendReq += 1;
     }
 
     /**
@@ -172,7 +177,7 @@ public class RequestDeregisterDB extends Database {
         int counter = 1;
         for (int i = 0; i < requestDeregisterList.size(); i += 1) {
             RequestDeregister currentRequest = requestDeregisterList.get(i);
-            System.out.println(counter + ". Requester: " + currentRequest.getStudent().getUserName()
+            System.out.println(counter + " Requester: " + currentRequest.getStudent().getUserName()
                     + " | Requestee: " + currentRequest.getRequestCoordinator().getUserName() +
                     " | Status: " + currentRequest.getRequestStatus().toString());
 
@@ -210,19 +215,17 @@ public class RequestDeregisterDB extends Database {
                 }
             }
         } else {
-            System.out.println("No requests to Deregister");
+            System.out.println("You have not submitted any requests to deregister.");
             System.out.println("");
         }
     }
 
     /**
-     * Check if user (supervisor or FYP coordinator) has any pending requests to
-     * deregister
+     * Check if FYP coordinator has any pending requests to deregister
      * 
-     * @param fypCoord
      * @return a Boolean to indicate whether there are any pending requests for user
      */
-    public Boolean anyPendingDeregisterRequestsForUser(User fypCoord) {
+    public Boolean anyPendingDeregisterRequestsForUser() {
         for (int i = 0; i < requestDeregisterList.size(); i += 1) {
             if (requestDeregisterList.get(i).getRequestStatus() == RequestStatus.PENDING) {
                 return true;
@@ -237,7 +240,13 @@ public class RequestDeregisterDB extends Database {
      * @return the print statements of all the transfer requests in FYPMS
      */
     public int viewAllDeregisterRequestFYPCoord() {
-        System.out.println("Loading all pending requests to deregister a project...");
+        System.out.println("");
+        System.out.println(
+                "+------------------------------------------------------------------------------------------------------------+");
+        System.out.println(
+                "|                     List of all Pending Requests from Students to deregister from Project                  |");
+        System.out.println(
+                "+------------------------------------------------------------------------------------------------------------+");
         int counter = 1;
         for (int i = 0; i < requestDeregisterList.size(); i += 1) {
             RequestDeregister currentRequest = requestDeregisterList.get(i);
@@ -255,7 +264,7 @@ public class RequestDeregisterDB extends Database {
             System.out.println("Enter 0 to return to the previous menu.");
             return 1;
         }
-        System.out.println();
+        
         System.out.println(); // Prints Empty Line
 
         return 0;
@@ -298,14 +307,17 @@ public class RequestDeregisterDB extends Database {
         System.out.println(
                 "|                                       De-register Request Approval                                         |");
         System.out.println(
-                "|------------------------------------------------------------------------------------------------------------|");
+                "+------------------------------------------------------------------------------------------------------------+");
         targetRequest.getProject().printProjectDetails();
         System.out.println("Project Status              : " + targetRequest.getProject().getProjectStatus());
         System.out.println("Assigned Student (Requester): " + targetRequest.getStudent().getUserName());
         System.out.println(
-                "|------------------------------------------------------------------------------------------------------------|");
+                "+------------------------------------------------------------------------------------------------------------+");
         System.out.println(
-                "Select 1 to approve the request, and 0 to reject the request and return to the previous menu.");
+                "|      Select 1 to approve the request, and 0 to reject the request and return to the previous menu.         |");
+        System.out.println(
+                "+------------------------------------------------------------------------------------------------------------+");
+        System.out.println();
         System.out.println();
 
         return targetRequest;
@@ -327,10 +339,11 @@ public class RequestDeregisterDB extends Database {
         Student deregisteredStudent = approvedRequest.getStudent();
         Supervisor deregisteredSupervisor = approvedRequest.getProject().getSupervisor();
 
-        // Update Student's Project
+        // Update Student Details
         deregisteredStudent.setAssignedProject(null);
         deregisteredStudent.setIsAssigned(false);
         deregisteredStudent.setIsDeregistered(true);
+        deregisteredStudent.setHasAppliedForProject(false);
 
         // Update Project Status
         deregisteredProject.deregisterStudent();
@@ -345,6 +358,8 @@ public class RequestDeregisterDB extends Database {
             projectDB.setSupervisorProjectsToNewStatus(deregisteredSupervisor, ProjectStatus.AVAILABLE);
         }
 
+        numPendReq -= 1;
+
         // Update Request Status so this.user cannot see it again
         // int indexCompletedRequest = requestDeregisterList.indexOf(approvedRequest);
         approvedRequest.setRequestStatus(RequestStatus.APPROVED);
@@ -355,4 +370,19 @@ public class RequestDeregisterDB extends Database {
         return true;
     }
 
+    /**
+     * Set the number of pending requests in the FYPMS
+     * 
+     * @param num
+     */
+    public void setNumPenReq(int num){
+        numPendReq += num;
+    }
+
+    /**
+     * Get the number of pending requests in the FYPMS
+     */
+    public int getNumPenReq(){
+        return numPendReq;
+    }
 }
