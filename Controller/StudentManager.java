@@ -3,6 +3,7 @@ package Controller;
 import java.io.Console;
 import java.util.Scanner;
 
+import Boundary.Menu;
 import Entities.*;
 
 /**
@@ -14,7 +15,7 @@ import Entities.*;
  * @version 1.0
  * @since 2023-04-14
  */
-public class StudentManager {
+public class StudentManager implements Menu {
 
     /**
      * Represents the Database of students in the FYP Management System.
@@ -173,5 +174,37 @@ public class StudentManager {
                 System.out.println("Please enter a valid choice");
                 break;
         }
+    }
+
+    /**
+     * Prints the Main Student Menu Interface and record their choice.
+     * 
+     * @return the Student's menu selection choice.
+     */
+    public int printMenuOptions(Scanner scObject) {
+        int choice;
+
+        System.out.println(""); // print empty line
+        System.out.println("+-------------------------------------------------------+");
+        System.out.println("|                   Student Portal                      |");
+        System.out.println("|-------------------------------------------------------|");
+        System.out.println("| 1. View Profile                                       |");
+        System.out.println("| 2. View All Projects                                  |");
+        System.out.println("| 3. View Registered Project                            |");
+        System.out.println("| 4. Request to Register for a Project                  |");
+        System.out.println("| 5. Request to Change Title of Project                 |");
+        System.out.println("| 6. Request to Deregister from Project                 |");
+        System.out.println("| 7. View Request History                               |");
+        System.out.println("| 8. Set New Password                                   |");
+        System.out.println("|-------------------------------------------------------|");
+        System.out.println("|              Enter 0 to Log out of FYPMS              |");
+        System.out.println("+-------------------------------------------------------+");
+        System.out.println(""); // print empty line
+
+        System.out.print("Please enter your choice: ");
+
+        choice = scObject.nextInt();
+
+        return choice;
     }
 }

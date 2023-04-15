@@ -142,6 +142,29 @@ public class RequestRegisterDB extends Database {
         // Update Supervisor number of supervising project
         // System.out.println("Before Adding: ");
         requestRegister.getSupervisor().editNumProjects(1);
+
+        // When student request to register for a project, the supervisor may hit
+        // his/her
+        // capacity, hence his remaining projects have to be set to UNAVAILABLE.
+        if (requestRegister.getSupervisor().getNumProj() >= 2) {
+            projectDB.setSupervisorProjectsToNewStatus(requestRegister.getSupervisor(), ProjectStatus.UNAVAILABLE);
+        }
+    }
+
+    /**
+     * Check if user (supervisor or FYP coordinator) has any pending requests to
+     * register
+     * 
+     * @param fypCoord
+     * @return a Boolean to indicate whether there are any pending requests for user
+     */
+    public Boolean anyPendingRegisterRequestsForUser(User fypCoord) {
+        for (int i = 0; i < requestRegisterList.size(); i += 1) {
+            if (requestRegisterList.get(i).getRequestStatus() == RequestStatus.PENDING) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -246,17 +269,18 @@ public class RequestRegisterDB extends Database {
         // Set Student to Project
         approvedProject.setStudent(approvedStudent);
         approvedStudent.setAssignedProject(approvedProject);
-        // Update Supervisor Project List
-        supervisingSupervisor.getSupervisingProjectList().add(approvedProject);
 
-        // Update the Allocation DB
-        // projectAllocationDB.addAllocation(new
-        // ProjectAllocation(approvedStudent.getUserID(),
-        // Integer.toString(approvedProject.getProjectID()),
-        // supervisingSupervisor.getUserID()));
+        // Update Supervisor Project List
+        supervisingSupervisor.setSupervisingProjectList(approvedProject);
+
+        // Update details of Supervisor
+        // When student registers for a project, the supervisor may hit his/her
+        // capacity, hence his remaining projects have to be set to UNAVAILABLE.
+        if (supervisingSupervisor.getNumProj() >= 2) {
+            projectDB.setSupervisorProjectsToNewStatus(supervisingSupervisor, ProjectStatus.UNAVAILABLE);
+        }
 
         // Update Request Status so this.user cannot see it again
-        // requestRegisterList.remove(requestRegisterList.indexOf(approvedRequest));
         approvedRequest.setRequestStatus(RequestStatus.APPROVED);
 
         System.out.println("Project " + approvedProject.getProjectTitle() + " has been successfully allocated to "

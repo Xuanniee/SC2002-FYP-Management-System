@@ -3,6 +3,7 @@ package Controller;
 import java.io.Console;
 import java.util.Scanner;
 
+import Boundary.Menu;
 import Entities.FYPCoordinator;
 import Entities.Student;
 import Entities.Project;
@@ -22,7 +23,7 @@ import enums.RequestStatus;
  * @version 1.0
  * @since 2023-04-14
  */
-public class FYPCoordinatorManager {
+public class FYPCoordinatorManager implements Menu {
     /**
      * Instance of the scanner used to retrieve this student's inputs.
      */
@@ -189,7 +190,8 @@ public class FYPCoordinatorManager {
                 int noTitleChangeRequest;
                 do {
                     // View Title Change Requests
-                    noTitleChangeRequest = requestChangeTitleDB.viewAllTitleChangeRequestSupervisor(currentFypCoordinator);
+                    noTitleChangeRequest = requestChangeTitleDB
+                            .viewAllTitleChangeRequestSupervisor(currentFypCoordinator);
                     // Input Validation to return to previous Menu if there are no Requests
                     if (noTitleChangeRequest == 1) {
                         break;
@@ -258,6 +260,13 @@ public class FYPCoordinatorManager {
                         targetRequest.setRequestStatus(RequestStatus.REJECTED);
                         // Update Project Status back to Available so that other students can view it
                         targetRequest.getProject().setProjectStatus(ProjectStatus.AVAILABLE);
+                        // Update numProjects supervised by Supervisor because 1 was added when request
+                        // was made
+                        targetRequest.getSupervisor().editNumProjects(-1);
+                        if (targetRequest.getSupervisor().getNumProj() < 2) {
+                            projectDB.setSupervisorProjectsToNewStatus(targetRequest.getSupervisor(),
+                                    ProjectStatus.AVAILABLE);
+                        }
                     }
                     System.out.println("Returning to previous menu...");
 
@@ -342,8 +351,7 @@ public class FYPCoordinatorManager {
                     if (approvalDeregisterRequest == 1) {
                         requestDeregisterDB.approveDeregisterRequestFYPCoord(targetDeregisterRequest);
                         targetDeregisterRequest.setRequestStatus(RequestStatus.APPROVED);
-                    }
-                    else {
+                    } else {
                         // Reject Request; Update the Status of the Request
                         targetDeregisterRequest.setRequestStatus(RequestStatus.REJECTED);
                     }
@@ -368,5 +376,56 @@ public class FYPCoordinatorManager {
                 System.out.println("Error!! Invalid Input!!");
 
         }
+    }
+
+    /**
+     * Implements the User Menu to print the FYP Coordinator Menu
+     * 
+     * @return integer that represents User's choice.
+     */
+    public int printMenuOptions(Scanner scObject) {
+        int choice;
+
+        System.out.println(""); // print empty line
+        System.out.println("+-------------------------------------------------------+");
+        System.out.println("|                 FYP Coordinator Portal                |");
+        System.out.println("|-------------------------------------------------------|");
+        System.out.println("| 1.  View Profile                                      |");
+        System.out.println("| 2.  Create a Project                                  |");
+        System.out.println("| 3.  View own Project(s)                               |");
+        System.out.println("| 4.  Modify the title of your Project(s)               |");
+        System.out.println("| 5.  View All Projects                                 |");
+        System.out.println("| 6.  Generate Project Report                           |");
+        System.out.println("| 7.  View Pending Title Change Requests                |");
+        System.out.println("| 8.  Request for Allocating a Project to a Student     |");
+        System.out.println("| 9.  Request for Changing Supervisor of Project        |");
+        System.out.println("| 10. Request for Deregister a Student from Project     |");
+        System.out.println("| 11. View Request History & Status                     |");
+        System.out.println("| 12. Set New Password                                  |");
+        System.out.println("|-------------------------------------------------------|");
+        System.out.println("|             Enter 0 to log out from FYPMS             |");
+        System.out.println("+-------------------------------------------------------+");
+        System.out.println(""); // print empty line
+
+        // Check if there are any new pending requests for the Supervisor
+        if (requestRegisterDB.anyPendingRegisterRequestsForUser(currentFypCoordinator)) {
+            System.out.println("Message: New Register Requests from students!");
+        }
+        if (requestChangeTitleDB.anyPendingChangeTitleRequestsForUser(currentFypCoordinator)) {
+            System.out.println("Message: New Change Title Requests from students!");
+        }
+        if (requestDeregisterDB.anyPendingDeregisterRequestsForUser(currentFypCoordinator)) {
+            System.out.println("Message: New Deregister Requests from students!");
+        }
+
+        System.out.println(""); // print empty line
+
+        System.out.print("Please enter your choice: ");
+
+        choice = scObject.nextInt();
+        // Remove \n from Buffer
+        scObject.nextLine();
+
+        return choice;
     }
 }

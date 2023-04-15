@@ -586,4 +586,29 @@ public class ProjectDB extends Database {
             choice = scObject.nextInt();
         } while (choice == 1);
     }
+
+    /**
+     * Sets status of remaining projects of Supervisor to either AVAILABLE or
+     * UNAVILABLE.
+     * Used when student deregisters from a project or when project is transferred
+     * to another supervisor.
+     * 
+     * @param currentSupervisor
+     * @param newStatus
+     */
+    public void setSupervisorProjectsToNewStatus(Supervisor currentSupervisor, ProjectStatus newStatus) {
+        Project currentProject;
+        for (int i = 0; i < projectList.size(); i++) {
+            currentProject = projectList.get(i);
+
+            // Find supervisor's UNAVAILABLE and AVAILABLE projects in database of projects
+            if (currentProject.getSupervisor().getUserID().equalsIgnoreCase(currentSupervisor.getUserID()) &&
+                    currentProject.getProjectStatus() != ProjectStatus.ALLOCATED &&
+                    currentProject.getProjectStatus() != ProjectStatus.RESERVED) {
+
+                // Set status of the projects to new status
+                currentProject.setProjectStatus(newStatus);
+            }
+        }
+    }
 }

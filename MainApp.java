@@ -51,8 +51,6 @@ public class MainApp {
                     scanner.next();
                 }
             }
-            
-            
 
             if (mainMenuInput == 2) {
                 System.out.println("Exiting FYPMS...");
@@ -98,7 +96,7 @@ public class MainApp {
                                 requestManager, FYPcoord_list, scanner, terminalConsole);
                         int choice;
                         do {
-                            choice = loggedStudent.printMenuOptions(scanner);
+                            choice = studentMgr.printMenuOptions(scanner);
                             studentMgr.processStudentChoice(choice);
                         } while (choice != 0);
                         break;
@@ -109,19 +107,20 @@ public class MainApp {
                                 project_list, requestManager, requestChangeTitleDB, scanner, terminalConsole);
                         int supChoice;
                         do {
-                            supChoice = loggedSupervisor.printMenuOptions(scanner);
+                            supChoice = supervisorManager.printMenuOptions(scanner);
                             supervisorManager.processSupervisorChoice(supChoice);
                         } while (supChoice != 0);
                         break;
 
                     case FYPCOORDINATOR:
                         FYPCoordinator fypCoordinator = FYPcoord_list.findFypCoordinator(username);
-                        FYPCoordinatorManager fypManager = new FYPCoordinatorManager(fypCoordinator, project_list, faculty_list,
-                                requestRegisterDB, requestTransferDB, requestDeregisterDB, requestChangeTitleDB, 
+                        FYPCoordinatorManager fypManager = new FYPCoordinatorManager(fypCoordinator, project_list,
+                                faculty_list,
+                                requestRegisterDB, requestTransferDB, requestDeregisterDB, requestChangeTitleDB,
                                 requestManager, scanner, terminalConsole);
                         int fypChoice;
                         do {
-                            fypChoice = fypCoordinator.printMenuOptions(scanner);
+                            fypChoice = fypManager.printMenuOptions(scanner);
                             fypManager.processFypCoordinatorChoice(fypChoice);
                         } while (fypChoice != 0);
 

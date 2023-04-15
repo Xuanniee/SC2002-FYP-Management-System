@@ -107,7 +107,7 @@ public class FacultyDB extends Database {
 
         System.out.println(" ------------------ Project Creation ------------------ ");
         System.out.println("Input the Project Title: ");
-        
+
         projectTitle = scObject.nextLine();
 
         // Increment the Project ID
@@ -140,10 +140,12 @@ public class FacultyDB extends Database {
         for (int i = 0; i < createdProjectList.size(); i += 1) {
             int projectId = createdProjectList.get(i).getProjectID();
             String projectName = createdProjectList.get(i).getProjectTitle();
-            System.out.println(counter + " | Project ID: " + projectId + " | Project Title: " + projectName);
+            String projectStatus = createdProjectList.get(i).getProjectStatus().toString();
+            System.out.println(counter + " | Project ID: " + projectId + " | Project Title: " + projectName
+                    + " | Project Status: " + projectStatus);
             counter += 1;
         }
-        System.out.println("----------------------------------------------------");
+        System.out.println("------------------------------------------------------------- ");
         return true;
     };
 
