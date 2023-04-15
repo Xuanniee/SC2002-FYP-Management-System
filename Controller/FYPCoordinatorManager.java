@@ -317,6 +317,7 @@ public class FYPCoordinatorManager implements Menu {
 
                     // Add hint message in scenario where the replacement supervisor has already
                     // reached his/her cap
+                    
                     if (targetTransferRequest.getRepSupervisor().getNumProj() >= 2) {
                         System.out.printf("Warning: Replacement Supervisor already has %d allocated projects.\n",
                                 targetTransferRequest.getRepSupervisor().getNumProj());
