@@ -74,12 +74,22 @@ public class MainApp {
                     attemptUserType = attemptUser.authenticateUser(username, password,
                             faculty_list.getSupervisorList(),
                             student_list.getStudentList(), FYPcoord_list.getFypCoordinatorsList());
+                    
+                    //Special scenario if FYPcoord change password
+                    if(attemptUserType == UserType.FACULTY && username.equalsIgnoreCase(FYPcoord_list.getFypCoordinatorsList().get(0).getUserID())){
+                        if(FYPcoord_list.getFypCoordinatorsList().get(0).getPassword().equalsIgnoreCase(password)){
+                            attemptUserType = UserType.FYPCOORDINATOR;
+                        }
+                        else{
+                            attemptUserType = UserType.UNKNOWN;
+                        }
+                    }
 
                     // Check if exceed login limits
                     if (numLoginAttempts == 0) {
                         System.exit(1);
                     } else if (attemptUserType == UserType.UNKNOWN) {
-                        System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+                        System.out.println("\n\n\n");
                         numLoginAttempts -= 1;
                         System.out.println(
                                 "Your Login Credentials are errorneous. You have " + numLoginAttempts

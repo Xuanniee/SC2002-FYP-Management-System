@@ -272,6 +272,7 @@ public class User {
 
             // Check if Password is correct (Case Sensitive)
             if (loggedUser.getPassword().equals(userPassword)) {
+                System.out.println(""); // print empty line
                 System.out.print("Enter your New Password: ");
                 //maskedPassword = terminalConsole.readPassword("Enter your New Password   : ");
                 String newPassword1 = scObject.nextLine();

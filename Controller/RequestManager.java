@@ -131,6 +131,10 @@ public class RequestManager {
         Project currentProject = student.getAssignedProject();
         if (currentProject.getProjectID() == projID) {
             RequestDeregister requestDeregister = new RequestDeregister(student, currentProject, fypCoordinator);
+            if(requestDeregisterDB.findStudent(student) == true){
+                System.out.print("You have already submitted a deregister request, please wait");
+                return;
+            }
             requestDeregisterDB.addRequest(requestDeregister);
             System.out.println("Request submitted successfully.");
         } else {
@@ -170,9 +174,6 @@ public class RequestManager {
         String replacementSupervisorID = scObject.nextLine();
         // Retrieve the Replacement Supervisor
         Supervisor replacementSupervisor = facultyDB.findSupervisor(replacementSupervisorID);
-        if(replacementSupervisor.getUserID().equalsIgnoreCase(fyPcoordDB.getFypCoordinatorsList().get(0).getUserID())){
-            replacementSupervisor = fyPcoordDB.getFypCoordinatorsList().get(0);
-        }
 
         while(replacementSupervisor == null){
             System.out.println("Invalid UserID, please select again: ");
@@ -181,6 +182,10 @@ public class RequestManager {
             if(replacementSupervisor.getUserID().equalsIgnoreCase(fyPcoordDB.getFypCoordinatorsList().get(0).getUserID())){
             replacementSupervisor = fyPcoordDB.getFypCoordinatorsList().get(0);
             }
+        }
+
+        if(replacementSupervisor.getUserID().equalsIgnoreCase(fyPcoordDB.getFypCoordinatorsList().get(0).getUserID())){
+            replacementSupervisor = fyPcoordDB.getFypCoordinatorsList().get(0);
         }
 
         requestTransferDB.addRequest(new RequestTransfer(targetProject, requesterSupervisor, replacementSupervisor));

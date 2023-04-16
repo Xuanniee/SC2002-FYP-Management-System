@@ -206,9 +206,19 @@ public class FYPCoordinatorManager implements Menu {
                         continue;
                     }
 
+                    while(selectedTitleChangeRequest < 0 || selectedTitleChangeRequest > requestChangeTitleDB.getNumPenReq()){
+                        System.out.println("You have selected an invalid input, indicate a valid request: ");
+                        selectedTitleChangeRequest = scanner.nextInt();
+                    }
+
                     RequestChangeTitle targetRequest = requestChangeTitleDB
                             .viewTitleChangeRequestDetailedSupervisor(selectedTitleChangeRequest);
                     approvalTitleChangeResult = scanner.nextInt();
+
+                    while(approvalTitleChangeResult != 1 && approvalTitleChangeResult != 0){
+                        System.out.println("You have selected an invalid input, indicate a valid one: ");
+                        approvalTitleChangeResult = scanner.nextInt();
+                    }
 
                     Project updateProject = targetRequest.getProject();
                     if (approvalTitleChangeResult == 1) {
@@ -218,6 +228,7 @@ public class FYPCoordinatorManager implements Menu {
                         // Reject Request
                         updateProject.setAwaitingTitleChangeRequest(false);
                         targetRequest.setRequestStatus(RequestStatus.REJECTED);
+                        requestChangeTitleDB.setNumPenReq(-1);
                     }
                     System.out.println("Returning to previous menu...");
 
@@ -307,7 +318,7 @@ public class FYPCoordinatorManager implements Menu {
                         continue;
                     }
 
-                    while(selectedSupervisorRequest < 0 && selectedSupervisorRequest > requestTransferDB.getNumPenReq()){
+                    while(selectedSupervisorRequest < 0 || selectedSupervisorRequest > requestTransferDB.getNumPenReq()){
                         System.out.println("You have selected an invalid input, indicate a valid request: ");
                         selectedSupervisorRequest = scanner.nextInt();
                     }
@@ -327,7 +338,7 @@ public class FYPCoordinatorManager implements Menu {
 
                     while(approvalTransferResult != 1 && approvalTransferResult != 0){
                         System.out.println("You have selected an invalid input, indicate a valid one: ");
-                        approvalResult = scanner.nextInt();
+                        approvalTransferResult = scanner.nextInt();
                     }
 
                     Project projectBeingTransferred = targetTransferRequest.getProject();
