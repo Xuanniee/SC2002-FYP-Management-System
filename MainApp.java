@@ -8,10 +8,10 @@ import Controller.*;
 
 public class MainApp {
     public static void main(String[] args) {
-        
+
         Scanner scanner = new Scanner(System.in);
         Console terminalConsole = System.console();
-        
+
         /* Initialise Database */
         StudentDB student_list = new StudentDB();
         FacultyDB faculty_list = new FacultyDB();
@@ -21,7 +21,8 @@ public class MainApp {
         RequestRegisterDB requestRegisterDB = new RequestRegisterDB(project_list, student_list, faculty_list);
         RequestDeregisterDB requestDeregisterDB = new RequestDeregisterDB(project_list, student_list, FYPcoord_list);
         RequestChangeTitleDB requestChangeTitleDB = new RequestChangeTitleDB(project_list, student_list, faculty_list);
-        RequestManager requestManager = new RequestManager(project_list, faculty_list, FYPcoord_list, requestChangeTitleDB,
+        RequestManager requestManager = new RequestManager(project_list, faculty_list, FYPcoord_list,
+                requestChangeTitleDB,
                 requestRegisterDB, requestDeregisterDB, requestTransferDB, scanner);
 
         // Check to ensure Console is available
@@ -66,8 +67,6 @@ public class MainApp {
 
                     System.out.print("Enter your Password: ");
                     password = scanner.nextLine();
-                    //char passwordArray[] = terminalConsole.readPassword("Enter your Password: ");
-                    //String maskedPassword = new String(passwordArray);
 
                     // Create attempted User
                     User attemptUser = new User(username, password);
@@ -79,7 +78,7 @@ public class MainApp {
                     if (numLoginAttempts == 0) {
                         System.exit(1);
                     } else if (attemptUserType == UserType.UNKNOWN) {
-                        System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+                        System.out.println("\n\n\n");
                         numLoginAttempts -= 1;
                         System.out.println(
                                 "Your Login Credentials are errorneous. You have " + numLoginAttempts
@@ -90,6 +89,11 @@ public class MainApp {
 
                 // Once Login once, number of attempts will reset
                 numLoginAttempts = 4;
+
+                // System displays message:
+                System.out.println(""); // Prints empty line
+                System.out.println("Logging in...");
+                System.out.println(""); // Prints empty line
 
                 // Find the Corresponding User
                 switch (attemptUserType) {

@@ -8,7 +8,9 @@ import enums.UserType;
 
 /**
  * Represents a User in the FYP Management System.
- * A User can only be classified with 1 User Type, that is either Student, Faculty, or FYP Coordinator
+ * A User can only be classified with 1 User Type, that is either Student,
+ * Faculty, or FYP Coordinator
+ * 
  * @author Lab A34 Assignment Team 1
  * @version 1.0
  * @since 2023-04-14
@@ -35,7 +37,7 @@ public class User {
     protected String userEmail;
 
     /**
-     * Classification of User. 
+     * Classification of User.
      * User can only be 1 of 3 types: Student, Faculty, FYP Coordinator
      */
     protected UserType userType = UserType.UNKNOWN;
@@ -43,7 +45,9 @@ public class User {
     /**
      * Constructor
      * Creates a new User Object with the given UserID and Password.
-     * This object does not represent an actual user of FYPMS yet. Becomes an actual user only after identifying the User Type.
+     * This object does not represent an actual user of FYPMS yet. Becomes an actual
+     * user only after identifying the User Type.
+     * 
      * @param userID
      * @param password
      */
@@ -52,7 +56,6 @@ public class User {
         this.password = password;
         this.userType = UserType.UNKNOWN;
     }
-
 
     public User(String userID, String userName, String userEmail) {
         this.userID = userID;
@@ -88,7 +91,8 @@ public class User {
     /**
      * Gets the Password of this User
      * 
-     * @return this User's password. Be careful when calling this function to avoid security issues.
+     * @return this User's password. Be careful when calling this function to avoid
+     *         security issues.
      */
     public String getPassword() {
         return this.password;
@@ -164,7 +168,8 @@ public class User {
     }
 
     /**
-     * Verifies if the provided password matches the User's password in the database.
+     * Verifies if the provided password matches the User's password in the
+     * database.
      * 
      * @param inputPassword this User's input.
      * @return a Boolean to inform us if the provided password is correct.
@@ -176,13 +181,15 @@ public class User {
 
     /**
      * Authenticates the User trying to log into FYPMS.
-     * Verifies and identifies what type of User is trying to log in so as to classify them.
+     * Verifies and identifies what type of User is trying to log in so as to
+     * classify them.
      * 
-     * @param userID Provided UserID Input
-     * @param password Provided Password Input
-     * @param supervisorList ArrayList of Registered Supervisors in FYPMS
-     * @param studentList ArrayList of Registered Students in FYPMS
-     * @param fypCoordinatorsList ArrayList of FYP Coordinators in FYPMS {Usually 1 for every course}
+     * @param userID              Provided UserID Input
+     * @param password            Provided Password Input
+     * @param supervisorList      ArrayList of Registered Supervisors in FYPMS
+     * @param studentList         ArrayList of Registered Students in FYPMS
+     * @param fypCoordinatorsList ArrayList of FYP Coordinators in FYPMS {Usually 1
+     *                            for every course}
      * @return the UserType Enumeration to identify if it is a valid user.
      */
     public UserType authenticateUser(String userID, String password, ArrayList<Supervisor> supervisorList,
@@ -223,7 +230,7 @@ public class User {
 
     // /* For testing purposes */
     // public void viewDetails() {
-    //     System.out.println(userID + " " + userName + " " + userEmail + "\n");
+    // System.out.println(userID + " " + userName + " " + userEmail + "\n");
     // }
 
     /**
@@ -237,16 +244,17 @@ public class User {
 
     /**
      * Provides an interface for User to change their Password.
-     * Users must verify their identity by providing their password and any password input is masked for security reasons.
+     * Users must verify their identity by providing their password and any password
+     * input is masked for security reasons.
      * 
-     * @param loggedUser Logged User
-     * @param scObject Scanner to read input from User
+     * @param loggedUser      Logged User
+     * @param scObject        Scanner to read input from User
      * @param terminalConsole Console to mask the Password of User
      * @return a Boolean to inform us if the provided password is correct.
      */
     public Boolean changeUserPassword(User loggedUser, Scanner scObject, Console terminalConsole) {
         int validationAttempts = 3;
-        
+
         do {
             System.out.println(""); // print empty line
             System.out.println("+----------------------------------------------------------+");
@@ -260,8 +268,6 @@ public class User {
 
             System.out.print("Enter your Password: ");
             String userPassword = scObject.nextLine();
-            //char[] maskedPassword = terminalConsole.readPassword("Enter your Password: ");
-            //String userPassword = new String(maskedPassword);
 
             // Check if User wants to cancel Password Change
             if (userPassword.equals("0")) {
@@ -273,30 +279,32 @@ public class User {
             // Check if Password is correct (Case Sensitive)
             if (loggedUser.getPassword().equals(userPassword)) {
                 System.out.print("Enter your New Password: ");
-                //maskedPassword = terminalConsole.readPassword("Enter your New Password   : ");
+                // maskedPassword = terminalConsole.readPassword("Enter your New Password : ");
                 String newPassword1 = scObject.nextLine();
+                System.out.println(""); // Prints empty line
 
                 System.out.print("Re-Enter your New Password: ");
-                //maskedPassword = terminalConsole.readPassword("Re-Enter your New Password: ");
+                // maskedPassword = terminalConsole.readPassword("Re-Enter your New Password:
+                // ");
                 String newPassword2 = scObject.nextLine();
+                System.out.println(""); // Prints empty line
 
                 if (newPassword1.equals(newPassword2)) {
                     // Change the Password
                     loggedUser.setPassword(newPassword1);
                     System.out.println("Your password has been changed successfully.");
                     break;
-                }
-                else {
+                } else {
                     System.out.println("Your passwords do not match. Please try again.");
                     continue;
                 }
-            }
-            else {
+            } else {
                 // User did not validate their password
                 validationAttempts -= 1;
-                System.out.println("You currently have " + validationAttempts + " more tries to validate your identity.");
+                System.out
+                        .println("You currently have " + validationAttempts + " more tries to validate your identity.");
             }
-        } while(validationAttempts != 0);
+        } while (validationAttempts != 0);
 
         if (validationAttempts == 0) {
             // User could not validate himself
