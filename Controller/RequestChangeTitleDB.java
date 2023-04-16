@@ -176,7 +176,7 @@ public class RequestChangeTitleDB extends Database {
      * Checks whether a Supervisor User has one of their projects receive a Title
      * Change Request.
      * 
-     * @param supervisor Target Supervisor
+     * @param user Target Supervisor
      * @return a boolean indicating to us if a request associated with Supervisor is
      *         found.
      */
